@@ -5,15 +5,10 @@
 This symfony bundle add the following features:
 
 * Bootstrap 4 theming
-* Specific assets install process for composer external libraries
-* Fixtures management
 * Menu Definition and management
 * Grid Definition and management
 * Entity Form Definition and management
 * Entity Show Definition and management
-* Role Hierarchy Management
-* Mail Manager
-* Asynchronous command Management
 
 ## Requirements
 
