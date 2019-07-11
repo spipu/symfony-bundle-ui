@@ -1,0 +1,10 @@
+{% use "bootstrap_4_layout.html.twig" %}
+
+{% block file_widget -%}
+    {%- set attr = attr|merge({
+            placeholder: "Please select a file ...",
+            onchange: "this.parentElement.getElementsByTagName('label')[0].innerText = this.value.replace(/\\\\/g, '/').split('/').pop();"
+        })
+    -%}
+    {{ parent() }}
+{% endblock %}

@@ -1,0 +1,21 @@
+{%set form = manager.formView %}
+{{ form_start(form, {'attr': {'id': 'form_' ~ manager.definition.code}}) }}
+<div class="row">
+{% for fieldSet in manager.fieldsets %}{%  if not fieldSet.isHiddenInForm %}
+    <div class="{{ fieldSet.cssClass }}">
+        <div class="card mb-3">
+            <div class="card-header"><b>{{ fieldSet.name|trans }}</b></div>
+            <div class="card-body">
+{% for field in fieldSet.fields %}{%  if not field.isHiddenInForm %}
+    {{ form_row(attribute(form, field.code)) }}
+{% endif %}{% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %}{% endfor %}
+    {{ form_widget(form) }}
+    <div class="col-12 col-12">
+        <button class="btn-success btn col-12"><i class="fas fa-{{ manager.submitIcon }}"></i> {{ manager.submitLabel|trans() }}</button>
+    </div>
+</div>
+{{ form_end(form) }}

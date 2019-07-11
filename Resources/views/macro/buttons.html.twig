@@ -1,0 +1,45 @@
+{% macro defaultLink(url, message, class, icon, id, role) %}
+    <a href="{{ url }}" {% if id is not null %}id="{{ id }}"{% endif %} {% if role is not null %}data-action-role="{{ role }}"{% endif %} class="btn ml-2 btn-outline-{{ class }}">{% if icon is not null %}<i class="fas fa-{{ icon }}"></i> {% endif %}{{ message|trans }}</a>
+{% endmacro %}
+
+{% macro defaultButton(action, message, class, icon, id, role) %}
+    {% set buttonType = 'button' %}
+    {% if action is empty %}{% set buttonType = 'submit' %}{% endif %}
+    <button type="{{ buttonType }}" {% if action is not null %}onclick="{{ action }}"{% endif %} {% if id is not null %}id="{{ id }}"{% endif %} {% if role is not null %}data-action-role="{{ role }}"{% endif %} class="btn ml-2 btn-outline-{{ class }}" >{% if icon is not null %}<i class="fas fa-{{ icon }}"></i> {% endif %}{{ message|trans() }}</button>
+{% endmacro %}
+
+{% macro create(url, message, id) %}
+    {% if message is empty %}{% set message = 'spipu.ui.action.create' %}{% endif %}
+    {{ _self.defaultLink(url, message, 'success', 'edit', id) }}
+{% endmacro %}
+
+{% macro show(url, message, id) %}
+    {% if message is empty %}{% set message = 'spipu.ui.action.show' %}{% endif %}
+    {{ _self.defaultLink(url, message, 'primary', 'eye', id) }}
+{% endmacro %}
+
+{% macro edit(url, message, id) %}
+    {% if message is empty %}{% set message = 'spipu.ui.action.edit' %}{% endif %}
+    {{ _self.defaultLink(url, message, 'success', 'edit', id) }}
+{% endmacro %}
+
+{% macro back(url, message, id) %}
+    {% if message is empty %}{% set message = 'spipu.ui.action.back' %}{% endif %}
+    {{ _self.defaultLink(url, message, 'secondary', 'undo-alt', id) }}
+{% endmacro %}
+
+{% macro delete(url, tokenId, message, id) %}
+    {% if message is empty %}{% set message = 'spipu.ui.action.delete' %}{% endif %}
+
+    {% apply spaceless %}
+        <form method="post" action="{{ url }}" style="display: inline">
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ tokenId) }}">
+            {{ _self.defaultButton(null, message, 'danger confirm-action', 'trash-alt', id, 'delete') }}
+        </form>
+    {% endapply %}
+{% endmacro %}
+
+{% macro submitManagerForm(manager) %}
+    {{ _self.defaultButton('$("form#form_' ~ manager.definition.code ~ ' :submit").click();', manager.submitLabel, 'success', manager.submitIcon) }}
+{% endmacro %}

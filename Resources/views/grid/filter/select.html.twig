@@ -1,0 +1,10 @@
+<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">
+    <label for="{{ input_id }}">{{ label }}</label>
+    <select class="form-control form-control-sm col-12" id="{{ input_id }}" name="{{ input_name }}">
+        <option value=""> - - - - - </option>
+{% for value, text in column.type.options.options %}
+        {% if column.type.translate %}{% set text = text|trans %}{% endif %}
+        <option value="{{ value }}" {% if ('_' ~ input_value) == ('_' ~ value) %}selected="selected"{% endif %}>{{ text }}</option>
+{% endfor %}
+    </select>
+</div>

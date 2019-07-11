@@ -1,0 +1,49 @@
+spipu:
+    ui:
+        options:
+            value_disabled: "Disabled"
+            value_enabled:  "Enabled"
+            value_false: "False"
+            value_true:  "True"
+            value_yes: "Yes"
+            value_no:  "No"
+
+        page:
+            home:  "Home"
+            admin: "Admin"
+
+        grid:
+            item:
+                found:          "{0} No item found|{1} %count% item found|]1,Inf[ %count% items found"
+                selected:       "selected"
+                at_least_one:   "You must select at least one item"
+
+            filter:
+                title:          "Filters"
+                search:         "Search"
+                clean:          "Clean Filters"
+                from:           "From"
+                to:             "To"
+                no_result:      "No item found"
+
+            action:
+                label:          "Actions"
+
+        action:
+            back:    "Back"
+            create:  "Create"
+            edit:    "Edit"
+            delete:  "Delete"
+            save:    "Save"
+            show:    "Show"
+            submit:  "Submit"
+            update:  "Update"
+
+        success:
+            created:  "The item has been created"
+            udpated:  "The item has been updated"
+            deleted:  "The item has been deleted"
+            saved:    "The item has been saved"
+
+        error:
+            token:    "Invalid Token!"

@@ -1,0 +1,61 @@
+{% set infoFilters = manager.infoFilters %}
+{% if infoFilters|length %}
+<div class="row">
+    <div class="col-12 mb-2">
+        <div class="card">
+            <div class="card-header cursor" style="cursor: pointer" data-toggle="collapse" href="#filterCollapse" role="button" aria-expanded="false" aria-controls="filterCollapse">
+                <b>{{ 'spipu.ui.grid.filter.title'|trans }}</b>
+            </div>
+            <div class="collapse {% if manager.request.filters|length > 0 %}show{% endif %}" id="filterCollapse">
+                <div class="card-body">
+                    <form method="get" onsubmit="return true;" class="form-inline" action="{{ manager.currentUrl }}">
+                        <div class="col-12">
+                            <div class="row mb-2">
+{% for column in infoFilters %}
+{%     if column.filter.isRange %}
+{%         include column.filter.templateFilter with {
+                'manager':     manager,
+                'column':      column,
+                'label':       (column.name|trans) ~ ' - ' ~ ('spipu.ui.grid.filter.from'|trans),
+                'input_id':    'filter_' ~ column.code ~ '_from',
+                'input_name':  'fl[' ~ column.code ~ '][from]',
+                'input_value': manager.request.filter(column.code, 'from')
+            } %}
+{%         include column.filter.templateFilter with {
+                'manager':     manager,
+                'column':      column,
+                'label':       (column.name|trans) ~ ' - ' ~ ('spipu.ui.grid.filter.to'|trans),
+                'input_id':    'filter_' ~ column.code ~ '_to',
+                'input_name':  'fl[' ~ column.code ~ '][to]',
+                'input_value': manager.request.filter(column.code, 'to')
+            } %}
+{%     else %}
+{%         include column.filter.templateFilter with {
+                'manager':     manager,
+                'column':      column,
+                'label':       column.name|trans,
+                'input_id':    'filter_' ~ column.code,
+                'input_name':  'fl[' ~ column.code ~ ']',
+                'input_value': manager.request.filter(column.code)
+            } %}
+{%     endif %}
+{% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6">
+                                    <button type="button" class="btn btn-secondary m-2 btn-block" onclick="$('input').val(''); $('select').val(''); this.form.submit();"><i class="fas fa-times"></i> {{ 'spipu.ui.grid.filter.clean'|trans }}</button>
+                                </div>
+                                <div class="col-xs-12 col-sm-6">
+                                    <button type="submit" class="btn btn-primary m-2 btn-block"><i class="fas fa-search"></i> {{ 'spipu.ui.grid.filter.search'|trans }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}

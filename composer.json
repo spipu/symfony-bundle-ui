@@ -1,0 +1,26 @@
+{
+    "name": "spipu/ui-bundle",
+    "type": "symfony-bundle",
+    "description": "Spipu User Interface Bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Laurent Minguet",
+            "email": "contact@minguet.fr"
+        }
+    ],
+    "version": "1.0",
+    "require": {
+        "symfony/twig-bundle": "^4.3",
+        "symfony/http-kernel": "^4.3",
+        "spipu/core-bundle":   "*",
+        "twbs/bootstrap":      "^4.0",
+        "components/jquery":   "^3.0",
+        "ext-zip": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spipu\\UiBundle\\": "./"
+        }
+    }
+}

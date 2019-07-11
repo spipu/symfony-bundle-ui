@@ -1,0 +1,68 @@
+# This file is part of a Spipu Bundle
+#
+# (c) Laurent Minguet
+#
+# For the full copyright and license information, please view the LICENSE
+# file that was distributed with this source code.
+services:
+    # API Services
+    # You can add fixtures. They must implement FixtureInterface and have the spipu.fixture tag
+    # You must implement DefinitionInterface to define the menu
+    spipu.ui.service.menu_definition:
+        class: Spipu\UiBundle\Service\Menu\DefinitionInterface
+
+    Spipu\UiBundle\Service\Ui\GridFactory:
+        arguments:
+            - '@service_container'
+
+    Spipu\UiBundle\Service\Ui\FormFactory:
+        arguments:
+            - '@service_container'
+
+    Spipu\UiBundle\Service\Ui\ShowFactory:
+        arguments:
+            - '@service_container'
+
+    Spipu\UiBundle\Form\Options\ActiveStatus:
+        public: true
+
+    Spipu\UiBundle\Form\Options\BooleanStatus:
+        public: true
+
+    Spipu\UiBundle\Form\Options\YesNo:
+        public: true
+
+    Spipu\UiBundle\Service\Menu\Manager:
+        arguments:
+           - "@security.authorization_checker"
+           - "@spipu.ui.service.menu_definition"
+
+    Spipu\UiBundle\Twig\OptionsExtension:
+        arguments:
+            - "@service_container"
+        tags:
+            - "twig.extension"
+
+    Spipu\UiBundle\Twig\UiExtension:
+        arguments:
+            - '@Spipu\UiBundle\Service\Menu\Manager'
+        tags:
+            - "twig.extension"
+
+    Spipu\UiBundle\Service\Ui\Grid\DataProvider\Doctrine:
+        public: true
+        arguments:
+            - '@service_container'
+
+    # Assets
+    Spipu\UiBundle\Assets\Bootstrap:
+        tags: ['spipu.asset']
+
+    Spipu\UiBundle\Assets\FontAwesome:
+        tags: ['spipu.asset']
+
+    Spipu\UiBundle\Assets\Jquery:
+        tags: ['spipu.asset']
+
+    Spipu\UiBundle\Assets\Popper:
+        tags: ['spipu.asset']

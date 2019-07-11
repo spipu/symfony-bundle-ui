@@ -1,0 +1,7 @@
+{% set divCss='badge badge-pill badge-' ~ (data ? 'primary' : 'secondary') ~ ' w-100 text-left' %}
+<td class="{{ column.option('td-css-class', '') }}">
+    <div class="{{ divCss }}">
+        <i class="fas fa-{{ (data ? 'check' : 'times') }} mr-1"></i>
+        {{ column.option('prefix', '') }}{{ data|label_from_option(column.type.options)|trans }}{{ column.option('suffix', '') }}
+    </div>
+</td>
