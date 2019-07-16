@@ -9,7 +9,7 @@ services:
     # You can add fixtures. They must implement FixtureInterface and have the spipu.fixture tag
     # You must implement DefinitionInterface to define the menu
     spipu.ui.service.menu_definition:
-        class: Spipu\UiBundle\Service\Menu\DefinitionInterface
+        class: Spipu\UiBundle\Service\Menu\Definition
 
     Spipu\UiBundle\Service\Ui\GridFactory:
         arguments:
