@@ -12,6 +12,7 @@ declare(strict_types = 1);
 
 namespace Spipu\UiBundle\Twig;
 
+use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Form\Options\OptionsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\Extension\AbstractExtension;
@@ -53,6 +54,10 @@ class OptionsExtension extends AbstractExtension
     public function getLabelFromOption($value, OptionsInterface $options)
     {
         $values = $options->getOptions();
+
+        if (is_object($value) && $value instanceof EntityInterface) {
+            $value = $value->getId();
+        }
 
         if (is_bool($value)) {
             $value = (int) $value;
