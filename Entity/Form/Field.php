@@ -106,6 +106,10 @@ class Field implements PositionInterface
                 $template = '@SpipuUi\entity\view\select.html.twig';
                 break;
 
+            case 'entity':
+                $template = '@SpipuUi\entity\view\entity.html.twig';
+                break;
+
             default:
                 $template = '@SpipuUi\entity\view\text.html.twig';
                 break;
