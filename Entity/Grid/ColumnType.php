@@ -23,6 +23,7 @@ class ColumnType
     const TYPE_SELECT   = 'select';
     const TYPE_DATE     = 'date';
     const TYPE_DATETIME = 'datetime';
+    const TYPE_COLOR    = 'color';
 
     /**
      * @var string
@@ -68,7 +69,8 @@ class ColumnType
             self::TYPE_FLOAT,
             self::TYPE_SELECT,
             self::TYPE_DATE,
-            self::TYPE_DATETIME
+            self::TYPE_DATETIME,
+            self::TYPE_COLOR,
         ];
 
         if (!in_array($type, $allowedTypes)) {
