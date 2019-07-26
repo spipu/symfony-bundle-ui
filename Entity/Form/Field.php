@@ -95,27 +95,27 @@ class Field implements PositionInterface
 
         switch ($type) {
             case 'date':
-                $template = '@SpipuUi\entity\view\date.html.twig';
+                $template = '@SpipuUi/entity/view/date.html.twig';
                 break;
 
             case 'datetime':
-                $template = '@SpipuUi\entity\view\datetime.html.twig';
+                $template = '@SpipuUi/entity/view/datetime.html.twig';
                 break;
 
             case 'choice':
-                $template = '@SpipuUi\entity\view\select.html.twig';
+                $template = '@SpipuUi/entity/view/select.html.twig';
                 break;
 
             case 'color':
-                $template = '@SpipuUi\entity\view\color.html.twig';
+                $template = '@SpipuUi/entity/view/color.html.twig';
                 break;
 
             case 'entity':
-                $template = '@SpipuUi\entity\view\entity.html.twig';
+                $template = '@SpipuUi/entity/view/entity.html.twig';
                 break;
 
             default:
-                $template = '@SpipuUi\entity\view\text.html.twig';
+                $template = '@SpipuUi/entity/view/text.html.twig';
                 break;
         }
 

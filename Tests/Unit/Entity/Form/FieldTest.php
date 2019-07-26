@@ -42,16 +42,16 @@ class FieldTest extends TestCase
     public function testEntityTemplate()
     {
         $entity = new Form\Field('code', Type\DateType::class, 10, []);
-        $this->assertSame('@SpipuUi\entity\view\date.html.twig', $entity->getTemplateView());
+        $this->assertSame('@SpipuUi/entity/view/date.html.twig', $entity->getTemplateView());
 
         $entity = new Form\Field('code', Type\DateTimeType::class, 10, []);
-        $this->assertSame('@SpipuUi\entity\view\datetime.html.twig', $entity->getTemplateView());
+        $this->assertSame('@SpipuUi/entity/view/datetime.html.twig', $entity->getTemplateView());
 
         $entity = new Form\Field('code', Type\ChoiceType::class, 10, []);
-        $this->assertSame('@SpipuUi\entity\view\select.html.twig', $entity->getTemplateView());
+        $this->assertSame('@SpipuUi/entity/view/select.html.twig', $entity->getTemplateView());
 
         $entity = new Form\Field('code', Type\TextType::class, 10, []);
-        $this->assertSame('@SpipuUi\entity\view\text.html.twig', $entity->getTemplateView());
+        $this->assertSame('@SpipuUi/entity/view/text.html.twig', $entity->getTemplateView());
 
         $entity->setTemplateView('view.html.twig');
         $this->assertSame('view.html.twig', $entity->getTemplateView());
