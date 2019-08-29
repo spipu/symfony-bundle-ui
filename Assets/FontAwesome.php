@@ -40,7 +40,7 @@ class FontAwesome implements AssetInterface
      */
     public function getSource(): string
     {
-        return 'https://use.fontawesome.com/releases/v5.5.0/fontawesome-free-5.5.0-web.zip';
+        return 'https://use.fontawesome.com/releases/v5.10.2/fontawesome-free-5.10.2-web.zip';
     }
 
     /**
@@ -49,8 +49,8 @@ class FontAwesome implements AssetInterface
     public function getMapping(): array
     {
         return [
-            'fontawesome-free-5.5.0-web/css/all.css' => 'css/all.css',
-            'fontawesome-free-5.5.0-web/webfonts'    => 'webfonts',
+            'fontawesome-free-5.10.2-web/css/all.css' => 'css/all.css',
+            'fontawesome-free-5.10.2-web/webfonts'    => 'webfonts',
         ];
     }
 }
