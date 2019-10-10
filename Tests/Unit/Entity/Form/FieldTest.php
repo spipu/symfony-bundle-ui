@@ -6,6 +6,7 @@ use Spipu\UiBundle\Entity\Form;
 use Spipu\UiBundle\Exception\FormException;
 use Spipu\UiBundle\Form\Options\YesNo;
 use Symfony\Component\Form\Extension\Core\Type;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class FieldTest extends TestCase
 {
@@ -46,6 +47,9 @@ class FieldTest extends TestCase
 
         $entity = new Form\Field('code', Type\DateTimeType::class, 10, []);
         $this->assertSame('@SpipuUi/entity/view/datetime.html.twig', $entity->getTemplateView());
+
+        $entity = new Form\Field('code', EntityType::class, 10, []);
+        $this->assertSame('@SpipuUi/entity/view/entity.html.twig', $entity->getTemplateView());
 
         $entity = new Form\Field('code', Type\ChoiceType::class, 10, []);
         $this->assertSame('@SpipuUi/entity/view/select.html.twig', $entity->getTemplateView());
