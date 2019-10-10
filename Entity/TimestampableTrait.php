@@ -12,6 +12,8 @@ declare(strict_types = 1);
 
 namespace Spipu\UiBundle\Entity;
 
+use DateTime;
+
 /**
  * You must add the following comment on all the entities:
  * @ORM\HasLifecycleCallbacks()
@@ -19,13 +21,13 @@ namespace Spipu\UiBundle\Entity;
 trait TimestampableTrait
 {
     /**
-     * @var \DateTime
+     * @var DateTime
      * @ORM\Column(type="datetime", nullable=false)
      */
     protected $createdAt;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @ORM\Column(type="datetime", nullable=false)
      */
     protected $updatedAt;
@@ -37,7 +39,7 @@ trait TimestampableTrait
      */
     public function setCreatedAtValue(): self
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
 
         return $this;
     }
@@ -50,7 +52,7 @@ trait TimestampableTrait
      */
     public function setUpdatedAtValue(): self
     {
-        $this->updatedAt = new \DateTime();
+        $this->updatedAt = new DateTime();
 
         return $this;
     }

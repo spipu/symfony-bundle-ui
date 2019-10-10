@@ -15,6 +15,7 @@ namespace Spipu\UiBundle\Twig;
 use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Form\Options\OptionsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Twig\Error\Error as TwigError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -74,14 +75,14 @@ class OptionsExtension extends AbstractExtension
      * @param mixed $value
      * @param string $optionsClassName
      * @return mixed
-     * @throws \Twig_Error
+     * @throws TwigError
      */
     public function getLabelFromOptionName($value, string $optionsClassName)
     {
         /** @var OptionsInterface $options */
         $options = $this->container->get($optionsClassName);
         if (!($options instanceof OptionsInterface)) {
-            throw new \Twig_Error('The options classname must implements OptionsInterface');
+            throw new TwigError('The options classname must implements OptionsInterface');
         }
 
         return $this->getLabelFromOption($value, $options);
