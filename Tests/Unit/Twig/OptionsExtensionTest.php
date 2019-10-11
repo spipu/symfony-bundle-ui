@@ -1,6 +1,7 @@
 <?php
 namespace Spipu\UiBundle\Tests\Unit\Twig;
 
+use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Tests\SpipuUiMock;
 use Spipu\UiBundle\Twig\OptionsExtension;
 use PHPUnit\Framework\TestCase;
@@ -69,6 +70,14 @@ class OptionsExtensionTest extends TestCase
 
         $this->assertSame('no', $extension->getLabelFromOption(false, $GoodOption));
         $this->assertSame('yes', $extension->getLabelFromOption(true, $GoodOption));
+
+        $object = $this->createMock(EntityInterface::class);
+        $object->expects($this->once())->method('getId')->willReturn(0);
+        $this->assertSame('no', $extension->getLabelFromOption($object, $GoodOption));
+
+        $object = $this->createMock(EntityInterface::class);
+        $object->expects($this->once())->method('getId')->willReturn(1);
+        $this->assertSame('yes', $extension->getLabelFromOption($object, $GoodOption));
     }
 
     public function testLabelFromOptionNameOk()

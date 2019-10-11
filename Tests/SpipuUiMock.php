@@ -89,6 +89,14 @@ class ResourceMock implements EntityInterface
     private $fieldBB = '';
 
     /**
+     * @return int|null
+     */
+    public function getId(): ?int
+    {
+        return null;
+    }
+
+    /**
      * @return string
      */
     public function getFieldAA(): string
