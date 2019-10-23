@@ -15,7 +15,6 @@
         "symfony/http-kernel": "^4.3",
         "spipu/core-bundle":   "*",
         "twbs/bootstrap":      "^4.0",
-        "components/jquery":   "^3.0",
         "ext-zip": "*"
     },
     "autoload": {

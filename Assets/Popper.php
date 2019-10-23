@@ -40,7 +40,7 @@ class Popper implements AssetInterface
      */
     public function getSource(): string
     {
-        return 'https://unpkg.com/';
+        return 'https://unpkg.com/popper.js/dist/';
     }
 
     /**
@@ -49,7 +49,8 @@ class Popper implements AssetInterface
     public function getMapping(): array
     {
         return [
-            'popper.js' => 'js/popper.js',
+            'popper.js'     => 'js/popper.js',
+            'popper.min.js' => 'js/popper.min.js',
         ];
     }
 }

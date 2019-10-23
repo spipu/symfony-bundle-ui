@@ -20,6 +20,20 @@ use Spipu\CoreBundle\Assets\AssetInterface;
 class FontAwesome implements AssetInterface
 {
     /**
+     * @var string
+     */
+    private $version;
+
+    /**
+     * Jquery constructor.
+     * @param string $version
+     */
+    public function __construct(string $version = '5.11.2')
+    {
+        $this->version = $version;
+    }
+
+    /**
      * @return string
      */
     public function getCode(): string
@@ -40,7 +54,8 @@ class FontAwesome implements AssetInterface
      */
     public function getSource(): string
     {
-        return 'https://use.fontawesome.com/releases/v5.10.2/fontawesome-free-5.10.2-web.zip';
+        return 'https://use.fontawesome.com/releases/v' . $this->version
+            . '/fontawesome-free-' . $this->version . '-web.zip';
     }
 
     /**
@@ -49,8 +64,9 @@ class FontAwesome implements AssetInterface
     public function getMapping(): array
     {
         return [
-            'fontawesome-free-5.10.2-web/css/all.css' => 'css/all.css',
-            'fontawesome-free-5.10.2-web/webfonts'    => 'webfonts',
+            'fontawesome-free-' . $this->version . '-web/css/all.css'     => 'css/all.css',
+            'fontawesome-free-' . $this->version . '-web/css/all.min.css' => 'css/all.min.css',
+            'fontawesome-free-' . $this->version . '-web/webfonts'        => 'webfonts',
         ];
     }
 }

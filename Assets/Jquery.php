@@ -20,6 +20,20 @@ use Spipu\CoreBundle\Assets\AssetInterface;
 class Jquery implements AssetInterface
 {
     /**
+     * @var string
+     */
+    private $version;
+
+    /**
+     * Jquery constructor.
+     * @param string $version
+     */
+    public function __construct(string $version = '3.4.1')
+    {
+        $this->version = $version;
+    }
+
+    /**
      * @return string
      */
     public function getCode(): string
@@ -32,7 +46,7 @@ class Jquery implements AssetInterface
      */
     public function getSourceType(): string
     {
-        return self::TYPE_VENDOR;
+        return self::TYPE_URL;
     }
 
     /**
@@ -40,7 +54,7 @@ class Jquery implements AssetInterface
      */
     public function getSource(): string
     {
-        return 'components/jquery';
+        return 'https://code.jquery.com/';
     }
 
     /**
@@ -49,7 +63,10 @@ class Jquery implements AssetInterface
     public function getMapping(): array
     {
         return [
-            'jquery.js' => 'js/jquery.js',
+            'jquery-' . $this->version . '.js'          => 'js/jquery.js',
+            'jquery-' . $this->version . '.min.js'      => 'js/jquery.min.js',
+            'jquery-' . $this->version . '.slim.js'     => 'js/jquery.slim.js',
+            'jquery-' . $this->version . '.slim.min.js' => 'js/jquery.slim.min.js',
         ];
     }
 }
