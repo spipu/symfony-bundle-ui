@@ -49,8 +49,9 @@ class Popper implements AssetInterface
     public function getMapping(): array
     {
         return [
-            'popper.js'     => 'js/popper.js',
-            'popper.min.js' => 'js/popper.min.js',
+            'popper.js'         => 'js/popper.js',
+            'popper.min.js'     => 'js/popper.min.js',
+            'popper.min.js.map' => 'js/popper.min.js.map',
         ];
     }
 }
