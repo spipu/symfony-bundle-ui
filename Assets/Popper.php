@@ -40,7 +40,7 @@ class Popper implements AssetInterface
      */
     public function getSource(): string
     {
-        return 'https://unpkg.com/popper.js/dist/';
+        return 'https://unpkg.com/popper.js/dist/umd/';
     }
 
     /**
