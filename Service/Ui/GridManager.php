@@ -176,10 +176,10 @@ class GridManager implements GridManagerInterface
     }
 
     /**
-     * @return bool
+     * @return void
      * @throws GridException
      */
-    public function validate(): bool
+    public function prepareRequest(): void
     {
         if (!$this->routeName) {
             throw new GridException('The Grid Manager is not ready');
@@ -188,7 +188,13 @@ class GridManager implements GridManagerInterface
         $this->definition->prepareSort();
 
         $this->request->prepare($this->routeName, $this->routeParameters);
+    }
 
+    /**
+     * @return void
+     */
+    public function loadPage(): void
+    {
         $this->nbPages = 1;
         $this->nbTotalRows = $this->dataProvider->getNbTotalRows();
 
@@ -200,6 +206,16 @@ class GridManager implements GridManagerInterface
         }
 
         $this->rows = $this->dataProvider->getPageRows();
+    }
+
+    /**
+     * @return bool
+     * @throws GridException
+     */
+    public function validate(): bool
+    {
+        $this->prepareRequest();
+        $this->loadPage();
 
         return true;
     }
