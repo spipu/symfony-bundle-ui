@@ -16,6 +16,10 @@ use Spipu\UiBundle\Entity\OptionsTrait;
 use Spipu\UiBundle\Entity\PositionInterface;
 use Spipu\UiBundle\Exception\GridException;
 
+/**
+ * Class Grid
+ * @SuppressWarnings(PMD.ExcessiveClassComplexity)
+ */
 class Grid
 {
     use OptionsTrait;
@@ -74,6 +78,11 @@ class Grid
      * @var Action[]
      */
     private $massActions = [];
+
+    /**
+     * @var Action[]
+     */
+    private $globalActions = [];
 
     /**
      * @var string[]
@@ -306,6 +315,51 @@ class Grid
     }
 
     /**
+     * @param Action $action
+     * @return Grid
+     */
+    public function addGlobalAction(Action $action): self
+    {
+        $this->globalActions[$action->getCode()] = $action;
+
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     * @return Grid
+     */
+    public function removeGlobalAction(string $key): self
+    {
+        if (array_key_exists($key, $this->globalActions)) {
+            unset($this->globalActions[$key]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     * @return null|Action
+     */
+    public function getGlobalAction(string $key): ?Action
+    {
+        if (!array_key_exists($key, $this->globalActions)) {
+            return null;
+        }
+
+        return $this->globalActions[$key];
+    }
+
+    /**
+     * @return Action[]
+     */
+    public function getGlobalActions(): array
+    {
+        return $this->globalActions;
+    }
+
+    /**
      * @return string
      */
     public function getTemplateAll(): string
@@ -504,6 +558,13 @@ class Grid
 
         uasort(
             $this->massActions,
+            function (PositionInterface $rowA, PositionInterface $rowB) {
+                return ($rowA->getPosition() <=> $rowB->getPosition());
+            }
+        );
+
+        uasort(
+            $this->globalActions,
             function (PositionInterface $rowA, PositionInterface $rowB) {
                 return ($rowA->getPosition() <=> $rowB->getPosition());
             }
