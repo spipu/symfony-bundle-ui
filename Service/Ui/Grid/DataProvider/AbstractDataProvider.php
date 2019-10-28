@@ -12,6 +12,7 @@ declare(strict_types = 1);
 
 namespace Spipu\UiBundle\Service\Ui\Grid\DataProvider;
 
+use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Service\Ui\Grid\GridRequest;
 use Spipu\UiBundle\Entity\Grid\Grid as GridDefinition;
 
@@ -26,6 +27,11 @@ abstract class AbstractDataProvider implements DataProviderInterface
      * @var GridDefinition
      */
     protected $definition;
+
+    /**
+     * @var array|null
+     */
+    private $filters = null;
 
     /**
      * need by Spipu Ui
@@ -54,5 +60,57 @@ abstract class AbstractDataProvider implements DataProviderInterface
     public function setGridDefinition(GridDefinition $definition): void
     {
         $this->definition = $definition;
+    }
+
+    /**
+     * @return GridRequest|null
+     */
+    public function getRequest(): ?GridRequest
+    {
+        return $this->request;
+    }
+
+    /**
+     * @return GridDefinition|null
+     */
+    public function getDefinition(): ?GridDefinition
+    {
+        return $this->definition;
+    }
+
+    /**
+     * @return bool
+     * @throws GridException
+     */
+    public function validate(): bool
+    {
+        if ($this->request === null || $this->definition === null) {
+            throw new GridException('The data provider is not ready');
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array $filters
+     * @return void
+     */
+    public function forceFilters(array $filters): void
+    {
+        $this->filters = $filters;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFilters(): array
+    {
+        $this->validate();
+
+        if (is_array($this->filters)) {
+            return $this->filters;
+        }
+
+        return $this->request->getFilters();
     }
 }

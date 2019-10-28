@@ -12,12 +12,13 @@ declare(strict_types = 1);
 
 namespace Spipu\UiBundle\Service\Ui\Grid\DataProvider;
 
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\Expr\Andx;
 use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Entity\Grid\ColumnType;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Spipu\UiBundle\Exception\GridException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Doctrine extends AbstractDataProvider
@@ -53,9 +54,12 @@ class Doctrine extends AbstractDataProvider
 
     /**
      * @return QueryBuilder
+     * @throws GridException
      */
-    private function prepareQueryBuilder(): QueryBuilder
+    public function prepareQueryBuilder(): QueryBuilder
     {
+        $this->validate();
+        
         /** @var EntityManagerInterface $entityManager */
         $entityManager = $this->container->get('doctrine.orm.default_entity_manager');
 
@@ -71,7 +75,7 @@ class Doctrine extends AbstractDataProvider
         }
 
         $parameters = [];
-        foreach ($this->request->getFilters() as $code => $value) {
+        foreach ($this->getFilters() as $code => $value) {
             $parameters += $this->prepareQueryBuilderFilter($queryBuilder, $where, $code, $value);
         }
 
@@ -125,21 +129,24 @@ class Doctrine extends AbstractDataProvider
     }
 
     /**
-     * @return Query
+     * @return int
      */
-    private function prepareCountQuery(): Query
+    public function getNbTotalRows(): int
     {
-        $queryBuilder = $this->prepareQueryBuilder();
+        try {
+            $queryBuilder = $this->prepareQueryBuilder();
+            $queryBuilder->select($queryBuilder->expr()->count('main'));
 
-        $queryBuilder->select($queryBuilder->expr()->count('main'));
-
-        return $queryBuilder->getQuery();
+            return (int) $queryBuilder->getQuery()->getSingleScalarResult();
+        } catch (NonUniqueResultException $e) {
+            return 0;
+        }
     }
 
     /**
-     * @return Query
+     * @return EntityInterface[]
      */
-    private function prepareRowQuery(): Query
+    public function getPageRows(): array
     {
         $queryBuilder = $this->prepareQueryBuilder();
 
@@ -158,26 +165,6 @@ class Doctrine extends AbstractDataProvider
             );
         }
 
-        return $queryBuilder->getQuery();
-    }
-
-    /**
-     * @return int
-     */
-    public function getNbTotalRows(): int
-    {
-        try {
-            return (int) $this->prepareCountQuery()->getSingleScalarResult();
-        } catch (\Doctrine\ORM\NonUniqueResultException $e) {
-            return 0;
-        }
-    }
-
-    /**
-     * @return EntityInterface[]
-     */
-    public function getPageRows(): array
-    {
-        return $this->prepareRowQuery()->execute();
+        return $queryBuilder->getQuery()->execute();
     }
 }
