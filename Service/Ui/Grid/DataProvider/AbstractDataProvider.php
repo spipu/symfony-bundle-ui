@@ -84,7 +84,11 @@ abstract class AbstractDataProvider implements DataProviderInterface
      */
     public function validate(): bool
     {
-        if ($this->request === null || $this->definition === null) {
+        if ($this->definition === null) {
+            throw new GridException('The data provider is not ready');
+        }
+
+        if ($this->request === null && $this->filters === null) {
             throw new GridException('The data provider is not ready');
         }
 
