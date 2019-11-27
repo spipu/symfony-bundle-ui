@@ -10,10 +10,10 @@ class TimestampableTest extends TestCase
     {
         $entity = new TimestampableEntity();
 
-        $this->assertSame($entity, $entity->setCreatedAtValue());
-        $this->assertInstanceOf(\DateTimeInterface::class, $entity->getCreatedAt());
+        $entity->setCreatedAtValue();
+        $entity->setUpdatedAtValue();
 
-        $this->assertSame($entity, $entity->setUpdatedAtValue());
+        $this->assertInstanceOf(\DateTimeInterface::class, $entity->getCreatedAt());
         $this->assertInstanceOf(\DateTimeInterface::class, $entity->getUpdatedAt());
     }
 }

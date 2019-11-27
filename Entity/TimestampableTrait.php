@@ -13,6 +13,7 @@ declare(strict_types = 1);
 namespace Spipu\UiBundle\Entity;
 
 use DateTime;
+use DateTimeInterface;
 
 /**
  * You must add the following comment on all the entities:
@@ -35,34 +36,30 @@ trait TimestampableTrait
     /**
      * Set the created at value on create
      * @ORM\PrePersist()
-     * @return self
+     * @return void
      */
-    public function setCreatedAtValue(): self
+    public function setCreatedAtValue(): void
     {
         $this->createdAt = new DateTime();
-
-        return $this;
     }
 
     /**
      * Set the updated at value on update
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
-     * @return self
+     * @return void
      */
-    public function setUpdatedAtValue(): self
+    public function setUpdatedAtValue(): void
     {
         $this->updatedAt = new DateTime();
-
-        return $this;
     }
 
     /**
      * Get - Created At
      *
-     * @return \DateTimeInterface
+     * @return DateTimeInterface|null
      */
-    public function getCreatedAt(): \DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
@@ -70,9 +67,9 @@ trait TimestampableTrait
     /**
      * Get - Updated At
      *
-     * @return \DateTimeInterface|null
+     * @return DateTimeInterface|null
      */
-    public function getUpdatedAt(): \DateTimeInterface
+    public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updatedAt;
     }
