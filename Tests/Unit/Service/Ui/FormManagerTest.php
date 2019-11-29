@@ -211,6 +211,7 @@ class FormManagerTest extends AbstractTest
         $this->assertSame(['success' => ['spipu.ui.success.saved']], $container->get('session')->getFlashBag()->all());
 
         $this->assertSame($resource, $manager->getForm()->getData());
+        $this->assertSame(null, $resource->getId());
         $this->assertSame('Value a.a', $resource->getFieldAA());
         $this->assertSame('original', $resource->getFieldAB());
         $this->assertSame('Value b.a', $resource->getFieldBA());

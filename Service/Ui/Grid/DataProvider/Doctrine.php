@@ -102,14 +102,11 @@ class Doctrine extends AbstractDataProvider
         $entityField = 'main.'.$column->getEntityField();
 
         if ($column->getFilter()->isRange()) {
-            if (!is_array($value)) {
-                return $parameters;
-            }
-            if (array_key_exists('from', $value)) {
+            if (is_array($value) && array_key_exists('from', $value)) {
                 $where->add($queryBuilder->expr()->gte($entityField, ':'.$code.'_from'));
                 $parameters[':'.$code.'_from'] = $value['from'];
             }
-            if (array_key_exists('to', $value)) {
+            if (is_array($value) && array_key_exists('to', $value)) {
                 $where->add($queryBuilder->expr()->lte($entityField, ':'.$code.'_to'));
                 $parameters[':'.$code.'_to'] = $value['to'];
             }
@@ -133,14 +130,10 @@ class Doctrine extends AbstractDataProvider
      */
     public function getNbTotalRows(): int
     {
-        try {
-            $queryBuilder = $this->prepareQueryBuilder();
-            $queryBuilder->select($queryBuilder->expr()->count('main'));
+        $queryBuilder = $this->prepareQueryBuilder();
+        $queryBuilder->select($queryBuilder->expr()->count('main'));
 
-            return (int) $queryBuilder->getQuery()->getSingleScalarResult();
-        } catch (NonUniqueResultException $e) {
-            return 0;
-        }
+        return (int) $queryBuilder->getQuery()->getSingleScalarResult();
     }
 
     /**
