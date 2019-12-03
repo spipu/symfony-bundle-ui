@@ -1,13 +1,13 @@
-<tr class="{{ manager.definition.option('tr-css-class', '') }}">
+<tr class="{{ manager.definition.option('tr-css-class', '') }}" data-grid-row-id="{{ attribute(row, manager.definition.dataProviderPrimaryKey) }}">
 {% if manager.definition.massActions|length > 0 %}
-    <td><input type="checkbox" value="{{ attribute(row, manager.definition.dataProviderPrimaryKey) }}" data-grid-code="{{ manager.definition.code }}" data-grid-role="checkbox" /></td>
+    <td data-grid-role="checkbox"><input type="checkbox" value="{{ attribute(row, manager.definition.dataProviderPrimaryKey) }}" data-grid-code="{{ manager.definition.code }}" data-grid-role="checkbox" /></td>
 {% endif %}
 {% for column in manager.definition.columns %}
     {% apply spaceless %}{% include column.type.templateField with {'manager': manager, 'row': row, 'column': column, 'data': manager.value(row, column.entityField)} %}{% endapply %}
 
 {% endfor %}
 {% if manager.definition.rowActions|length > 0 %}
-    <td class="text-right">{% apply spaceless %}
+    <td data-grid-role="row-actions" class="text-right">{% apply spaceless %}
         {%  include manager.definition.templateActions with {'manager': manager, 'row': row} %}
     {% endapply %}</td>
 {% endif %}
