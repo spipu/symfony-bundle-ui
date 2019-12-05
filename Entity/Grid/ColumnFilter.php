@@ -25,6 +25,11 @@ class ColumnFilter
     private $range = false;
 
     /**
+     * @var bool
+     */
+    private $exactValue = false;
+
+    /**
      * @var string|null
      */
     private $templateFilter;
@@ -78,6 +83,26 @@ class ColumnFilter
     public function useRange(bool $range = true): self
     {
         $this->range = $range;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExactValue(): bool
+    {
+        return $this->exactValue;
+    }
+
+    /**
+     * @param bool $exactValue
+     * @return self
+     * @SuppressWarnings(PMD.BooleanArgumentFlag)
+     */
+    public function useExactValue(bool $exactValue = true): self
+    {
+        $this->exactValue = $exactValue;
 
         return $this;
     }

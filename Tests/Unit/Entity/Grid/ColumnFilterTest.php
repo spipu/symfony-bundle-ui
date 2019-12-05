@@ -11,23 +11,37 @@ class ColumnFilterTest extends TestCase
         $entity = new Grid\ColumnFilter(true);
         $this->assertSame(true, $entity->isFilterable());
         $this->assertSame(false, $entity->isRange());
+        $this->assertSame(false, $entity->isExactValue());
 
         $entity = new Grid\ColumnFilter(false);
         $this->assertSame(false, $entity->isFilterable());
         $this->assertSame(false, $entity->isRange());
+        $this->assertSame(false, $entity->isExactValue());
 
         $entity->useFilterable(true);
         $this->assertSame(true, $entity->isFilterable());
         $this->assertSame(false, $entity->isRange());
+        $this->assertSame(false, $entity->isExactValue());
 
         $entity = new Grid\ColumnFilter(false);
         $this->assertSame(false, $entity->isFilterable());
         $this->assertSame(false, $entity->isRange());
+        $this->assertSame(false, $entity->isExactValue());
 
         $entity->useRange(true);
         $this->assertSame(false, $entity->isFilterable());
         $this->assertSame(true, $entity->isRange());
+        $this->assertSame(false, $entity->isExactValue());
 
+        $entity = new Grid\ColumnFilter(false);
+        $this->assertSame(false, $entity->isFilterable());
+        $this->assertSame(false, $entity->isRange());
+        $this->assertSame(false, $entity->isExactValue());
+
+        $entity->useExactValue(true);
+        $this->assertSame(false, $entity->isFilterable());
+        $this->assertSame(false, $entity->isRange());
+        $this->assertSame(true, $entity->isExactValue());
 
         $type = new Grid\ColumnType('select');
 

@@ -113,7 +113,7 @@ class Doctrine extends AbstractDataProvider
             return $parameters;
         }
 
-        if ($column->getType()->getType() == ColumnType::TYPE_SELECT) {
+        if ($column->getFilter()->isExactValue() || $column->getType()->getType() == ColumnType::TYPE_SELECT) {
             $where->add($queryBuilder->expr()->eq($entityField, ':'.$code));
             $parameters[':'.$code] = $value;
             return $parameters;
