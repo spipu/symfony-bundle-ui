@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
+{% block html_head %}
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>{% block header_title %}{% endblock %}</title>
+{% endblock %}
 {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset('/bundles/bootstrap/css/bootstrap.min.css')}}" >
         <link rel="stylesheet" href="{{ asset('/bundles/fontawesome/css/all.min.css')}}" >
