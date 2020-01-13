@@ -17,7 +17,7 @@
                             {% endfor %}
                         </ul>
                     {%  else %}
-                        {% if data is same as(null) %}
+                        {% if (data is same as(null)) or (data == '') %}
                             -
                         {% else %}
                             {% include field.templateView with {'manager': manager, 'field': field, 'data': data} %}
