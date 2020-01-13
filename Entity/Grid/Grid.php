@@ -147,10 +147,10 @@ class Grid
     }
 
     /**
-     * @param Pager $pager
+     * @param Pager|null $pager
      * @return self
      */
-    public function setPager(Pager $pager): self
+    public function setPager(?Pager $pager): self
     {
         $this->pager = $pager;
 
