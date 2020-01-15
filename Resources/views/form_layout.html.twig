@@ -17,3 +17,12 @@
         </div>
     </div>
 {%- endblock %}
+
+{% block numberunit_widget -%}
+    <div class="input-group">
+        {{- block('number_widget') -}}
+        <div class="input-group-append">
+            <span class="input-group-text">{{ unit }}</span>
+        </div>
+    </div>
+{%- endblock %}

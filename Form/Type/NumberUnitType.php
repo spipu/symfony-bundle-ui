@@ -8,14 +8,15 @@
  * file that was distributed with this source code.
  */
 
+
 namespace Spipu\UiBundle\Form\Type;
 
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class IntegerUnitType extends IntegerType
+class NumberUnitType extends NumberType
 {
     /**
      * @param FormView $view
@@ -47,6 +48,6 @@ class IntegerUnitType extends IntegerType
      */
     public function getBlockPrefix()
     {
-        return 'integerunit';
+        return 'numberunit';
     }
 }
