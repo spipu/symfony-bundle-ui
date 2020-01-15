@@ -166,15 +166,24 @@ class Field implements PositionInterface
     }
 
     /**
+     * @param string $code
+     * @return mixed
+     */
+    public function getOption(string $code)
+    {
+        if (!array_key_exists($code, $this->options)) {
+            return null;
+        }
+
+        return $this->options[$code];
+    }
+
+    /**
      * @return null|string
      */
     public function getLabel(): ?string
     {
-        if (!array_key_exists('label', $this->options)) {
-            return null;
-        }
-
-        return $this->options['label'];
+        return $this->getOption('label');
     }
 
     /**
@@ -202,11 +211,7 @@ class Field implements PositionInterface
      */
     public function getChoices(): ?OptionsInterface
     {
-        if (!array_key_exists('choices', $this->options)) {
-            return null;
-        }
-
-        return $this->options['choices'];
+        return $this->getOption('choices');
     }
 
     /**

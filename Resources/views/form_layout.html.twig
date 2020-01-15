@@ -8,3 +8,12 @@
     -%}
     {{ parent() }}
 {% endblock %}
+
+{% block integerunit_widget -%}
+    <div class="input-group">
+        {{- block('integer_widget') -}}
+        <div class="input-group-append">
+            <span class="input-group-text">{{ unit }}</span>
+        </div>
+    </div>
+{%- endblock %}
