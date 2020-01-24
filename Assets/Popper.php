@@ -15,7 +15,8 @@ namespace Spipu\UiBundle\Assets;
 use Spipu\CoreBundle\Assets\AssetInterface;
 
 /**
- * All the assets
+ * Popper asset
+ * https://github.com/popperjs/popper-core/releases
  */
 class Popper implements AssetInterface
 {

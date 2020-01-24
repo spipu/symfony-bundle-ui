@@ -15,7 +15,8 @@ namespace Spipu\UiBundle\Assets;
 use Spipu\CoreBundle\Assets\AssetInterface;
 
 /**
- * All the assets
+ * Jquery asset
+ * https://jquery.com/download/
  */
 class Jquery implements AssetInterface
 {

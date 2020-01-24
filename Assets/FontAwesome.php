@@ -15,7 +15,8 @@ namespace Spipu\UiBundle\Assets;
 use Spipu\CoreBundle\Assets\AssetInterface;
 
 /**
- * All the assets
+ * FontAwesome asset
+ * https://fontawesome.com/changelog/latest
  */
 class FontAwesome implements AssetInterface
 {
@@ -28,7 +29,7 @@ class FontAwesome implements AssetInterface
      * Jquery constructor.
      * @param string $version
      */
-    public function __construct(string $version = '5.11.2')
+    public function __construct(string $version = '5.12.0')
     {
         $this->version = $version;
     }
