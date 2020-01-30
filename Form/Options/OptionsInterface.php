@@ -21,6 +21,11 @@ interface OptionsInterface
     public function getOptions(): array;
 
     /**
+     * @return bool
+     */
+    public function resetOptions(): bool;
+
+    /**
      * @return array
      */
     public function getOptionsWithEmptyValue(): array;

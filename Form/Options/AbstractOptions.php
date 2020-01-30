@@ -39,6 +39,16 @@ abstract class AbstractOptions implements OptionsInterface
     }
 
     /**
+     * @return bool
+     */
+    public function resetOptions(): bool
+    {
+        $this->options = null;
+
+        return true;
+    }
+
+    /**
      * @return string[]
      */
     public function getOptionsWithEmptyValue(): array
