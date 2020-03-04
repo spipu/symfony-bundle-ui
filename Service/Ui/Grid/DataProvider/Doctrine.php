@@ -34,6 +34,11 @@ class Doctrine extends AbstractDataProvider
     private $conditions = [];
 
     /**
+     * @var array
+     */
+    private $mappingValues = [];
+
+    /**
      * Doctrine constructor.
      * @param ContainerInterface $container
      */
@@ -50,6 +55,20 @@ class Doctrine extends AbstractDataProvider
     public function addCondition($condition): void
     {
         $this->conditions[] = $condition;
+    }
+
+    /**
+     * @param string $fieldCode
+     * @param mixed $originalValue
+     * @param mixed $newValue
+     * @return void
+     */
+    public function addMappingValue(string $fieldCode, $originalValue, $newValue): void
+    {
+        if (!array_key_exists($fieldCode, $this->mappingValues)) {
+            $this->mappingValues[$fieldCode] = [];
+        }
+        $this->mappingValues[$fieldCode][$originalValue] = $newValue;
     }
 
     /**
@@ -104,18 +123,18 @@ class Doctrine extends AbstractDataProvider
         if ($column->getFilter()->isRange()) {
             if (is_array($value) && array_key_exists('from', $value)) {
                 $where->add($queryBuilder->expr()->gte($entityField, ':'.$code.'_from'));
-                $parameters[':'.$code.'_from'] = $value['from'];
+                $parameters[':'.$code.'_from'] = $this->applyMappingValue($code, $value['from']);
             }
             if (is_array($value) && array_key_exists('to', $value)) {
                 $where->add($queryBuilder->expr()->lte($entityField, ':'.$code.'_to'));
-                $parameters[':'.$code.'_to'] = $value['to'];
+                $parameters[':'.$code.'_to'] = $this->applyMappingValue($code, $value['to']);
             }
             return $parameters;
         }
 
         if ($column->getFilter()->isExactValue() || $column->getType()->getType() == ColumnType::TYPE_SELECT) {
             $where->add($queryBuilder->expr()->eq($entityField, ':'.$code));
-            $parameters[':'.$code] = $value;
+            $parameters[':'.$code] = $this->applyMappingValue($code, $value);
             return $parameters;
         }
 
@@ -159,5 +178,23 @@ class Doctrine extends AbstractDataProvider
         }
 
         return $queryBuilder->getQuery()->execute();
+    }
+
+    /**
+     * @param string $fieldCode
+     * @param mixed $originalValue
+     * @return mixed
+     */
+    private function applyMappingValue(string $fieldCode, $originalValue)
+    {
+        if (!array_key_exists($fieldCode, $this->mappingValues)) {
+            return $originalValue;
+        }
+
+        if (!array_key_exists($originalValue, $this->mappingValues[$fieldCode])) {
+            return $originalValue;
+        }
+
+        return $this->mappingValues[$fieldCode][$originalValue];
     }
 }
