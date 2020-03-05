@@ -78,7 +78,7 @@ class Doctrine extends AbstractDataProvider
     public function prepareQueryBuilder(): QueryBuilder
     {
         $this->validate();
-        
+
         /** @var EntityManagerInterface $entityManager */
         $entityManager = $this->container->get('doctrine.orm.default_entity_manager');
 
@@ -133,8 +133,13 @@ class Doctrine extends AbstractDataProvider
         }
 
         if ($column->getFilter()->isExactValue() || $column->getType()->getType() == ColumnType::TYPE_SELECT) {
-            $where->add($queryBuilder->expr()->eq($entityField, ':'.$code));
-            $parameters[':'.$code] = $this->applyMappingValue($code, $value);
+            $value = $this->applyMappingValue($code, $value);
+            $expression = $queryBuilder->expr()->eq($entityField, ':'.$code);
+            if (is_array($value)) {
+                $expression = $queryBuilder->expr()->in($entityField, ':'.$code);
+            }
+            $where->add($expression);
+            $parameters[':'.$code] = $value;
             return $parameters;
         }
 
