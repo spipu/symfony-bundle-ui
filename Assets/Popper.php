@@ -52,7 +52,7 @@ class Popper implements AssetInterface
         return [
             'popper.js'         => 'js/popper.js',
             'popper.min.js'     => 'js/popper.min.js',
-            'popper.min.js.map' => 'js/popper.min.js.map',
+            // 'popper.min.js.map' => 'js/popper.min.js.map',
         ];
     }
 }
