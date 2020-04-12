@@ -1,10 +1,12 @@
+{% if ((manager.definition.massActions|length > 0)) %}{% set hasMassAction = 1 %}{% else %}{% set hasMassAction=0 %}{% endif %}
+{% if ((manager.definition.rowActions|length > 0)) %}{% set hasRowAction = 1 %}{% else %}{% set hasRowAction=0 %}{% endif %}
 <div class="row {{ manager.definition.option('div-css-class', '') }}">
     <table class="{{ manager.definition.option('table-css-class', 'table table-striped table-hover table-sm') }}">
         <thead class="{{ manager.definition.option('thead-css-class', '') }}">
             <tr>
-                <td colspan="{{ (manager.definition.massActions|length > 0) + (manager.definition.rowActions|length > 0) + manager.definition.columns|length }}">{% apply spaceless %}
+                <td colspan="{{ hasMassAction + hasRowAction + manager.definition.columns|length }}">{% apply spaceless %}
                     <span data-grid-code="{{ manager.definition.code }}" data-grid-role="total-rows">{% trans count manager.nbTotalRows %}spipu.ui.grid.item.found{% endtrans %}</span>
-                        {% if manager.definition.massActions|length > 0 %}
+                        {% if hasMassAction %}
                             <span class="border-right ml-2 mr-2"></span>
                             <span data-grid-code="{{ manager.definition.code }}" data-grid-role="count">0</span> {{ 'spipu.ui.grid.item.selected'|trans }}
                             <ul class="nav" style="display: inline-block">
@@ -47,7 +49,7 @@
                 {% endapply %}</td>
             </tr>
             <tr>
-{% if manager.definition.massActions|length > 0 %}
+{% if hasMassAction %}
                 <th scope="col" style="width: 30px"><input type="checkbox" data-grid-code="{{ manager.definition.code }}" data-grid-role="checkbox-all" /></th>
 {% endif %}
 {% for column in manager.definition.columns %}
@@ -61,7 +63,7 @@
                 <th scope="col">{{ column.name|trans }}</th>
 {%   endif %}
 {% endfor %}
-{% if manager.definition.rowActions|length > 0 %}
+{% if hasRowAction %}
                 <th scope="col"></th>
 {% endif %}
             </tr>
@@ -71,7 +73,7 @@
 {%    include manager.definition.templateRow with {'manager': manager, 'row': row} %}
 {% else %}
             <tr>
-                <td class="text-center" colspan="{{ (manager.definition.massActions|length > 0) + (manager.definition.rowActions|length > 0) + manager.definition.columns|length }}">
+                <td class="text-center" colspan="{{ hasMassAction + hasRowAction + manager.definition.columns|length }}">
                     <div class="alert alert-info">{{ 'spipu.ui.grid.filter.no_result'|trans() }}</div>
                 </td>
             </tr>
