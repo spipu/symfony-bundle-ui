@@ -29,7 +29,7 @@ class FontAwesome implements AssetInterface
      * Jquery constructor.
      * @param string $version
      */
-    public function __construct(string $version = '5.13.0')
+    public function __construct(string $version = '5.13.1')
     {
         $this->version = $version;
     }
