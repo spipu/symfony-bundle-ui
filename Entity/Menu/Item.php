@@ -129,11 +129,30 @@ class Item
         ?string $route = null
     ): Item {
         $item = new Item($name, $code, $route);
-        $item->parentItem = $this;
 
-        $this->childItems[] = $item;
+        $this->addChildItem($item);
 
         return $item;
+    }
+
+    /**
+     * @param Item $item
+     * @return void
+     */
+    protected function setParentItem(Item $item): void
+    {
+        $this->parentItem = $item;
+    }
+
+    /**
+     * @param Item $item
+     * @return void
+     */
+    public function addChildItem(Item $item): void
+    {
+        $item->setParentItem($this);
+
+        $this->childItems[] = $item;
     }
 
     /**
