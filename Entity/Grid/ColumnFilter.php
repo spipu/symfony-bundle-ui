@@ -17,17 +17,22 @@ class ColumnFilter
     /**
      * @var bool
      */
-    private $filterable = false;
+    private $filterable;
 
     /**
      * @var bool
      */
-    private $range = false;
+    private $quickSearch;
 
     /**
      * @var bool
      */
-    private $exactValue = false;
+    private $range;
+
+    /**
+     * @var bool
+     */
+    private $exactValue;
 
     /**
      * @var string|null
@@ -37,12 +42,17 @@ class ColumnFilter
     /**
      * Pager constructor.
      * @param bool $filterable
+     * @param bool $quickSearch
      * @SuppressWarnings(PMD.BooleanArgumentFlag)
      */
     public function __construct(
-        bool $filterable = false
+        bool $filterable = false,
+        bool $quickSearch = false
     ) {
         $this->filterable = $filterable;
+        $this->quickSearch = $quickSearch;
+        $this->range = false;
+        $this->exactValue = false;
     }
 
     /**
@@ -65,6 +75,14 @@ class ColumnFilter
     public function isFilterable(): bool
     {
         return $this->filterable;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isQuickSearch(): bool
+    {
+        return $this->quickSearch;
     }
 
     /**
@@ -134,6 +152,17 @@ class ColumnFilter
     public function useFilterable(bool $filterable): self
     {
         $this->filterable = $filterable;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $quickSearch
+     * @return self
+     */
+    public function useQuickSearch(bool $quickSearch): self
+    {
+        $this->quickSearch = $quickSearch;
 
         return $this;
     }
