@@ -131,7 +131,10 @@ class FormManager implements FormManagerInterface
                     $entityManager->flush();
                 }
 
-                $this->addFlashTrans('success', 'spipu.ui.success.saved');
+                $message = $this->definition->getDefinition()->getValidateSuccessMessage();
+                if ($message != '') {
+                    $this->addFlashTrans('success', $message);
+                }
 
                 return true;
             } catch (\Exception $e) {

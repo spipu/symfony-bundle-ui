@@ -29,6 +29,10 @@ class FormTest extends TestCase
         $this->assertSame(null, $entity->getEntityClassName());
         $entity->setEntityClassName('entity_name');
         $this->assertSame('entity_name', $entity->getEntityClassName());
+
+        $this->assertSame('spipu.ui.success.saved', $entity->getValidateSuccessMessage());
+        $entity->setValidateSuccessMessage('test.translation');
+        $this->assertSame('test.translation', $entity->getValidateSuccessMessage());
     }
 
     public function testEntityFieldSets()

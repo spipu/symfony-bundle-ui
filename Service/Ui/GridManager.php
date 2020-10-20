@@ -27,7 +27,6 @@ use Spipu\UiBundle\Entity\Grid\Action as GridAction;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Twig_Error;
 
 /**
  * @SuppressWarnings(PMD.ExcessiveClassComplexity)
@@ -246,7 +245,6 @@ class GridManager implements GridManagerInterface
 
     /**
      * @return string
-     * @throws Twig_Error
      */
     public function display(): string
     {
@@ -314,7 +312,7 @@ class GridManager implements GridManagerInterface
 
     /**
      * @param GridAction $action
-     * @param EntityInterface $object
+     * @param EntityInterface|null $object
      * @return bool
      * @throws GridException
      */

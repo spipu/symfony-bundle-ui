@@ -42,6 +42,11 @@ class Form
     private $templateView = '@SpipuUi/entity/view.html.twig';
 
     /**
+     * @var string
+     */
+    private $validateSuccessMessage = 'spipu.ui.success.saved';
+
+    /**
      * Form constructor.
      * @param string $code
      * @param string|null $entityClassName
@@ -189,5 +194,24 @@ class Form
         foreach ($this->fieldSets as $fieldSet) {
             $fieldSet->prepareSort();
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getValidateSuccessMessage(): string
+    {
+        return $this->validateSuccessMessage;
+    }
+
+    /**
+     * @param string $validateSuccessMessage
+     * @return $this
+     */
+    public function setValidateSuccessMessage(string $validateSuccessMessage): self
+    {
+        $this->validateSuccessMessage = $validateSuccessMessage;
+
+        return $this;
     }
 }
