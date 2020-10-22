@@ -1,12 +1,16 @@
-$(document).ready(
-    function () {
-        spipuUiInitConfirmAction();
-        spipuUiInitGrid();
-    }
-);
+// spipu-ui.js
 
-function spipuUiInitConfirmAction()
+// Spipu Ui - Global
+function SpipuUi()
 {
+}
+
+SpipuUi.prototype.init = function () {
+    this.initConfirm();
+    this.initGrids();
+}
+
+SpipuUi.prototype.initConfirm = function () {
     $(".confirm-action").click(
         function () {
             let actionName = $(this).data('action-role');
@@ -16,17 +20,21 @@ function spipuUiInitConfirmAction()
             return confirm('Do you really want to ' + actionName + ' this item ?');
         }
     );
-}
+};
 
-function spipuUiInitGrid()
-{
-    $("span[data-grid-role=count]").each(
+SpipuUi.prototype.initGrids = function () {
+    $("span[data-grid-role=total-rows]").each(
         function () {
             new SpipuUiGrid($(this).data('grid-code'));
         }
     )
+};
+
+SpipuUi.prototype.submitForm = function (code) {
+    $("form#form_" + code + " :submit").click();
 }
 
+// Spipu Ui - Grid
 function SpipuUiGrid(code)
 {
     this.code = code;
@@ -34,7 +42,6 @@ function SpipuUiGrid(code)
     this.ids = [];
 
     this.init();
-    this.update();
 }
 
 SpipuUiGrid.prototype.getElement = function (role) {
@@ -46,52 +53,46 @@ SpipuUiGrid.prototype.getValue = function (target) {
 };
 
 SpipuUiGrid.prototype.init = function () {
+    this.initFilters();
+
+    if (this.getElement('checkbox-all')) {
+        this.initMassActions();
+        this.updateMassAction();
+    }
+}
+
+SpipuUiGrid.prototype.initFilters = function () {
+    this.getElement('filter-cancel').click($.proxy(this.resetFilters, this));
+}
+
+SpipuUiGrid.prototype.resetFilters = function () {
+    let form = this.getElement('filter-form');
+
+    form.find('input').val('');
+    form.find('select').val('');
+    form.submit();
+}
+
+SpipuUiGrid.prototype.initMassActions = function () {
     let that = this;
 
     that.getElement('checkbox').prop("checked", false);
     that.getElement('checkbox-all').prop("checked", false);
 
-    that.getElement('checkbox').change(
-        function () {
-            that.checkChange(this)
-        }
-    );
+    that.getElement('checkbox')
+        .change(function () { that.checkChange(this); })
+        .click(function (e) { e.stopPropagation(); })
+        .parent().click(function () { $(this).children().trigger('click'); });
 
-    that.getElement('checkbox').click(
-        function (e) {
-            e.stopPropagation();
-        }
-    );
-    that.getElement('checkbox').parent().click(
-        function () {
-            $(this).children().trigger('click');
-        }
-    );
+    that.getElement('checkbox-all')
+        .change(function () { that.checkAllChange(this); })
+        .click(function (e) { e.stopPropagation(); })
+        .parent().click(function () { $(this).children().trigger('click'); });
 
-    that.getElement('checkbox-all').change(
-        function () {
-            that.checkAllChange(this);
-        }
-    );
-    that.getElement('checkbox-all').click(
-        function (e) {
-            e.stopPropagation();
-        }
-    );
-    that.getElement('checkbox-all').parent().click(
-        function () {
-            $(this).children().trigger('click');
-        }
-    );
-
-    that.getElement('action').click(
-        function () {
-            that.actionSelected(this)
-        }
-    );
+    that.getElement('action').click(function () { that.actionSelected(this) });
 };
 
-SpipuUiGrid.prototype.update = function () {
+SpipuUiGrid.prototype.updateMassAction = function () {
     this.count = this.ids.length;
     this.getElement('count').html(this.count);
 
@@ -121,7 +122,7 @@ SpipuUiGrid.prototype.checkChange = function (target) {
 
     this.getElement('checkbox-all').prop("checked", false);
 
-    this.update();
+    this.updateMassAction();
 };
 
 SpipuUiGrid.prototype.checkAllChange = function (target) {
@@ -139,7 +140,7 @@ SpipuUiGrid.prototype.checkAllChange = function (target) {
         );
     }
 
-    that.update();
+    that.updateMassAction();
 };
 
 SpipuUiGrid.prototype.actionSelected = function (target) {
@@ -162,3 +163,11 @@ SpipuUiGrid.prototype.actionSelected = function (target) {
 
     form.appendTo('body').submit();
 };
+
+window.spipuUi = new SpipuUi();
+
+$(document).ready(
+    function () {
+        spipuUi.init();
+    }
+);

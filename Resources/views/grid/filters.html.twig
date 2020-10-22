@@ -8,7 +8,7 @@
             </div>
             <div class="collapse {% if manager.request.filters|length > 0 %}show{% endif %}" id="filterCollapse">
                 <div class="card-body">
-                    <form method="get" onsubmit="return true;" class="form-inline" action="{{ manager.currentUrl }}">
+                    <form method="get" onsubmit="return true;" class="form-inline" action="{{ manager.currentUrl }}" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-form">
                         <div class="col-12">
                             <div class="row mb-2">
 {% for column in infoFilters %}
@@ -45,10 +45,10 @@
                         <div class="col-12">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-6">
-                                    <button type="button" class="btn btn-secondary m-2 btn-block" onclick="$('input').val(''); $('select').val(''); this.form.submit();"><i class="fas fa-times"></i> {{ 'spipu.ui.grid.filter.clean'|trans }}</button>
+                                    <button type="button" class="btn btn-secondary m-2 btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-cancel"><i class="fas fa-times"></i> {{ 'spipu.ui.grid.filter.clean'|trans }}</button>
                                 </div>
                                 <div class="col-xs-12 col-sm-6">
-                                    <button type="submit" class="btn btn-primary m-2 btn-block"><i class="fas fa-search"></i> {{ 'spipu.ui.grid.filter.search'|trans }}</button>
+                                    <button type="submit" class="btn btn-primary m-2 btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-submit"><i class="fas fa-search"></i> {{ 'spipu.ui.grid.filter.search'|trans }}</button>
                                 </div>
                             </div>
                         </div>
