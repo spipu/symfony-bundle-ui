@@ -20,6 +20,7 @@ use Symfony\Component\Routing\RouterInterface;
 /**
  * @SuppressWarnings(PMD.CyclomaticComplexity)
  * @SuppressWarnings(PMD.NPathComplexity)
+ * @SuppressWarnings(PMD.ExcessiveClassComplexity)
  */
 class GridRequest
 {
@@ -30,6 +31,7 @@ class GridRequest
     const KEY_SORT_COLUMN  = 'sc';
     const KEY_SORT_ORDER   = 'so';
     const KEY_FILTERS      = 'fl';
+    const KEY_QUICK_SEARCH = 'qs';
 
     /**
      * @var SymfonyRequest
@@ -82,6 +84,11 @@ class GridRequest
     private $filters = [];
 
     /**
+     * @var array
+     */
+    private $quickSearch = [];
+
+    /**
      * @var string
      */
     private $routeName;
@@ -131,6 +138,7 @@ class GridRequest
         $this->preparePager();
         $this->prepareSort();
         $this->prepareFilters();
+        $this->prepareQuickSearch();
     }
 
     /**
@@ -265,6 +273,39 @@ class GridRequest
     }
 
     /**
+     * @return void
+     */
+    private function prepareQuickSearch(): void
+    {
+        $this->quickSearch = [];
+        $this->quickSearch = $this->getSessionValue('quick_search', $this->quickSearch);
+        $this->quickSearch = (array) $this->request->get(self::KEY_QUICK_SEARCH, $this->quickSearch);
+
+        if (!array_key_exists('field', $this->quickSearch) || !array_key_exists('value', $this->quickSearch)) {
+            $this->quickSearch = [];
+            $this->setSessionValue('quick_search', $this->quickSearch);
+            return;
+        }
+
+        $this->quickSearch['field'] = (string) $this->quickSearch['field'];
+        $this->quickSearch['value'] = trim((string) $this->quickSearch['value']);
+
+
+        $column = $this->definition->getColumn($this->quickSearch['field']);
+        if ($column === null || !$column->getFilter()->isQuickSearch() || $this->quickSearch['value'] === '') {
+            $this->quickSearch = [];
+            $this->setSessionValue('quick_search', $this->quickSearch);
+            return;
+        }
+
+        $this->setSessionValue('quick_search', $this->quickSearch);
+        if (!empty($this->quickSearch)) {
+            $this->filters = [];
+            $this->setSessionValue('filters', $this->filters);
+        }
+    }
+
+    /**
      * @param mixed $value
      * @return array
      */
@@ -283,7 +324,7 @@ class GridRequest
             if ($valueF === '') {
                 $valueF = null;
             }
-        };
+        }
 
         $valueT = null;
         if (array_key_exists('to', $value)) {
@@ -294,7 +335,7 @@ class GridRequest
             if ($valueT === '') {
                 $valueT = null;
             }
-        };
+        }
 
         $value = [];
         if ($valueF !== null) {
@@ -390,6 +431,30 @@ class GridRequest
         }
 
         return $this->filters[$key][$subKey];
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getQuickSearchField() :?string
+    {
+        if (!array_key_exists('field', $this->quickSearch)) {
+            return null;
+        }
+
+        return $this->quickSearch['field'];
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getQuickSearchValue() :?string
+    {
+        if (!array_key_exists('value', $this->quickSearch)) {
+            return null;
+        }
+
+        return $this->quickSearch['value'];
     }
 
     /**

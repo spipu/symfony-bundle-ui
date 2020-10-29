@@ -432,6 +432,22 @@ class GridManager implements GridManagerInterface
     }
 
     /**
+     * Get the list of the columns to filter
+     * @return Column[]
+     */
+    public function getInfoQuickSearch(): array
+    {
+        $columns = [];
+        foreach ($this->definition->getColumns() as $column) {
+            if ($column->getFilter()->isQuickSearch()) {
+                $columns[$column->getCode()] = $column;
+            }
+        }
+
+        return $columns;
+    }
+
+    /**
      * @param int $maxPages
      * @return array
      */

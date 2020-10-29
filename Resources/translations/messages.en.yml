@@ -19,12 +19,15 @@ spipu:
                 at_least_one:   "You must select at least one item"
 
             filter:
-                title:          "Filters"
-                search:         "Search"
+                title:          "Advanced Search"
+                search:         "Advanced Search"
                 clean:          "Clean Filters"
                 from:           "From"
                 to:             "To"
                 no_result:      "No item found"
+
+            quick_search:
+                search: "Search"
 
             action:
                 label:          "Actions"

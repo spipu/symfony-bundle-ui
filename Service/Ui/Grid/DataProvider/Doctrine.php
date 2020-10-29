@@ -98,6 +98,15 @@ class Doctrine extends AbstractDataProvider
             $parameters += $this->prepareQueryBuilderFilter($queryBuilder, $where, $code, $value);
         }
 
+        if ($this->request->getQuickSearchField() && $this->request->getQuickSearchValue()) {
+            $parameters += $this->prepareQueryBuilderQuickSearch(
+                $queryBuilder,
+                $where,
+                $this->request->getQuickSearchField(),
+                $this->request->getQuickSearchValue()
+            );
+        }
+
         if (count($parameters) > 0 || count($this->conditions) > 0) {
             $queryBuilder->where($where);
             $queryBuilder->setParameters($parameters);
@@ -113,8 +122,12 @@ class Doctrine extends AbstractDataProvider
      * @param mixed $value
      * @return array
      */
-    private function prepareQueryBuilderFilter(QueryBuilder $queryBuilder, Andx $where, string $code, $value): array
-    {
+    private function prepareQueryBuilderFilter(
+        QueryBuilder $queryBuilder,
+        Andx $where,
+        string $code,
+        $value
+    ): array {
         $parameters = [];
 
         $column = $this->definition->getColumn($code);
@@ -145,6 +158,30 @@ class Doctrine extends AbstractDataProvider
 
         $where->add($queryBuilder->expr()->like($entityField, ':'.$code));
         $parameters[':'.$code] = '%'.$value.'%';
+
+        return $parameters;
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param Andx $where
+     * @param string $code
+     * @param mixed $value
+     * @return array
+     */
+    private function prepareQueryBuilderQuickSearch(
+        QueryBuilder $queryBuilder,
+        Andx $where,
+        string $code,
+        $value
+    ): array {
+        $parameters = [];
+
+        $column = $this->definition->getColumn($code);
+        $entityField = 'main.'.$column->getEntityField();
+
+        $where->add($queryBuilder->expr()->like($entityField, ':'.$code));
+        $parameters[':'.$code] = $value.'%';
 
         return $parameters;
     }
