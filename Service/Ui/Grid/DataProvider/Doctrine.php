@@ -98,7 +98,7 @@ class Doctrine extends AbstractDataProvider
             $parameters += $this->prepareQueryBuilderFilter($queryBuilder, $where, $code, $value);
         }
 
-        if ($this->request->getQuickSearchField() && $this->request->getQuickSearchValue()) {
+        if ($this->request && $this->request->getQuickSearchField() && $this->request->getQuickSearchValue()) {
             $parameters += $this->prepareQueryBuilderQuickSearch(
                 $queryBuilder,
                 $where,
