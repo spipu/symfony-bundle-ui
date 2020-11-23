@@ -44,7 +44,7 @@ spipu:
 
         success:
             created:  "The item has been created"
-            udpated:  "The item has been updated"
+            updated:  "The item has been updated"
             deleted:  "The item has been deleted"
             saved:    "The item has been saved"
 

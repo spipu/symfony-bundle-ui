@@ -52,3 +52,19 @@ table.table thead th.sorting_desc span.fa-angle-down
 {
     color: black;
 }
+
+div.tab-sub-actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 1.25rem;
+    padding: 0.3rem;
+}
+
+div.tab-sub-actions a {
+    background-color: white;
+}
+
+ul.checkbox-tree, ul.checkbox-tree ul {
+    list-style: none;
+}
