@@ -68,3 +68,7 @@ div.tab-sub-actions a {
 ul.checkbox-tree, ul.checkbox-tree ul {
     list-style: none;
 }
+
+ul.checkbox-tree ul.useless-node {
+    opacity: 0.4;
+}

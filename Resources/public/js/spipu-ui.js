@@ -8,6 +8,7 @@ function SpipuUi()
 SpipuUi.prototype.init = function () {
     this.initConfirm();
     this.initGrids();
+    this.initCheckboxTrees();
 }
 
 SpipuUi.prototype.initConfirm = function () {
@@ -26,6 +27,14 @@ SpipuUi.prototype.initGrids = function () {
     $("span[data-grid-role=total-rows]").each(
         function () {
             new SpipuUiGrid($(this).data('grid-code'));
+        }
+    )
+};
+
+SpipuUi.prototype.initCheckboxTrees = function () {
+    $("ul.checkbox-tree").each(
+        function () {
+            new SpipuUiCheckboxTree($(this));
         }
     )
 };
@@ -163,6 +172,34 @@ SpipuUiGrid.prototype.actionSelected = function (target) {
 
     form.appendTo('body').submit();
 };
+
+// Spipu Ui - CheckBox Tree
+function SpipuUiCheckboxTree(mainNode)
+{
+    this.mainNode = mainNode
+    this.code = mainNode.data('tree-code');
+    this.init();
+}
+
+SpipuUiCheckboxTree.prototype.init = function () {
+    let that = this;
+
+    let inputs = this.mainNode.find('input[type=checkbox]');
+
+    inputs.on('change', function () { that.change($(this)); });
+    inputs.each(function() { that.toggleChildren($(this)); });
+}
+
+SpipuUiCheckboxTree.prototype.change = function (node) {
+    node.closest('li').find('ul li input[type=checkbox]').prop('checked', false);
+
+    this.toggleChildren(node);
+
+}
+
+SpipuUiCheckboxTree.prototype.toggleChildren = function (node) {
+    node.closest('li').find('ul').toggleClass('useless-node', node.prop('checked'));
+}
 
 window.spipuUi = new SpipuUi();
 
