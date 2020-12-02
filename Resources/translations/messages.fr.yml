@@ -1,0 +1,52 @@
+spipu:
+    ui:
+        options:
+            value_disabled: "Désactiver"
+            value_enabled:  "Activer"
+            value_false: "Vrai"
+            value_true:  "Faux"
+            value_yes: "Oui"
+            value_no:  "Non"
+
+        page:
+            home:  "Acueil"
+            admin: "Admin"
+
+        grid:
+            item:
+                found:          "{0} Aucun item trouvé|{1} %count% item trouvé|]1,Inf[ %count% items trouvés"
+                selected:       "sélectionné(s)"
+                at_least_one:   "Vous devez sélectionner au moins un item"
+
+            filter:
+                title:          "Recherche Avancée"
+                search:         "Recherche Avancée"
+                clean:          "Effacer les Filtres"
+                from:           "De"
+                to:             "A"
+                no_result:      "Aucun item trouvé"
+
+            quick_search:
+                search: "Recherche"
+
+            action:
+                label:          "Actions"
+
+        action:
+            back:    "Retour"
+            create:  "Créer"
+            edit:    "Editer"
+            delete:  "Supprimer"
+            save:    "Sauvegarder"
+            show:    "Afficher"
+            submit:  "Soumettre"
+            update:  "Mettre à jour"
+
+        success:
+            created:  "L'item a été créé"
+            updated:  "L'item a été mis à jour"
+            deleted:  "L'item a été supprimé"
+            saved:    "L'item a été sauvegardé"
+
+        error:
+            token:    "Token Invalide !"
