@@ -12,12 +12,15 @@ declare(strict_types = 1);
 
 namespace Spipu\UiBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 trait PositionTrait
 {
     /**
      * @var int
+     * @ORM\Column(type="integer", nullable=false)
      */
-    private $position;
+    private $position = 0;
 
     /**
      * @param int $position
