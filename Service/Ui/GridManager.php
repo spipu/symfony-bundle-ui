@@ -384,6 +384,10 @@ class GridManager implements GridManagerInterface
                     $granted = $granted && !in_array($value, $condValue);
                     break;
 
+                case 'callback':
+                    $granted = $granted && call_user_func_array($condValue, [$object]);
+                    break;
+
                 default:
                     throw new GridException('Unknown Action Condition Type');
             }
