@@ -8,7 +8,12 @@
 {% endfor %}
 {% if manager.definition.rowActions|length > 0 %}
     <td data-grid-role="row-actions" class="text-right">{% apply spaceless %}
-        {%  include manager.definition.templateActions with {'manager': manager, 'row': row} %}
+        {%  include manager.definition.templateActions with {
+            'manager': manager,
+            'actions': manager.definition.rowActions,
+            'actionParams': { (manager.definition.requestPrimaryKey): attribute(row, manager.definition.dataProviderPrimaryKey)},
+            'row': row
+        } %}
     {% endapply %}</td>
 {% endif %}
 </tr>

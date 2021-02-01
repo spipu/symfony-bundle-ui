@@ -9,9 +9,9 @@
                         {% if hasMassAction %}
                             <span class="border-right ml-2 mr-2"></span>
                             <span data-grid-code="{{ manager.definition.code }}" data-grid-role="count">0</span> {{ 'spipu.ui.grid.item.selected'|trans }}
-                            <ul class="nav" style="display: inline-block">
+                            <ul class="nav pl-2" style="display: inline-block">
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle p-0 pl-2" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{ 'spipu.ui.grid.action.label'|trans }}</a>
+                                    <a class="nav-link dropdown-toggle p-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{ 'spipu.ui.grid.action.label'|trans }}</a>
                                     <div class="dropdown-menu">
                                         {% for action in manager.definition.massActions %}{% if manager.isGrantedAction(action) %}
                                             <span class="dropdown-item" data-grid-code="{{ manager.definition.code }}" data-grid-role="action" data-grid-href="{{ path(action.routeName, action.routeParams) }}">
@@ -25,27 +25,16 @@
                                 </li>
                             </ul>
                         {% endif %}
-                        <span class="float-right">
-                            {% if manager.definition.globalActions|length == 1 %}
-                                {% set action = manager.definition.globalActions|first %}
-                                {% if manager.isGrantedAction(action) %}
-                                    <a href="{{ path(action.routeName, action.routeParams) }}" class="pt-0 pb-0 ml-1 btn btn-sm btn-outline-{{ action.cssClass }}">{% if action.icon %}<i class="fas fa-{{ action.icon }}"></i> {% endif %}{{ action.name|trans }}</a>
-                                {% endif %}
-                            {%  elseif manager.definition.globalActions|length > 1 %}
-                                <ul class="nav">
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle p-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{ 'spipu.ui.grid.action.label'|trans }}</a>
-                                        <div class="dropdown-menu">
-                                            {% for action in manager.definition.globalActions %}{% if manager.isGrantedAction(action) %}
-                                                <a href="{{ path(action.routeName, action.routeParams) }}" class="dropdown-item">
-                                                    <div class="btn btn-sm btn-outline-{{ action.cssClass }} w-100">{%  if action.icon %}<i class="fas fa-{{ action.icon }}"></i> {% endif %}{{ action.name|trans }}</div>
-                                                </a>
-                                            {% endif %}{% endfor %}
-                                        </div>
-                                    </li>
-                                </ul>
-                            {% endif %}
-                        </span>
+                        {% if manager.definition.globalActions|length > 0 %}
+                            <span class="float-right">
+                                {%  include manager.definition.templateActions with {
+                                    'manager': manager,
+                                    'actions': manager.definition.globalActions,
+                                    'actionParams': {},
+                                    'row': null
+                                } %}
+                            </span>
+                        {% endif %}
                 {% endapply %}</td>
             </tr>
             <tr>
