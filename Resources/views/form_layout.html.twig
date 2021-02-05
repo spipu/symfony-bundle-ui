@@ -2,7 +2,7 @@
 
 {% block file_widget -%}
     {%- set attr = attr|merge({
-            placeholder: "Please select a file ...",
+            placeholder: 'spipu.ui.field.file.placeholder'|trans,
             onchange: "this.parentElement.getElementsByTagName('label')[0].innerText = this.value.replace(/\\\\/g, '/').split('/').pop();"
         })
     -%}

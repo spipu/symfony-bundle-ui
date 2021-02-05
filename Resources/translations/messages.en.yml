@@ -50,3 +50,8 @@ spipu:
 
         error:
             token:    "Invalid Token!"
+
+        field:
+            file:
+                placeholder: "Please select a file ..."
+                action:      "Browse"
