@@ -7,6 +7,7 @@
         })
     -%}
     {{ parent() }}
+    <style type="text/css">.custom-file-label::after { content: "{{ 'spipu.ui.field.file.action'|trans }}"; }</style>
 {% endblock %}
 
 {% block integerunit_widget -%}
