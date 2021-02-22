@@ -1,7 +1,7 @@
 {% if actions|length == 1 %}
     {% set action = actions|first %}
     {% if manager.isGrantedAction(action, row) %}
-        <a href="{{ path(action.routeName, action.routeParams|merge(actionParams)) }}" class="pt-0 pb-0 ml-1 btn btn-sm btn-outline-{{ action.cssClass }}">{% if action.icon %}<i class="fas fa-{{ action.icon }}"></i> {% endif %}{{ action.name|trans }}</a>
+        <a href="{{ manager.buildActionUrl(action, actionParams, row) }}" class="pt-0 pb-0 ml-1 btn btn-sm btn-outline-{{ action.cssClass }}">{% if action.icon %}<i class="fas fa-{{ action.icon }}"></i> {% endif %}{{ action.name|trans }}</a>
     {% endif %}
 {%  else %}
     <ul class="nav">
@@ -9,7 +9,7 @@
             <a class="nav-link dropdown-toggle p-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{ 'spipu.ui.grid.action.label'|trans }}</a>
             <div class="dropdown-menu">
     {% for action in actions %}{% if manager.isGrantedAction(action, row) %}
-                <a href="{{ path(action.routeName, action.routeParams|merge(actionParams)) }}" class="dropdown-item">
+                <a href="{{ manager.buildActionUrl(action, actionParams, row) }}" class="dropdown-item">
                     <div class="btn btn-sm btn-outline-{{ action.cssClass }} w-100">{%  if action.icon %}<i class="fas fa-{{ action.icon }}"></i> {% endif %}{{ action.name|trans }}</div>
                 </a>
     {% endif %}{% endfor %}

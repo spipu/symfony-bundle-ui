@@ -13,6 +13,7 @@ declare(strict_types = 1);
 namespace Spipu\UiBundle\Service\Ui;
 
 use Spipu\UiBundle\Entity\EntityInterface;
+use Spipu\UiBundle\Entity\Grid\Action;
 use Spipu\UiBundle\Entity\Grid\Column;
 use Spipu\UiBundle\Event\GridDefinitionEvent;
 use Spipu\UiBundle\Exception\GridException;
@@ -54,6 +55,11 @@ class GridManager implements GridManagerInterface
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
+
+    /**
+     * @var RouterInterface
+     */
+    private $router;
 
     /**
      * @var GridDefinition
@@ -113,6 +119,7 @@ class GridManager implements GridManagerInterface
         $this->container = $container;
         $this->authorizationChecker = $authorizationChecker;
         $this->eventDispatcher = $eventDispatcher;
+        $this->router = $router;
         $this->definition = $gridDefinition->getDefinition();
 
         $event = new GridDefinitionEvent($this->definition);
@@ -509,5 +516,28 @@ class GridManager implements GridManagerInterface
             'active'   => (!$disabled && ($page === $this->request->getPageCurrent())),
             'disabled' => $disabled
         );
+    }
+
+    /**
+     * @param GridAction $action
+     * @param array $actionParams
+     * @param EntityInterface|null $row
+     * @return string
+     */
+    public function buildActionUrl(Action $action, array $actionParams, ?EntityInterface $row): string
+    {
+        if ($action->getBuildCallback()) {
+            return call_user_func_array(
+                $action->getBuildCallback(),
+                [
+                    $this->router,
+                    $action,
+                    $actionParams,
+                    $row
+                ]
+            );
+        }
+
+        return $this->router->generate($action->getRouteName(), array_merge($action->getRouteParams(), $actionParams));
     }
 }

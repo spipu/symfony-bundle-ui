@@ -60,6 +60,11 @@ class Action implements PositionInterface
     private $neededRole = null;
 
     /**
+     * @var callable|null
+     */
+    private $buildCallback = null;
+
+    /**
      * Action constructor.
      * @param string $code
      * @param string $name
@@ -186,6 +191,25 @@ class Action implements PositionInterface
     public function setIcon(?string $icon): self
     {
         $this->icon = $icon;
+
+        return $this;
+    }
+
+    /**
+     * @return callable|null
+     */
+    public function getBuildCallback(): ?callable
+    {
+        return $this->buildCallback;
+    }
+
+    /**
+     * @param callable|null $buildCallback
+     * @return self
+     */
+    public function setBuildCallback(?callable $buildCallback): self
+    {
+        $this->buildCallback = $buildCallback;
 
         return $this;
     }
