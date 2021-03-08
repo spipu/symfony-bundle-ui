@@ -6,6 +6,8 @@ use Spipu\UiBundle\Tests\SpipuUiMock;
 use Spipu\UiBundle\Twig\OptionsExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Twig\Error\Error;
+use Twig\Extension\ExtensionInterface;
 
 class OptionsExtensionTest extends TestCase
 {
@@ -33,7 +35,7 @@ class OptionsExtensionTest extends TestCase
     public function testExtension()
     {
         $extension = $this->getExtension();
-        $this->assertTrue($extension instanceof \Twig_ExtensionInterface);
+        $this->assertTrue($extension instanceof ExtensionInterface);
     }
 
     public function testFilters()
@@ -102,7 +104,7 @@ class OptionsExtensionTest extends TestCase
 
         $extension = $this->getExtension();
 
-        $this->expectException('\Twig_Error');
+        $this->expectException(Error::class);
         $extension->getLabelFromOptionName('value', $serviceName);
     }
 }

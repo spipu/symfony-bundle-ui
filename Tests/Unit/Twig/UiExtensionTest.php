@@ -6,6 +6,7 @@ use Spipu\UiBundle\Entity\Menu\Item;
 use Spipu\UiBundle\Service\Menu\Manager as MenuManager;
 use Spipu\UiBundle\Service\Ui\UiManagerInterface;
 use Spipu\UiBundle\Twig\UiExtension;
+use Twig\Extension\ExtensionInterface;
 
 class UiExtensionTest extends TestCase
 {
@@ -34,7 +35,7 @@ class UiExtensionTest extends TestCase
     public function testExtension()
     {
         $extension = $this->getExtension();
-        $this->assertTrue($extension instanceof \Twig_ExtensionInterface);
+        $this->assertTrue($extension instanceof ExtensionInterface);
     }
 
     public function testFunctions()
