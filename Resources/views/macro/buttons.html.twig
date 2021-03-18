@@ -1,11 +1,11 @@
 {% macro defaultLink(url, message, class, icon, id, role) %}
-    <a href="{{ url }}" {% if id is not null %}id="{{ id }}"{% endif %} {% if role is not null %}data-action-role="{{ role }}"{% endif %} class="btn ml-2 btn-outline-{{ class }}">{% if icon is not null %}<i class="fas fa-{{ icon }}"></i> {% endif %}{{ message|trans }}</a>
+    <a href="{{ url }}" {% if id is not null %}id="{{ id }}"{% endif %} {% if role is not null %}data-action-role="{{ role }}"{% endif %} class="ml-2 spipu-ui-btn btn btn-outline-{{ class }}">{% if icon is not null %}<i class="fas fa-{{ icon }}"></i> {% endif %}{{ message|trans }}</a>
 {% endmacro %}
 
 {% macro defaultButton(action, message, class, icon, id, role) %}
     {% set buttonType = 'button' %}
     {% if action is empty %}{% set buttonType = 'submit' %}{% endif %}
-    <button type="{{ buttonType }}" {% if action is not null %}onclick="{{ action }}"{% endif %} {% if id is not null %}id="{{ id }}"{% endif %} {% if role is not null %}data-action-role="{{ role }}"{% endif %} class="btn ml-2 btn-outline-{{ class }}" >{% if icon is not null %}<i class="fas fa-{{ icon }}"></i> {% endif %}{{ message|trans() }}</button>
+    <button type="{{ buttonType }}" {% if action is not null %}onclick="{{ action }}"{% endif %} {% if id is not null %}id="{{ id }}"{% endif %} {% if role is not null %}data-action-role="{{ role }}"{% endif %} class="ml-2 spipu-ui-btn btn btn-outline-{{ class }}" >{% if icon is not null %}<i class="fas fa-{{ icon }}"></i> {% endif %}{{ message|trans() }}</button>
 {% endmacro %}
 
 {% macro create(url, message, id) %}
