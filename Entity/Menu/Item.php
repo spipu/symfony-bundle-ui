@@ -27,47 +27,52 @@ class Item
     /**
      * @var string|null
      */
-    private $name = null;
+    private $name;
 
     /**
      * @var string|null
      */
-    private $code = null;
+    private $code;
 
     /**
      * @var string|null
      */
-    private $route = null;
+    private $route;
+
+    /**
+     * @var array
+     */
+    private $routeParams;
 
     /**
      * @var bool|null
      */
-    private $connected = null;
+    private $connected;
 
     /**
      * @var string|null
      */
-    private $role = null;
+    private $role;
 
     /**
      * @var bool
      */
-    private $allowed = false;
+    private $allowed;
 
     /**
      * @var bool
      */
-    private $active = false;
+    private $active;
 
     /**
      * @var Item[]
      */
-    private $childItems = [];
+    private $childItems;
 
     /**
      * @var Item|null
      */
-    private $parentItem = null;
+    private $parentItem;
 
     /**
      * @var string|null
@@ -79,11 +84,13 @@ class Item
      * @param string $name
      * @param null|string $code
      * @param null|string $route
+     * @param array $routeParams
      */
     public function __construct(
         string $name,
         ?string $code = null,
-        ?string $route = null
+        ?string $route = null,
+        array $routeParams = []
     ) {
         self::$lastId++;
 
@@ -91,11 +98,13 @@ class Item
         $this->name = $name;
         $this->code = $code;
         $this->route = $route;
+        $this->routeParams = $routeParams;
         $this->connected = null;
         $this->role = null;
         $this->childItems = [];
         $this->parentItem = null;
         $this->active = false;
+        $this->allowed = false;
     }
 
     /**
@@ -120,15 +129,16 @@ class Item
      * @param string $name
      * @param null|string $code
      * @param null|string $route
-     *
+     * @param array $routeParams
      * @return Item
      */
     public function addChild(
         string $name,
         ?string $code = null,
-        ?string $route = null
+        ?string $route = null,
+        array $routeParams = []
     ): Item {
-        $item = new Item($name, $code, $route);
+        $item = new Item($name, $code, $route, $routeParams);
 
         $this->addChildItem($item);
 
@@ -185,6 +195,14 @@ class Item
     public function getRoute(): ?string
     {
         return $this->route;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRouteParams(): array
+    {
+        return $this->routeParams;
     }
 
     /**

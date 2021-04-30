@@ -16,6 +16,7 @@ class ItemTest extends TestCase
         $this->assertSame('main_name', $main->getName());
         $this->assertSame('main_code', $main->getCode());
         $this->assertSame('main_route', $main->getRoute());
+        $this->assertSame([], $main->getRouteParams());
         $this->assertSame(null, $main->getIcon());
         $this->assertSame(null, $main->getConnected());
         $this->assertSame(null, $main->getRole());
@@ -55,9 +56,18 @@ class ItemTest extends TestCase
         $this->assertSame('child_name', $child->getName());
         $this->assertSame('child_code', $child->getCode());
         $this->assertSame('child_route', $child->getRoute());
-
+        $this->assertSame([], $child->getRouteParams());
         $this->assertSame($main, $child->getParentItem());
         $this->assertSame([$child], $main->getChildItems());
+
+        $otherChild = $main->addChild('child_name2', 'child_code2', 'child_route2', ['foo' => 'bar']);
+        $this->assertSame(3, $otherChild->getId());
+        $this->assertSame('child_name2', $otherChild->getName());
+        $this->assertSame('child_code2', $otherChild->getCode());
+        $this->assertSame('child_route2', $otherChild->getRoute());
+        $this->assertSame(['foo' => 'bar'], $otherChild->getRouteParams());
+        $this->assertSame($main, $child->getParentItem());
+        $this->assertSame([$child, $otherChild], $main->getChildItems());
 
         Item::resetAll();
     }
