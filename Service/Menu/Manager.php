@@ -83,7 +83,7 @@ class Manager
             $active  = ($active  || $childMenuItem->isActive());
         }
         if ($active) {
-            $menuItem->setActive($active);
+            $menuItem->setActive(true);
         }
         if ($menuItem->getRoute() === null) {
             $menuItem->setAllowed($allowed);
@@ -94,7 +94,7 @@ class Manager
      * Checks if the attributes are granted against the current authentication token and optionally supplied subject.
      *
      * @param bool|null $connected
-     * @param string $role
+     * @param string|null $role
      * @return bool
      */
     private function isAllowed(?bool $connected, ?string $role): bool
