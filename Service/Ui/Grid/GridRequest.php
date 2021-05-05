@@ -458,18 +458,26 @@ class GridRequest
     }
 
     /**
-     * @param array $params
-     * @return string
+     * @return array
      */
-    public function getCurrentUrl(array $params): string
+    public function getCurrentParams(): array
     {
-        $requestParams = [
+        return [
             self::KEY_PAGE_CURRENT => $this->pageCurrent,
             self::KEY_PAGE_LENGTH  => $this->pageLength,
             self::KEY_SORT_COLUMN  => $this->sortColumn,
             self::KEY_SORT_ORDER   => $this->sortOrder,
             self::KEY_FILTERS      => $this->filters,
         ];
+    }
+
+    /**
+     * @param array $params
+     * @return string
+     */
+    public function getCurrentUrl(array $params): string
+    {
+        $requestParams = $this->getCurrentParams();
 
         $params = array_merge($this->routeParameters, $requestParams, $params);
 
