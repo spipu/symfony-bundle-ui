@@ -26,14 +26,22 @@ abstract class AbstractOptions implements OptionsInterface
     abstract protected function buildOptions(): array;
 
     /**
+     * @return void
+     */
+    private function loadOptions(): void
+    {
+        if (!is_array($this->options)) {
+            $this->options = $this->buildOptions();
+        }
+    }
+
+    /**
      * List of available options
      * @return string[]
      */
     public function getOptions(): array
     {
-        if (!is_array($this->options)) {
-            $this->options = $this->buildOptions();
-        }
+        $this->loadOptions();
 
         return $this->options;
     }
@@ -78,10 +86,12 @@ abstract class AbstractOptions implements OptionsInterface
      */
     public function hasKey($key): bool
     {
+        $this->loadOptions();
+
         if (is_bool($key)) {
             $key = (int) $key;
         }
 
-        return array_key_exists($key, $this->getOptions());
+        return array_key_exists($key, $this->options);
     }
 }
