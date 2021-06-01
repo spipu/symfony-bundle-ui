@@ -94,4 +94,19 @@ abstract class AbstractOptions implements OptionsInterface
 
         return array_key_exists($key, $this->options);
     }
+
+    /**
+     * @param mixed $key
+     * @return string|null
+     */
+    public function getValueFromKey($key): ?string
+    {
+        $this->loadOptions();
+
+        if (is_bool($key)) {
+            $key = (int) $key;
+        }
+
+        return array_key_exists($key, $this->options) ? $this->options[$key] : null;
+    }
 }
