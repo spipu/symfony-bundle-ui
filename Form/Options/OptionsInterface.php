@@ -45,4 +45,10 @@ interface OptionsInterface
      * @return bool
      */
     public function hasKey($key): bool;
+
+    /**
+     * @param mixed $key
+     * @return string|null
+     */
+    public function getValueFromKey($key): ?string;
 }
