@@ -27,7 +27,6 @@ class SpipuUiMock extends TestCase
     {
         $gridRequest = new GridRequest(
             SymfonyMock::getRequestStack($testCase, $getValues)->getCurrentRequest(),
-            SymfonyMock::getSession($testCase),
             SymfonyMock::getRouter($testCase),
             $definition
         );

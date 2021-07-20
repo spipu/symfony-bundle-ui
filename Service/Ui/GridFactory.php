@@ -15,6 +15,9 @@ namespace Spipu\UiBundle\Service\Ui;
 use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Service\Ui\Definition\GridDefinitionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Twig\Environment as Twig;
 
 class GridFactory
 {
@@ -24,13 +27,37 @@ class GridFactory
     private $container;
 
     /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
+     * @var Twig
+     */
+    private $twig;
+
+    /**
      * GridFactory constructor.
      * @param ContainerInterface $container
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param Twig $twig
      */
     public function __construct(
-        ContainerInterface $container
+        ContainerInterface $container,
+        AuthorizationCheckerInterface $authorizationChecker,
+        EventDispatcherInterface $eventDispatcher,
+        Twig $twig
     ) {
         $this->container = $container;
+        $this->authorizationChecker = $authorizationChecker;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->twig = $twig;
     }
 
     /**
@@ -43,10 +70,10 @@ class GridFactory
         return new GridManager(
             $this->container,
             $this->container->get('request_stack')->getCurrentRequest(),
-            $this->container->get('session'),
-            $this->container->get('security.authorization_checker'),
+            $this->authorizationChecker,
             $this->container->get('router'),
-            $this->container->get('event_dispatcher'),
+            $this->eventDispatcher,
+            $this->twig,
             $gridDefinition
         );
     }

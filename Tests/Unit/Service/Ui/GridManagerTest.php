@@ -17,6 +17,20 @@ use Symfony\Component\HttpFoundation\Request;
 
 class GridManagerTest extends AbstractTest
 {
+    /**
+     * @param ContainerInterface $container
+     * @return GridFactory
+     */
+    private function getGridFactory(ContainerInterface $container): GridFactory
+    {
+        return new GridFactory(
+            $container,
+            $container->get('security.authorization_checker'),
+            $container->get('event_dispatcher'),
+            $container->get('twig')
+        );
+    }
+
     public function testManager()
     {
         $dataProviderMock = SpipuUiMock::getDataProviderMock();
@@ -31,7 +45,7 @@ class GridManagerTest extends AbstractTest
             ->method('dispatch')
             ->with($this->anything(), GridDefinitionEvent::PREFIX_NAME . $definition->getDefinition()->getCode());
 
-        $factory = new GridFactory($container);
+        $factory = $this->getGridFactory($container);
 
         $manager = $this->prepareManager($factory, $container, $definition, []);
 
@@ -553,7 +567,7 @@ class GridManagerTest extends AbstractTest
         $container = $this->getContainerMock(['data_provider' => new \stdClass()]);
         $definition = SpipuUiMock::getGridDefinitionMock();
 
-        $factory = new GridFactory($container);
+        $factory = $this->getGridFactory($container);
 
         $this->expectException(GridException::class);
         $factory->create($definition);
@@ -565,7 +579,7 @@ class GridManagerTest extends AbstractTest
 
         $definition = SpipuUiMock::getGridDefinitionMock();
 
-        $factory = new GridFactory($container);
+        $factory = $this->getGridFactory($container);
         $manager = $factory->create($definition);
 
         $this->expectException(GridException::class);
@@ -601,7 +615,7 @@ class GridManagerTest extends AbstractTest
 
         $container = $this->getContainerMock(['data_provider' => $dataProviderMock]);
 
-        $factory = new GridFactory($container);
+        $factory = $this->getGridFactory($container);
 
         return $this->prepareManager($factory, $container, $definition, $getValues);
     }

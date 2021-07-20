@@ -12,16 +12,17 @@ services:
         class: Spipu\UiBundle\Service\Menu\Definition
 
     Spipu\UiBundle\Service\Ui\GridFactory:
+        autowire: true
         arguments:
-            - '@service_container'
+            $container: '@service_container'
 
     Spipu\UiBundle\Service\Ui\FormFactory:
+        autowire: true
         arguments:
-            - '@service_container'
+            $container: '@service_container'
 
     Spipu\UiBundle\Service\Ui\ShowFactory:
-        arguments:
-            - '@service_container'
+        autowire: true
 
     Spipu\UiBundle\Form\Options\ActiveStatus:
         public: true

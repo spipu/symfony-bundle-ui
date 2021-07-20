@@ -13,7 +13,6 @@ declare(strict_types = 1);
 namespace Spipu\UiBundle\Service\Ui\Grid;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Spipu\UiBundle\Entity\Grid\Grid as GridDefinition;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -37,11 +36,6 @@ class GridRequest
      * @var SymfonyRequest
      */
     private $request;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
 
     /**
      * @var RouterInterface
@@ -101,18 +95,15 @@ class GridRequest
     /**
      * Request constructor.
      * @param SymfonyRequest $request
-     * @param SessionInterface $session
      * @param RouterInterface $router
      * @param GridDefinition $definition
      */
     public function __construct(
         SymfonyRequest $request,
-        SessionInterface $session,
         RouterInterface $router,
         GridDefinition $definition
     ) {
         $this->request = $request;
-        $this->session = $session;
         $this->definition = $definition;
         $this->router = $router;
     }
@@ -157,7 +148,7 @@ class GridRequest
      */
     public function getSessionValue(string $key, $default)
     {
-        return $this->session->get($this->getSessionKey($key), $default);
+        return $this->request->getSession()->get($this->getSessionKey($key), $default);
     }
 
     /**
@@ -167,7 +158,7 @@ class GridRequest
      */
     private function setSessionValue(string $key, $value): self
     {
-        $this->session->set($this->getSessionKey($key), $value);
+        $this->request->getSession()->set($this->getSessionKey($key), $value);
 
         return $this;
     }

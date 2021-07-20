@@ -13,23 +13,32 @@ declare(strict_types = 1);
 namespace Spipu\UiBundle\Service\Ui;
 
 use Spipu\UiBundle\Service\Ui\Definition\EntityDefinitionInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Twig\Environment as Twig;
 
 class ShowFactory
 {
     /**
-     * @var ContainerInterface
+     * @var EventDispatcherInterface
      */
-    private $container;
+    private $eventDispatcher;
+
+    /**
+     * @var Twig
+     */
+    private $twig;
 
     /**
      * GridFactory constructor.
-     * @param ContainerInterface $container
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param Twig $twig
      */
     public function __construct(
-        ContainerInterface $container
+        EventDispatcherInterface $eventDispatcher,
+        Twig $twig
     ) {
-        $this->container = $container;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->twig = $twig;
     }
 
     /**
@@ -39,8 +48,8 @@ class ShowFactory
     public function create(EntityDefinitionInterface $formDefinition): ShowManagerInterface
     {
         return new ShowManager(
-            $this->container,
-            $this->container->get('event_dispatcher'),
+            $this->eventDispatcher,
+            $this->twig,
             $formDefinition
         );
     }

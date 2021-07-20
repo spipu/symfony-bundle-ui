@@ -13,6 +13,7 @@ declare(strict_types = 1);
 namespace Spipu\UiBundle\Service\Ui;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Entity\Form\FieldSet;
 use Spipu\UiBundle\Entity\Form\Form;
@@ -21,22 +22,20 @@ use Spipu\UiBundle\Event\FormSaveEvent;
 use Spipu\UiBundle\Exception\FormException;
 use Spipu\UiBundle\Form\GenericType;
 use Spipu\UiBundle\Service\Ui\Definition\EntityDefinitionInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment as Twig;
+use Twig\Error\Error as TwigError;
 
 /**
  * @SuppressWarnings(PMD.CouplingBetweenObjects)
  */
 class FormManager implements FormManagerInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
     /**
      * @var SymfonyRequest
      */
@@ -46,6 +45,26 @@ class FormManager implements FormManagerInterface
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var Twig
+     */
+    private $twig;
 
     /**
      * @var EntityDefinitionInterface
@@ -79,20 +98,29 @@ class FormManager implements FormManagerInterface
 
     /**
      * Manager constructor.
-     * @param ContainerInterface $container
      * @param SymfonyRequest $symfonyRequest
      * @param EventDispatcherInterface $eventDispatcher
+     * @param EntityManagerInterface $entityManager
+     * @param FormFactoryInterface $formFactory
+     * @param TranslatorInterface $translator
+     * @param Twig $twig
      * @param EntityDefinitionInterface $definition
      */
     public function __construct(
-        ContainerInterface $container,
         SymfonyRequest $symfonyRequest,
         EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface $entityManager,
+        FormFactoryInterface $formFactory,
+        TranslatorInterface $translator,
+        Twig $twig,
         EntityDefinitionInterface $definition
     ) {
-        $this->container = $container;
         $this->symfonyRequest = $symfonyRequest;
         $this->eventDispatcher = $eventDispatcher;
+        $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
+        $this->translator = $translator;
+        $this->twig = $twig;
         $this->definition = $definition;
     }
 
@@ -126,9 +154,8 @@ class FormManager implements FormManagerInterface
 
                 if ($this->resource !== null) {
                     /** @var EntityManagerInterface $entityManager */
-                    $entityManager = $this->container->get('doctrine.orm.default_entity_manager');
-                    $entityManager->persist($this->resource);
-                    $entityManager->flush();
+                    $this->entityManager->persist($this->resource);
+                    $this->entityManager->flush();
                 }
 
                 $message = $this->definition->getDefinition()->getValidateSuccessMessage();
@@ -137,7 +164,7 @@ class FormManager implements FormManagerInterface
                 }
 
                 return true;
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->addFlashTrans('danger', $e->getMessage());
             }
         }
@@ -162,10 +189,7 @@ class FormManager implements FormManagerInterface
 
         $this->formDefinition->prepareSort();
 
-        /** @var \Symfony\Component\Form\FormFactory $formFactory */
-        $formFactory = $this->container->get('form.factory');
-
-        $this->form = $formFactory->create(
+        $this->form = $this->formFactory->create(
             GenericType::class,
             $this->getFormData(),
             [
@@ -232,7 +256,7 @@ class FormManager implements FormManagerInterface
      */
     private function addFlash(string $type, string $message): void
     {
-        $this->container->get('session')->getFlashBag()->add($type, $message);
+        $this->symfonyRequest->getSession()->getFlashBag()->add($type, $message);
     }
 
     /**
@@ -242,7 +266,7 @@ class FormManager implements FormManagerInterface
      */
     private function trans(string $message, array $params = []): string
     {
-        return $this->container->get('translator')->trans($message, $params);
+        return $this->translator->trans($message, $params);
     }
 
     /**
@@ -255,11 +279,11 @@ class FormManager implements FormManagerInterface
 
     /**
      * @return string
-     * @throws \Twig_Error
+     * @throws TwigError
      */
     public function display(): string
     {
-        return $this->container->get('twig')->render(
+        return $this->twig->render(
             $this->formDefinition->getTemplateForm(),
             [
                 'manager' => $this,

@@ -12,17 +12,34 @@ use Spipu\UiBundle\Service\Ui\FormManagerInterface;
 use Spipu\UiBundle\Tests\ResourceMock;
 use Spipu\UiBundle\Tests\SpipuUiMock;
 use Spipu\CoreBundle\Tests\SymfonyMock;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class FormManagerTest extends AbstractTest
 {
+    /**
+     * @param ContainerInterface $container
+     * @return FormFactory
+     */
+    private function getFormFactory(ContainerInterface $container): FormFactory
+    {
+        return new FormFactory(
+            $container,
+            $container->get('event_dispatcher'),
+            $container->get('doctrine.orm.default_entity_manager'),
+            $container->get('form.factory'),
+            $container->get('translator'),
+            $container->get('twig')
+        );
+    }
+
     public function testManagerWithoutResource()
     {
         $container = $this->getContainerMock(['form.factory' => SymfonyMock::getFormFactory($this)]);
 
         $definition = SpipuUiMock::getEntityDefinitionMock();
 
-        $factory = new FormFactory($container);
+        $factory = $this->getFormFactory($container);
 
         /** @var FormManager $manager */
         $manager = $factory->create($definition);
@@ -84,7 +101,7 @@ class FormManagerTest extends AbstractTest
         $request->initialize([], $values);
         $request->setMethod('POST');
 
-        $factory = new FormFactory($container);
+        $factory = $this->getFormFactory($container);
 
         $eventDispatcher = $container->get('event_dispatcher');
         $eventDispatcher
@@ -105,7 +122,7 @@ class FormManagerTest extends AbstractTest
 
         $this->assertSame(true, $manager->getForm()->isSubmitted());
         $this->assertSame(true, $manager->getForm()->isValid());
-        $this->assertSame(['success' => ['spipu.ui.success.saved']], $container->get('session')->getFlashBag()->all());
+        $this->assertSame(['success' => ['spipu.ui.success.saved']], $container->get('request_stack')->getSession()->getFlashBag()->all());
 
         $this->assertSame($values['generic']['field_a_a'], $manager->getForm()->getData()['field_a_a']);
         $this->assertSame($values['generic']['field_b_a'], $manager->getForm()->getData()['field_b_a']);
@@ -122,7 +139,7 @@ class FormManagerTest extends AbstractTest
         $definition = SpipuUiMock::getEntityDefinitionMock();
         $definition->getDefinition()->setEntityClassName(ResourceMock::class);
 
-        $factory = new FormFactory($container);
+        $factory = $this->getFormFactory($container);
 
         /** @var FormManager $manager */
         $manager = $factory->create($definition);
@@ -185,7 +202,7 @@ class FormManagerTest extends AbstractTest
         $request->initialize([], $values);
         $request->setMethod('POST');
 
-        $factory = new FormFactory($container);
+        $factory = $this->getFormFactory($container);
 
         $eventDispatcher = $container->get('event_dispatcher');
         $eventDispatcher
@@ -208,7 +225,7 @@ class FormManagerTest extends AbstractTest
 
         $this->assertSame(true, $manager->getForm()->isSubmitted());
         $this->assertSame(true, $manager->getForm()->isValid());
-        $this->assertSame(['success' => ['spipu.ui.success.saved']], $container->get('session')->getFlashBag()->all());
+        $this->assertSame(['success' => ['spipu.ui.success.saved']], $container->get('request_stack')->getSession()->getFlashBag()->all());
 
         $this->assertSame($resource, $manager->getForm()->getData());
         $this->assertSame(null, $resource->getId());
@@ -227,7 +244,7 @@ class FormManagerTest extends AbstractTest
         $definition = SpipuUiMock::getEntityDefinitionMock();
         $definition->getDefinition()->setEntityClassName(ResourceMock::class);
 
-        $factory = new FormFactory($container);
+        $factory = $this->getFormFactory($container);
 
         /** @var FormManager $manager */
         $manager = $factory->create($definition);
@@ -255,12 +272,12 @@ class FormManagerTest extends AbstractTest
         $request->initialize([], $values);
         $request->setMethod('POST');
 
-        $factory = new FormFactory($container);
+        $factory = $this->getFormFactory($container);
 
         /** @var FormManager $manager */
         $manager = $factory->create($definition);
 
         $this->assertFalse($manager->validate());
-        $this->assertSame(['danger' => ['mock error']], $container->get('session')->getFlashBag()->all());
+        $this->assertSame(['danger' => ['mock error']], $container->get('request_stack')->getSession()->getFlashBag()->all());
     }
 }

@@ -12,7 +12,6 @@ abstract class AbstractTest extends TestCase
         $services = array_merge(
             [
                 'request_stack'    => SymfonyMock::getRequestStack($this),
-                'session'          => SymfonyMock::getSession($this),
                 'router'           => SymfonyMock::getRouter($this),
                 'translator'       => SymfonyMock::getTranslator($this),
                 'event_dispatcher' => SymfonyMock::getEventDispatcher($this),
