@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\UiBundle\Service\Ui\Grid;
 
@@ -23,14 +23,14 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class GridRequest
 {
-    const MAX_AUTHORIZED_PAGE_LENGTH = 10000;
+    public const MAX_AUTHORIZED_PAGE_LENGTH = 10000;
 
-    const KEY_PAGE_LENGTH  = 'pl';
-    const KEY_PAGE_CURRENT = 'pc';
-    const KEY_SORT_COLUMN  = 'sc';
-    const KEY_SORT_ORDER   = 'so';
-    const KEY_FILTERS      = 'fl';
-    const KEY_QUICK_SEARCH = 'qs';
+    public const KEY_PAGE_LENGTH  = 'pl';
+    public const KEY_PAGE_CURRENT = 'pc';
+    public const KEY_SORT_COLUMN  = 'sc';
+    public const KEY_SORT_ORDER   = 'so';
+    public const KEY_FILTERS      = 'fl';
+    public const KEY_QUICK_SEARCH = 'qs';
 
     /**
      * @var SymfonyRequest
@@ -427,7 +427,7 @@ class GridRequest
     /**
      * @return string|null
      */
-    public function getQuickSearchField() :?string
+    public function getQuickSearchField(): ?string
     {
         if (!array_key_exists('field', $this->quickSearch)) {
             return null;
@@ -439,7 +439,7 @@ class GridRequest
     /**
      * @return string|null
      */
-    public function getQuickSearchValue() :?string
+    public function getQuickSearchValue(): ?string
     {
         if (!array_key_exists('value', $this->quickSearch)) {
             return null;

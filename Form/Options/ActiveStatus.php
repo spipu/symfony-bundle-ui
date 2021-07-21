@@ -8,14 +8,14 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\UiBundle\Form\Options;
 
 class ActiveStatus extends AbstractOptions
 {
-    const VALUE_ACTIVE = 1;
-    const VALUE_INACTIVE = 0;
+    public const VALUE_ACTIVE = 1;
+    public const VALUE_INACTIVE = 0;
 
     /**
      * Build the list of the available options

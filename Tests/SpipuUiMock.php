@@ -384,8 +384,8 @@ class DataProviderMock extends AbstractDataProvider
 
 class OptionIntegerMock extends AbstractOptions
 {
-    const VALUE_YES = 1;
-    const VALUE_NO = 0;
+    public const VALUE_YES = 1;
+    public const VALUE_NO = 0;
 
     /**
      * Build the list of the available options
@@ -402,8 +402,8 @@ class OptionIntegerMock extends AbstractOptions
 
 class OptionStringMock extends AbstractOptions
 {
-    const VALUE_YES = 'yes';
-    const VALUE_NO = 'no';
+    public const VALUE_YES = 'yes';
+    public const VALUE_NO = 'no';
 
     /**
      * Build the list of the available options

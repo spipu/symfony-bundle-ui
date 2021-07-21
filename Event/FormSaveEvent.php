@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\UiBundle\Event;
 
@@ -21,7 +21,7 @@ use Symfony\Component\Form\FormInterface;
  */
 class FormSaveEvent extends AbstractFormEvent
 {
-    const PREFIX_NAME = 'spipu.ui.form.save.';
+    public const PREFIX_NAME = 'spipu.ui.form.save.';
 
     /**
      * @var FormInterface

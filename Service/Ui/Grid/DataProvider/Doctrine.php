@@ -8,11 +8,10 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\UiBundle\Service\Ui\Grid\DataProvider;
 
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\Expr\Andx;
 use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Entity\Grid\ColumnType;
