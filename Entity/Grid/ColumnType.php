@@ -155,7 +155,7 @@ class ColumnType
         $this->validateType($type);
 
         $this->type = $type;
-        $this->templateField = '@SpipuUi/grid/field/'.$type.'.html.twig';
+        $this->templateField = '@SpipuUi/grid/field/' . $type . '.html.twig';
         $this->translate = ($type === 'select');
 
         return $this;

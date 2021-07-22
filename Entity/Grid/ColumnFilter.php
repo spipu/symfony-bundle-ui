@@ -66,7 +66,7 @@ class ColumnFilter
             return true;
         }
 
-        $this->templateFilter = '@SpipuUi/grid/filter/'.$columnType->getType().'.html.twig';
+        $this->templateFilter = '@SpipuUi/grid/filter/' . $columnType->getType() . '.html.twig';
         return true;
     }
 

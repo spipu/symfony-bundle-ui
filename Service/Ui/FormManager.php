@@ -198,7 +198,7 @@ class FormManager implements FormManagerInterface
                 'data_class'      => $this->formDefinition->getEntityClassName(),
                 'csrf_protection' => true,
                 'csrf_field_name' => '_token',
-                'csrf_token_id'   => $this->formDefinition->getCode().'_item',
+                'csrf_token_id'   => $this->formDefinition->getCode() . '_item',
             ]
         );
     }

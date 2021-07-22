@@ -419,8 +419,8 @@ class GridManager implements GridManagerInterface
     public function getValue(EntityInterface $object, string $field)
     {
         $methods = [
-            'get'.ucfirst($field),
-            'is'.ucfirst($field),
+            'get' . ucfirst($field),
+            'is' . ucfirst($field),
             $field,
         ];
 
@@ -430,7 +430,7 @@ class GridManager implements GridManagerInterface
             }
         }
 
-        throw new GridException('Unable to find the field '.$field.' on the object '.get_class($object));
+        throw new GridException('Unable to find the field ' . $field . ' on the object ' . get_class($object));
     }
 
     /**

@@ -353,8 +353,8 @@ class DataProviderMock extends AbstractDataProvider
         $entity
             ->setFieldAA($key)
             ->setFieldAB($key)
-            ->setFieldBA('Name '.str_pad((string) $key, 6, '0', STR_PAD_LEFT))
-            ->setFieldBB('Name '.str_pad((string) $key, 6, '0', STR_PAD_LEFT));
+            ->setFieldBA('Name ' . str_pad((string) $key, 6, '0', STR_PAD_LEFT))
+            ->setFieldBB('Name ' . str_pad((string) $key, 6, '0', STR_PAD_LEFT));
 
         $this->entities[] = $entity;
     }

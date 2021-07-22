@@ -139,7 +139,7 @@ class GridRequest
      */
     private function getSessionKey(string $key): string
     {
-        return $this->sessionPrefixGridKey.'.'.$key;
+        return $this->sessionPrefixGridKey . '.' . $key;
     }
 
     /**

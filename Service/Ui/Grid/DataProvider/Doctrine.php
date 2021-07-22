@@ -131,33 +131,33 @@ class Doctrine extends AbstractDataProvider
         $parameters = [];
 
         $column = $this->definition->getColumn($code);
-        $entityField = 'main.'.$column->getEntityField();
+        $entityField = 'main.' . $column->getEntityField();
 
         if ($column->getFilter()->isRange()) {
             if (is_array($value) && array_key_exists('from', $value)) {
-                $where->add($queryBuilder->expr()->gte($entityField, ':'.$code.'_from'));
-                $parameters[':'.$code.'_from'] = $this->applyMappingValue($code, $value['from']);
+                $where->add($queryBuilder->expr()->gte($entityField, ':' . $code . '_from'));
+                $parameters[':' . $code . '_from'] = $this->applyMappingValue($code, $value['from']);
             }
             if (is_array($value) && array_key_exists('to', $value)) {
-                $where->add($queryBuilder->expr()->lte($entityField, ':'.$code.'_to'));
-                $parameters[':'.$code.'_to'] = $this->applyMappingValue($code, $value['to']);
+                $where->add($queryBuilder->expr()->lte($entityField, ':' . $code . '_to'));
+                $parameters[':' . $code . '_to'] = $this->applyMappingValue($code, $value['to']);
             }
             return $parameters;
         }
 
         if ($column->getFilter()->isExactValue() || $column->getType()->getType() == ColumnType::TYPE_SELECT) {
             $value = $this->applyMappingValue($code, $value);
-            $expression = $queryBuilder->expr()->eq($entityField, ':'.$code);
+            $expression = $queryBuilder->expr()->eq($entityField, ':' . $code);
             if (is_array($value)) {
-                $expression = $queryBuilder->expr()->in($entityField, ':'.$code);
+                $expression = $queryBuilder->expr()->in($entityField, ':' . $code);
             }
             $where->add($expression);
-            $parameters[':'.$code] = $value;
+            $parameters[':' . $code] = $value;
             return $parameters;
         }
 
-        $where->add($queryBuilder->expr()->like($entityField, ':'.$code));
-        $parameters[':'.$code] = '%'.$value.'%';
+        $where->add($queryBuilder->expr()->like($entityField, ':' . $code));
+        $parameters[':' . $code] = '%' . $value . '%';
 
         return $parameters;
     }
@@ -178,10 +178,10 @@ class Doctrine extends AbstractDataProvider
         $parameters = [];
 
         $column = $this->definition->getColumn($code);
-        $entityField = 'main.'.$column->getEntityField();
+        $entityField = 'main.' . $column->getEntityField();
 
-        $where->add($queryBuilder->expr()->like($entityField, ':'.$code));
-        $parameters[':'.$code] = $value.'%';
+        $where->add($queryBuilder->expr()->like($entityField, ':' . $code));
+        $parameters[':' . $code] = $value . '%';
 
         return $parameters;
     }
@@ -214,7 +214,7 @@ class Doctrine extends AbstractDataProvider
 
         if ($this->request->getSortColumn()) {
             $queryBuilder->orderBy(
-                'main.'.$this->definition->getColumn($this->request->getSortColumn())->getEntityField(),
+                'main.' . $this->definition->getColumn($this->request->getSortColumn())->getEntityField(),
                 $this->request->getSortOrder()
             );
         }

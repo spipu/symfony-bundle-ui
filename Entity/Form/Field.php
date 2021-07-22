@@ -153,7 +153,7 @@ class Field implements PositionInterface
     {
         if ($key === 'choices') {
             if (!is_object($value) || !($value instanceof OptionsInterface)) {
-                throw new FormException('The choices of field '.$this->code.' must implement OptionsInterface');
+                throw new FormException('The choices of field ' . $this->code . ' must implement OptionsInterface');
             }
         }
 
