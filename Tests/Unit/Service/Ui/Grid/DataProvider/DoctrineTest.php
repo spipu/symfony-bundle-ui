@@ -13,7 +13,7 @@ class DoctrineTest extends AbstractTest
     {
         $containerMock = $this->getContainerMock();
 
-        $service =  new Doctrine($containerMock);
+        $service =  new Doctrine($containerMock->get('doctrine.orm.default_entity_manager'));
 
         $this->expectException(GridException::class);
         $service->validate();
@@ -24,7 +24,7 @@ class DoctrineTest extends AbstractTest
         $containerMock = $this->getContainerMock();
         $definition    = SpipuUiMock::getGridDefinitionMock();
 
-        $service =  new Doctrine($containerMock);
+        $service =  new Doctrine($containerMock->get('doctrine.orm.default_entity_manager'));
         $service->setGridDefinition($definition->getDefinition());
 
         $this->expectException(GridException::class);
@@ -36,7 +36,7 @@ class DoctrineTest extends AbstractTest
         $containerMock = $this->getContainerMock();
         $requestMock   = $this->createMock(GridRequest::class);
 
-        $service =  new Doctrine($containerMock);
+        $service =  new Doctrine($containerMock->get('doctrine.orm.default_entity_manager'));
         $service->setGridRequest($requestMock);
 
         $this->expectException(GridException::class);
@@ -49,7 +49,7 @@ class DoctrineTest extends AbstractTest
         $requestMock   = $this->createMock(GridRequest::class);
         $definition    = SpipuUiMock::getGridDefinitionMock();
 
-        $service =  new Doctrine($containerMock);
+        $service =  new Doctrine($containerMock->get('doctrine.orm.default_entity_manager'));
         $service->setGridDefinition($definition->getDefinition());
         $service->setGridRequest($requestMock);
         $this->assertTrue($service->validate());
@@ -72,7 +72,7 @@ class DoctrineTest extends AbstractTest
             ->method('getFilters')
             ->willreturn($filters);
 
-        $service =  new Doctrine($containerMock);
+        $service =  new Doctrine($containerMock->get('doctrine.orm.default_entity_manager'));
         $service->setGridDefinition($definition->getDefinition());
         $service->setGridRequest($requestMock);
         $this->assertTrue($service->validate());

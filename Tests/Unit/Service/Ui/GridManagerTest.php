@@ -592,7 +592,9 @@ class GridManagerTest extends AbstractTest
 
         $manager = $this->prepareManagerReset($definition, []);
 
-        $dataProvider = new Doctrine($this->getContainerMock());
+        $container = $this->getContainerMock();
+
+        $dataProvider = new Doctrine($container->get('doctrine.orm.default_entity_manager'));
         $dataProvider->setGridRequest($manager->getRequest());
         $dataProvider->setGridDefinition($manager->getDefinition());
         $dataProvider->addCondition(['id' => 1]);

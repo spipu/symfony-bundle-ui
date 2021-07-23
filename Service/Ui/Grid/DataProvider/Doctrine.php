@@ -19,33 +19,32 @@ use Spipu\UiBundle\Entity\Grid\ColumnType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Spipu\UiBundle\Exception\GridException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Doctrine extends AbstractDataProvider
 {
     /**
-     * @var ContainerInterface
+     * @var EntityManagerInterface
      */
-    private $container;
+    protected $entityManager;
 
     /**
      * @var array
      */
-    private $conditions = [];
+    protected $conditions = [];
 
     /**
      * @var array
      */
-    private $mappingValues = [];
+    protected $mappingValues = [];
 
     /**
      * Doctrine constructor.
-     * @param ContainerInterface $container
+     * @param EntityManagerInterface $entityManager
      */
     public function __construct(
-        ContainerInterface $container
+        EntityManagerInterface $entityManager
     ) {
-        $this->container = $container;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -79,10 +78,7 @@ class Doctrine extends AbstractDataProvider
     {
         $this->validate();
 
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = $this->container->get('doctrine.orm.default_entity_manager');
-
-        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder = $this->entityManager->createQueryBuilder();
 
         $queryBuilder
             ->select('main')
@@ -122,7 +118,7 @@ class Doctrine extends AbstractDataProvider
      * @param mixed $value
      * @return array
      */
-    private function prepareQueryBuilderFilter(
+    protected function prepareQueryBuilderFilter(
         QueryBuilder $queryBuilder,
         Andx $where,
         string $code,
@@ -169,7 +165,7 @@ class Doctrine extends AbstractDataProvider
      * @param mixed $value
      * @return array
      */
-    private function prepareQueryBuilderQuickSearch(
+    protected function prepareQueryBuilderQuickSearch(
         QueryBuilder $queryBuilder,
         Andx $where,
         string $code,
@@ -227,7 +223,7 @@ class Doctrine extends AbstractDataProvider
      * @param mixed $originalValue
      * @return mixed
      */
-    private function applyMappingValue(string $fieldCode, $originalValue)
+    protected function applyMappingValue(string $fieldCode, $originalValue)
     {
         if (!array_key_exists($fieldCode, $this->mappingValues)) {
             return $originalValue;
