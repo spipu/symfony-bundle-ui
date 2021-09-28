@@ -16,7 +16,6 @@ namespace Spipu\UiBundle\Entity\Grid;
 use Spipu\UiBundle\Entity\OptionsTrait;
 use Spipu\UiBundle\Entity\PositionInterface;
 use Spipu\UiBundle\Entity\PositionTrait;
-use Spipu\UiBundle\Exception\GridException;
 
 class Column implements PositionInterface
 {
@@ -59,7 +58,6 @@ class Column implements PositionInterface
      * @param string $name
      * @param string $entityField
      * @param int $position
-     * @throws GridException
      */
     public function __construct(
         string $code,

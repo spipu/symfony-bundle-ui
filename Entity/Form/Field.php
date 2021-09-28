@@ -50,7 +50,7 @@ class Field implements PositionInterface
     /**
      * @var array
      */
-    private $options = [];
+    private $options;
 
     /**
      * @var mixed

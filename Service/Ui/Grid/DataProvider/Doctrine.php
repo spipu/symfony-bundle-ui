@@ -184,6 +184,7 @@ class Doctrine extends AbstractDataProvider
 
     /**
      * @return int
+     * @throws GridException
      */
     public function getNbTotalRows(): int
     {
@@ -195,6 +196,7 @@ class Doctrine extends AbstractDataProvider
 
     /**
      * @return EntityInterface[]
+     * @throws GridException
      */
     public function getPageRows(): array
     {

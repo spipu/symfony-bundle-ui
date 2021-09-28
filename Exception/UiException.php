@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Exception;
 
-class UiException extends \Exception
+use Exception;
+
+class UiException extends Exception
 {
 }

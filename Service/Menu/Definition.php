@@ -17,7 +17,6 @@ use Spipu\UiBundle\Entity\Menu\Item;
 
 /**
  * Class Definition - Example. Make your own menu definition !
- * @package Spipu\UiBundle\Service\Menu
  */
 class Definition implements DefinitionInterface
 {

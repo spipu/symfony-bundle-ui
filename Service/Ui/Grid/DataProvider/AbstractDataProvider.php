@@ -107,6 +107,7 @@ abstract class AbstractDataProvider implements DataProviderInterface
 
     /**
      * @return array
+     * @throws GridException
      */
     public function getFilters(): array
     {
