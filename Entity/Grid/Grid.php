@@ -571,4 +571,20 @@ class Grid
             }
         );
     }
+
+    /**
+     * @return Column[]
+     */
+    public function getDisplayedColumns(): array
+    {
+        $columns = [];
+
+        foreach ($this->columns as $column) {
+            if ($column->isDisplayed()) {
+                $columns[$column->getCode()] = $column;
+            }
+        }
+
+        return $columns;
+    }
 }

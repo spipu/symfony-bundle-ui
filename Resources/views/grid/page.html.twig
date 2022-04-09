@@ -4,7 +4,7 @@
     <table class="{{ manager.definition.option('table-css-class', 'table table-striped table-hover table-sm') }}">
         <thead class="{{ manager.definition.option('thead-css-class', '') }}">
             <tr>
-                <td colspan="{{ hasMassAction + hasRowAction + manager.definition.columns|length }}">{% apply spaceless %}
+                <td colspan="{{ hasMassAction + hasRowAction + manager.definition.displayedColumns|length }}">{% apply spaceless %}
                     <span data-grid-code="{{ manager.definition.code }}" data-grid-role="total-rows">{% trans count manager.nbTotalRows %}spipu.ui.grid.item.found{% endtrans %}</span>
                         {% if hasMassAction %}
                             <span class="border-right ml-2 mr-2"></span>
@@ -41,7 +41,7 @@
 {% if hasMassAction %}
                 <th scope="col" style="width: 30px"><input type="checkbox" data-grid-code="{{ manager.definition.code }}" data-grid-role="checkbox-all" /></th>
 {% endif %}
-{% for column in manager.definition.columns %}
+{% for column in manager.definition.displayedColumns %}
 {%   if column.sortable %}
 {%       if manager.request.sortColumn == column.code and manager.request.sortOrder == 'asc' %}{%  set sortOrder='desc' %}{% else %}{%  set sortOrder='asc' %}{% endif %}
                 <th scope="col" class="sorting {% if manager.request.sortColumn == column.code %}sorting_{{ manager.request.sortOrder }}{% endif %}">
@@ -62,7 +62,7 @@
 {%    include manager.definition.templateRow with {'manager': manager, 'row': row} %}
 {% else %}
             <tr>
-                <td class="text-center" colspan="{{ hasMassAction + hasRowAction + manager.definition.columns|length }}">
+                <td class="text-center" colspan="{{ hasMassAction + hasRowAction + manager.definition.displayedColumns|length }}">
                     <div class="alert alert-info">{{ 'spipu.ui.grid.filter.no_result'|trans() }}</div>
                 </td>
             </tr>

@@ -18,6 +18,7 @@ class ColumnTest extends TestCase
         $this->assertSame(false, $entity->getFilter()->isFilterable());
         $this->assertSame('text', $entity->getType()->getType());
         $this->assertSame(false, $entity->isSortable());
+        $this->assertSame(true, $entity->isDisplayed());
 
         $entity
             ->setName('name_2')
@@ -29,10 +30,23 @@ class ColumnTest extends TestCase
         $this->assertSame('name_2', $entity->getName());
         $this->assertSame('id_2', $entity->getEntityField());
         $this->assertSame(true, $entity->isSortable());
+        $this->assertSame(true, $entity->isDisplayed());
         $this->assertSame(true, $entity->getFilter()->isFilterable());
         $this->assertSame('integer', $entity->getType()->getType());
 
         $entity->addOption('a', 1);
         $this->assertSame(['a' => 1], $entity->getOptions());
+
+        $entity->setDisplayed(true);
+        $this->assertSame(true, $entity->isSortable());
+        $this->assertSame(true, $entity->isDisplayed());
+
+        $entity->setDisplayed(false);
+        $this->assertSame(true, $entity->isSortable());
+        $this->assertSame(false, $entity->isDisplayed());
+
+        $entity->setDisplayed(true);
+        $this->assertSame(true, $entity->isSortable());
+        $this->assertSame(true, $entity->isDisplayed());
     }
 }

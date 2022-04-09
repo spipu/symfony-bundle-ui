@@ -53,6 +53,11 @@ class Column implements PositionInterface
     private $sortable = false;
 
     /**
+     * @var bool
+     */
+    private $displayed = true;
+
+    /**
      * Column constructor.
      * @param string $code
      * @param string $name
@@ -178,5 +183,24 @@ class Column implements PositionInterface
         $this->entityField = $entityField;
 
         return $this;
+    }
+
+    /**
+     * @param bool $displayed
+     * @return Column
+     */
+    public function setDisplayed(bool $displayed): self
+    {
+        $this->displayed = $displayed;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDisplayed(): bool
+    {
+        return $this->displayed;
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace Spipu\UiBundle\Tests\Unit\Service\Ui;
 
+use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Entity\Grid;
 use Spipu\UiBundle\Event\GridDefinitionEvent;
 use Spipu\UiBundle\Exception\GridException;
@@ -476,6 +477,7 @@ class GridManagerTest extends AbstractTest
         $manager = $this->prepareManagerReset($definition, []);
 
         $rows = $manager->getRows();
+        /** @var EntityInterface $row */
         $row = array_shift($rows);
 
         $this->assertSame($row->getFieldAA(), $manager->getValue($row, 'fieldAA'));
@@ -491,6 +493,7 @@ class GridManagerTest extends AbstractTest
         $definition = SpipuUiMock::getGridDefinitionMock();
 
         $manager = $this->prepareManagerReset($definition, []);
+        /** @var EntityInterface $row */
         $row = $manager->getRows()[0];
 
         $action = new Grid\Action('enable', 'Enable', 30, 'enable');
@@ -554,6 +557,24 @@ class GridManagerTest extends AbstractTest
         $this->assertFalse(
             $manager->isGrantedAction(
                 $action->setConditions(['fieldAA' => ['eq' => 1], 'fieldAB' => ['eq' => 2]]),
+                $row
+            )
+        );
+
+        // Test callback
+        $this->assertTrue(
+            $manager->isGrantedAction(
+                $action->setConditions(
+                    ['fieldAA' => ['callback' => function ($row) { return $row->getFieldAA() === '1'; }]]
+                ),
+                $row
+            )
+        );
+        $this->assertFalse(
+            $manager->isGrantedAction(
+                $action->setConditions(
+                    ['fieldAA' => ['callback' => function ($row) { return $row->getFieldAA() === '2'; }]]
+                ),
                 $row
             )
         );
