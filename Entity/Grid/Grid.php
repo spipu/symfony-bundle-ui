@@ -20,6 +20,7 @@ use Spipu\UiBundle\Exception\GridException;
 /**
  * Class Grid
  * @SuppressWarnings(PMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PMD.ExcessivePublicCount)
  */
 class Grid
 {
@@ -84,6 +85,11 @@ class Grid
      * @var Action[]
      */
     private $globalActions = [];
+
+    /**
+     * @var bool
+     */
+    private $personalize = false;
 
     /**
      * @var string[]
@@ -534,6 +540,25 @@ class Grid
         $this->entityName = $entityName;
 
         return $this;
+    }
+
+    /**
+     * @param bool $personalize
+     * @return Grid
+     * @SuppressWarnings(PMD.BooleanArgumentFlag)
+     */
+    public function setPersonalize(bool $personalize = false): Grid
+    {
+        $this->personalize = $personalize;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPersonalize(): bool
+    {
+        return $this->personalize;
     }
 
     /**
