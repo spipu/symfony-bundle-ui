@@ -19,6 +19,7 @@ use Spipu\UiBundle\Entity\Grid\Column;
 use Spipu\UiBundle\Event\GridDefinitionEvent;
 use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Service\Ui\Grid\DataProvider\DataProviderInterface;
+use Spipu\UiBundle\Service\Ui\Grid\GridConfig;
 use Spipu\UiBundle\Service\Ui\Grid\GridRequest;
 use Spipu\UiBundle\Service\Ui\Definition\GridDefinitionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -69,6 +70,11 @@ class GridManager implements GridManagerInterface
     private $twig;
 
     /**
+     * @var GridConfig
+     */
+    private $gridConfig;
+
+    /**
      * @var GridDefinition
      */
     private $definition;
@@ -111,6 +117,7 @@ class GridManager implements GridManagerInterface
      * @param RouterInterface $router
      * @param EventDispatcherInterface $eventDispatcher
      * @param Twig $twig
+     * @param GridConfig $gridConfig
      * @param GridDefinitionInterface $gridDefinition
      * @throws GridException
      */
@@ -121,6 +128,7 @@ class GridManager implements GridManagerInterface
         RouterInterface $router,
         EventDispatcherInterface $eventDispatcher,
         Twig $twig,
+        GridConfig $gridConfig,
         GridDefinitionInterface $gridDefinition
     ) {
         $this->container = $container;
@@ -135,6 +143,7 @@ class GridManager implements GridManagerInterface
 
         $this->request = $this->initGridRequest($symfonyRequest, $router);
         $this->dataProvider = $this->initDataProvider();
+        $this->gridConfig = $gridConfig;
     }
 
     /**
