@@ -46,6 +46,7 @@ class GridConfigTest extends TestCase
                 }
             );
 
+        $translator = SymfonyMock::getTranslator($testCase);
 
         $gridIdentifier = new GridIdentifier(SymfonyMock::getRequestStack($testCase));
         $userIdentifier = new UserIdentifier();
@@ -53,6 +54,7 @@ class GridConfigTest extends TestCase
         return new GridConfig(
             $security,
             $gridConfigRepository,
+            $translator,
             $gridIdentifier,
             $userIdentifier
         );

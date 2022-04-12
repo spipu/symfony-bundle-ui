@@ -49,6 +49,7 @@ function SpipuUiGrid(code)
     this.code = code;
     this.count = 0;
     this.ids = [];
+    this.config = [];
 
     this.init();
 }
@@ -68,10 +69,19 @@ SpipuUiGrid.prototype.init = function () {
         this.initMassActions();
         this.updateMassAction();
     }
+
+    if (this.getElement('personalize-button')) {
+        this.initPersonalize();
+    }
 }
 
 SpipuUiGrid.prototype.initFilters = function () {
     this.getElement('filter-cancel').click($.proxy(this.resetFilters, this));
+}
+
+SpipuUiGrid.prototype.initPersonalize = function () {
+    this.config = JSON.parse(this.getElement('personalize-config').html());
+    this.getElement('personalize-button').click($.proxy(this.configureGrid, this));
 }
 
 SpipuUiGrid.prototype.resetFilters = function () {
@@ -80,6 +90,10 @@ SpipuUiGrid.prototype.resetFilters = function () {
     form.find('input').val('');
     form.find('select').val('');
     form.submit();
+}
+
+SpipuUiGrid.prototype.configureGrid = function () {
+    console.log(this.config);
 }
 
 SpipuUiGrid.prototype.initMassActions = function () {

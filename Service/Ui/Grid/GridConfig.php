@@ -17,6 +17,7 @@ use Spipu\UiBundle\Entity\Grid\Grid;
 use Spipu\UiBundle\Entity\GridConfig as GridConfigEntity;
 use Spipu\UiBundle\Repository\GridConfigRepository;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GridConfig
 {
@@ -31,6 +32,11 @@ class GridConfig
     private $gridConfigRepository;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @var GridIdentifierInterface
      */
     private $gridIdentifier;
@@ -43,17 +49,20 @@ class GridConfig
     /**
      * @param Security $security
      * @param GridConfigRepository $gridConfigRepository
+     * @param TranslatorInterface $translator
      * @param GridIdentifierInterface $gridIdentifier
      * @param UserIdentifierInterface $userIdentifier
      */
     public function __construct(
         Security $security,
         GridConfigRepository $gridConfigRepository,
+        TranslatorInterface $translator,
         GridIdentifierInterface $gridIdentifier,
         UserIdentifierInterface $userIdentifier
     ) {
         $this->security = $security;
         $this->gridConfigRepository = $gridConfigRepository;
+        $this->translator = $translator;
         $this->gridIdentifier = $gridIdentifier;
         $this->userIdentifier = $userIdentifier;
     }
@@ -99,5 +108,37 @@ class GridConfig
     {
         $user = $this->security->getUser();
         return $this->userIdentifier->getIdentifier($user);
+    }
+
+    /**
+     * @param Grid $grid
+     * @return array
+     */
+    public function getPersonalizeDefinition(Grid $grid): array
+    {
+        $definition = [
+            'columns' => [],
+            'configs' => [],
+        ];
+
+        foreach ($grid->getColumns() as $column) {
+            $definition['columns'][$column->getCode()] = [
+                'code'      => $column->getCode(),
+                'name'      => $this->translator->trans($column->getName()),
+                'position'  => $column->getPosition(),
+                'displayed' => $column->isDisplayed(),
+            ];
+        }
+
+        $configs = $this->getUserConfigs($grid);
+        foreach ($configs as $config) {
+            $definition['configs'][$config->getId()] = [
+                'id'     => $config->getId(),
+                'name'   => $config->getName(),
+                'config' => $config->getConfig(),
+            ];
+        }
+
+        return $definition;
     }
 }

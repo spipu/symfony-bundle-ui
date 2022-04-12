@@ -556,4 +556,12 @@ class GridManager implements GridManagerInterface
 
         return $this->router->generate($action->getRouteName(), array_merge($action->getRouteParams(), $actionParams));
     }
+
+    /**
+     * @return array
+     */
+    public function getPersonalizeDefinition(): array
+    {
+        return $this->gridConfig->getPersonalizeDefinition($this->getDefinition());
+    }
 }

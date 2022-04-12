@@ -33,14 +33,15 @@ spipu:
                 label:          "Actions"
 
         action:
-            back:    "Retour"
-            create:  "Créer"
-            edit:    "Editer"
-            delete:  "Supprimer"
-            save:    "Sauvegarder"
-            show:    "Afficher"
-            submit:  "Soumettre"
-            update:  "Mettre à jour"
+            back:      "Retour"
+            create:    "Créer"
+            edit:      "Editer"
+            delete:    "Supprimer"
+            save:      "Sauvegarder"
+            show:      "Afficher"
+            submit:    "Soumettre"
+            update:    "Mettre à jour"
+            configure: "configurer"
 
         success:
             created:  "L'item a été créé"
