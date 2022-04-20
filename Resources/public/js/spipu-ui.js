@@ -50,6 +50,10 @@ function SpipuUiGrid(code)
     this.count = 0;
     this.ids = [];
     this.config = [];
+    this.personalizeSorting = {
+        'dragging': null,
+        'draggedOver': null
+    };
 
     this.init();
 }
@@ -63,40 +67,113 @@ SpipuUiGrid.prototype.getValue = function (target) {
 };
 
 SpipuUiGrid.prototype.init = function () {
-    this.initFilters();
+    this.filtersInit();
 
     if (this.getElement('checkbox-all')) {
-        this.initMassActions();
-        this.updateMassAction();
+        this.massActionsInit();
+        this.massActionsUpdate();
     }
 
-    if (this.getElement('personalize-button')) {
-        this.initPersonalize();
+    if (this.getElement('config-form')) {
+        this.personalizeInit();
     }
 }
 
-SpipuUiGrid.prototype.initFilters = function () {
-    this.getElement('filter-cancel').click($.proxy(this.resetFilters, this));
+SpipuUiGrid.prototype.filtersInit = function () {
+    this.getElement('filter-cancel').click($.proxy(this.filtersReset, this));
 }
 
-SpipuUiGrid.prototype.initPersonalize = function () {
-    this.config = JSON.parse(this.getElement('personalize-config').html());
-    this.getElement('personalize-button').click($.proxy(this.configureGrid, this));
+SpipuUiGrid.prototype.personalizeInit = function () {
+    let items = this.getElement('config-form-columns').find('li');
+    items.attr('draggable', true);
+    items.on('dragover', $.proxy(this.personalizeSortColumnsDragOver, this));
+    items.on('drop', $.proxy(this.personalizeSortColumnsDrop, this));
+
+    items = items.slice(1);
+    items.on('drag', $.proxy(this.personalizeSortColumnsDrag, this));
+    items.css('cursor', 'move');
+
+    this.getElement('config-cancel').click($.proxy(this.personalizeCancel, this));
+
+    this.personalizeSortColumnsInit();
+    this.personalizeSortColumnsStyle();
 }
 
-SpipuUiGrid.prototype.resetFilters = function () {
+SpipuUiGrid.prototype.personalizeCancel = function () {
+    window.location.reload();
+}
+
+SpipuUiGrid.prototype.personalizeSortColumnsDrag = function (event) {
+    this.personalizeSortColumnsInit();
+    this.personalizeSorting.dragging = $(event.target).closest('li');
+    this.personalizeSorting.dragging.addClass('list-group-item-success');
+}
+
+SpipuUiGrid.prototype.personalizeSortColumnsDragOver = function (event) {
+    event.preventDefault();
+
+    this.personalizeSortColumnsStyle();
+
+    if (!this.personalizeSorting.dragging) {
+        return;
+    }
+
+    this.personalizeSorting.draggedOver = $(event.target).closest('li');
+    if (this.personalizeSorting.draggedOver.hasClass('list-group-item-success')) {
+        return;
+    }
+    this.personalizeSorting.draggedOver.addClass('border-primary');
+}
+
+SpipuUiGrid.prototype.personalizeSortColumnsDrop = function (event) {
+
+    if (this.personalizeSorting.dragging && this.personalizeSorting.draggedOver) {
+        this.personalizeSorting.dragging.removeClass('list-group-item-success');
+        this.personalizeSorting.draggedOver.after(this.personalizeSorting.dragging);
+    }
+
+    this.personalizeSortColumnsStyle();
+    this.personalizeSortColumnsInit();
+}
+
+SpipuUiGrid.prototype.personalizeSortColumnsStyle = function () {
+    let items = this.getElement('config-form-columns').find('li');
+
+    items.removeClass('border-primary');
+    items.removeClass('list-group-item-light');
+
+    let hidden = false;
+    items.each(
+        function() {
+            let currentItem = $(this);
+            let currentInput = currentItem.find('input');;
+
+            if (hidden) {
+                currentItem.addClass('list-group-item-light');
+            }
+
+            if (currentInput && currentInput.val() === '----') {
+                hidden = true;
+            }
+        }
+    );
+}
+
+SpipuUiGrid.prototype.personalizeSortColumnsInit = function () {
+    this.personalizeSorting = {
+        'dragging': null,
+        'draggedOver': null
+    };
+}
+
+SpipuUiGrid.prototype.filtersReset = function () {
     let form = this.getElement('filter-form');
 
     form.find('input').val('');
     form.find('select').val('');
     form.submit();
 }
-
-SpipuUiGrid.prototype.configureGrid = function () {
-    console.log(this.config);
-}
-
-SpipuUiGrid.prototype.initMassActions = function () {
+SpipuUiGrid.prototype.massActionsInit = function () {
     let that = this;
 
     that.getElement('checkbox').prop("checked", false);
@@ -115,7 +192,7 @@ SpipuUiGrid.prototype.initMassActions = function () {
     that.getElement('action').click(function () { that.actionSelected(this) });
 };
 
-SpipuUiGrid.prototype.updateMassAction = function () {
+SpipuUiGrid.prototype.massActionsUpdate = function () {
     this.count = this.ids.length;
     this.getElement('count').html(this.count);
 
@@ -145,7 +222,7 @@ SpipuUiGrid.prototype.checkChange = function (target) {
 
     this.getElement('checkbox-all').prop("checked", false);
 
-    this.updateMassAction();
+    this.massActionsUpdate();
 };
 
 SpipuUiGrid.prototype.checkAllChange = function (target) {
@@ -163,7 +240,7 @@ SpipuUiGrid.prototype.checkAllChange = function (target) {
         );
     }
 
-    that.updateMassAction();
+    that.massActionsUpdate();
 };
 
 SpipuUiGrid.prototype.actionSelected = function (target) {

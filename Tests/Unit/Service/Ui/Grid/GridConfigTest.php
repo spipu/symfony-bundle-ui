@@ -24,7 +24,7 @@ class GridConfigTest extends TestCase
 
         $gridConfigRepository
             ->expects($testCase::any())
-            ->method('getUserConfig')
+            ->method('getUserConfigById')
             ->willReturnCallback(
                 function (string $gridIdentifier, string $userIdentifier, int $gridConfigId)
                 {
@@ -33,6 +33,16 @@ class GridConfigTest extends TestCase
                     $entity->setUserIdentifier($userIdentifier);
 
                     return $entity;
+                }
+            );
+
+        $gridConfigRepository
+            ->expects($testCase::any())
+            ->method('getUserConfigByName')
+            ->willReturnCallback(
+                function (string $gridIdentifier, string $userIdentifier, string $name)
+                {
+                    return null;
                 }
             );
 

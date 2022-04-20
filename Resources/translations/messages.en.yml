@@ -26,11 +26,18 @@ spipu:
                 to:             "To"
                 no_result:      "No item found"
 
+            config:
+                title:     "Configure display \"%name\""
+                display:   "Display"
+                configure: "Configure"
+                columns_show: "Displayed Columns"
+                columns_hide: "Hidden Columns"
+
             quick_search:
                 search: "Search"
 
             action:
-                label:          "Actions"
+                label: "Actions"
 
         action:
             back:      "Back"
@@ -42,6 +49,7 @@ spipu:
             submit:    "Submit"
             update:    "Update"
             configure: "Configure"
+            cancel:    "Cancel"
 
         success:
             created:  "The item has been created"

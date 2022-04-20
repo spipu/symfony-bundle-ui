@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(
  *     name="spipu_ui_grid_config",
- *     indexes={
- *         @ORM\Index(name="search_idx", columns={"grid_identifier", "user_identifier"})
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(name="UNIQ_GRID_CONFIG", columns={"grid_identifier", "user_identifier", "name"})
  *     }
  * )
  */

@@ -26,11 +26,18 @@ spipu:
                 to:             "A"
                 no_result:      "Aucun item trouvé"
 
+            config:
+                title:     "Configurer l'affichage \"%name\""
+                display:   "Affichage"
+                configure: "Configurer"
+                columns_show: "Colonnes affichées"
+                columns_hide: "Colonnes cachées"
+
             quick_search:
                 search: "Recherche"
 
             action:
-                label:          "Actions"
+                label: "Actions"
 
         action:
             back:      "Retour"
@@ -42,6 +49,7 @@ spipu:
             submit:    "Soumettre"
             update:    "Mettre à jour"
             configure: "configurer"
+            cancel:    "Annuler"
 
         success:
             created:  "L'item a été créé"

@@ -21,6 +21,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GridConfig
 {
+    public const DEFAULT_NAME = 'default';
+
     /**
      * @var Security
      */
@@ -76,7 +78,13 @@ class GridConfig
         $gridIdentifier = $this->getGridIdentifier($grid);
         $userIdentifier = $this->getUserIdentifier();
 
-        return $this->gridConfigRepository->getUserConfigs($gridIdentifier, $userIdentifier);
+        $configs = $this->gridConfigRepository->getUserConfigs($gridIdentifier, $userIdentifier);
+
+        if (empty($configs)) {
+            $configs = [$this->getDefaultUserConfig($grid)];
+        }
+
+        return $configs;
     }
 
     /**
@@ -89,7 +97,53 @@ class GridConfig
         $gridIdentifier = $this->getGridIdentifier($grid);
         $userIdentifier = $this->getUserIdentifier();
 
-        return $this->gridConfigRepository->getUserConfig($gridIdentifier, $userIdentifier, $gridConfigId);
+        return $this->gridConfigRepository->getUserConfigById(
+            $gridIdentifier,
+            $userIdentifier,
+            $gridConfigId
+        );
+    }
+
+    /**
+     * @param Grid $grid
+     * @return GridConfigEntity
+     */
+    public function getDefaultUserConfig(Grid $grid): GridConfigEntity
+    {
+        $gridIdentifier = $this->getGridIdentifier($grid);
+        $userIdentifier = $this->getUserIdentifier();
+
+        $gridConfig = $this->gridConfigRepository->getUserConfigByName(
+            $gridIdentifier,
+            $userIdentifier,
+            self::DEFAULT_NAME
+        );
+
+        if (!$gridConfig) {
+            $columns = [];
+            foreach ($grid->getColumns() as $column) {
+                if ($column->isDisplayed()) {
+                    $columns[$column->getCode()] = $column->getPosition();
+                }
+            }
+            asort($columns);
+
+            $config = [
+                'columns' => array_keys($columns),
+            ];
+
+            $gridConfig = new GridConfigEntity();
+            $gridConfig
+                ->setGridIdentifier($gridIdentifier)
+                ->setUserIdentifier($userIdentifier)
+                ->setName(self::DEFAULT_NAME)
+                ->setConfig($config)
+            ;
+
+            $this->gridConfigRepository->add($gridConfig);
+        }
+
+        return $gridConfig;
     }
 
     /**
@@ -119,24 +173,22 @@ class GridConfig
         $definition = [
             'columns' => [],
             'configs' => [],
+            'current' => null,
         ];
 
         foreach ($grid->getColumns() as $column) {
             $definition['columns'][$column->getCode()] = [
                 'code'      => $column->getCode(),
                 'name'      => $this->translator->trans($column->getName()),
-                'position'  => $column->getPosition(),
-                'displayed' => $column->isDisplayed(),
             ];
         }
 
         $configs = $this->getUserConfigs($grid);
         foreach ($configs as $config) {
-            $definition['configs'][$config->getId()] = [
-                'id'     => $config->getId(),
-                'name'   => $config->getName(),
-                'config' => $config->getConfig(),
-            ];
+            $definition['configs'][$config->getId()] = $config;
+            if ($config->getName() === GridConfig::DEFAULT_NAME) {
+                $definition['current'] = $config->getId();
+            }
         }
 
         return $definition;

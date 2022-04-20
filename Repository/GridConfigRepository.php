@@ -29,7 +29,7 @@ class GridConfigRepository extends ServiceEntityRepository
     public function add(GridConfig $entity): void
     {
         $this->_em->persist($entity);
-            $this->_em->flush();
+        $this->_em->flush();
     }
 
     /**
@@ -66,13 +66,30 @@ class GridConfigRepository extends ServiceEntityRepository
      * @param int $gridConfigId
      * @return GridConfig|null
      */
-    public function getUserConfig(string $gridIdentifier, string $userIdentifier, int $gridConfigId): ?GridConfig
+    public function getUserConfigById(string $gridIdentifier, string $userIdentifier, int $gridConfigId): ?GridConfig
     {
         return $this->findOneBy(
             [
                 'gridIdentifier' => $gridIdentifier,
                 'userIdentifier' => $userIdentifier,
                 'id' => $gridConfigId,
+            ]
+        );
+    }
+
+    /**
+     * @param string $gridIdentifier
+     * @param string $userIdentifier
+     * @param string $name
+     * @return GridConfig|null
+     */
+    public function getUserConfigByName(string $gridIdentifier, string $userIdentifier, string $name): ?GridConfig
+    {
+        return $this->findOneBy(
+            [
+                'gridIdentifier' => $gridIdentifier,
+                'userIdentifier' => $userIdentifier,
+                'name' => $name,
             ]
         );
     }

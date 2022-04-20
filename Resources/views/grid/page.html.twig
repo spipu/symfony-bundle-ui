@@ -25,15 +25,6 @@
                         </li>
                     </ul>
 {% endif %}
-{% if (manager.definition.personalize) %}
-                    <span class="float-right ml-2 p-0">
-                        <button data-grid-code="{{ manager.definition.code }}" data-grid-role="personalize-button" class="pt-0 pb-0 ml-1 btn btn-sm btn-outline-dark">
-                            <i class="fas fa-cog" ></i>
-                            {{ 'spipu.ui.action.configure'|trans }}
-                        </button>
-                        <script data-grid-code="{{ manager.definition.code }}" data-grid-role="personalize-config" type="application/ld+json">{{ manager.personalizeDefinition|json_encode|raw }}</script>
-                    </span>
-{% endif %}
 {% if manager.definition.globalActions|length > 0 %}
                     <span class="float-right">
                         {%  include manager.definition.templateActions with {

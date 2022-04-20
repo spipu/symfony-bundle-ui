@@ -1,0 +1,87 @@
+{% if (manager.definition.personalize) %}
+    {% set configuration=manager.personalizeDefinition %}
+    {% set currentConfig=configuration.configs[configuration.current] %}
+    <div class="row collapse multi-collapse-config show" id="config-collapse-select">
+        <div class="col-12 mb-2">
+            <form class="form-inline justify-content-center" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-select-form">
+                <input name="cf[action]" type="hidden" value="select" />
+                <div class="form-group mb-2 mr-2">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <label for="grid_config_select" class="input-group-text border-dark">{{ 'spipu.ui.grid.config.display'|trans }}</label>
+                        </div>
+                        <select class="custom-select border-dark" id="grid_config_select" name="cf[id]">
+                            {% for config in configuration.configs %}
+                                <option value="{{ config.id }}">{{ config.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary border-dark" data-toggle="collapse" data-target=".multi-collapse-config" aria-expanded="false" aria-controls="config-collapse-select config-collapse-config">
+                                <i class="fas fa-search"></i> {{ 'spipu.ui.grid.config.configure'|trans }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row collapse multi-collapse-config" id="config-collapse-config">
+        <div class="col-12 mb-2">
+            <div class="card">
+                <div class="card-header font-weight-bold">
+                    {{ 'spipu.ui.grid.config.title'|trans({'%name': currentConfig.name}) }}
+                </div>
+                <div class="card-body">
+                    <form method="get" action="{{ manager.currentUrl }}" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-form">
+                        <input name="cf[action]" type="hidden" value="update" />
+                        <input name="cf[id]" type="hidden" value="{{ currentConfig.id }}" />
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row mb-2">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <ul class="list-group list-group-flush" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-form-columns">
+                                                <li class="list-group-item list-group-item-primary font-weight-bold">
+                                                    {{ 'spipu.ui.grid.config.columns_show'|trans }}
+                                                </li>
+                                            {% for columnKey in currentConfig.config.columns %}
+                                                <li class="list-group-item">
+                                                    <input name="cf[columns][]" type="hidden" value="{{ columnKey }}" />
+                                                    <i class="fa fa-grip-lines float-right"></i>
+                                                    {{ configuration.columns[columnKey].name }}
+                                                </li>
+                                            {% endfor %}
+                                                <li class="list-group-item list-group-item-dark font-weight-bold">
+                                                    <input name="cf[columns][]" type="hidden" value="----" />
+                                                    <i class="fa fa-grip-lines float-right"></i>
+                                                    {{ 'spipu.ui.grid.config.columns_hide'|trans }}
+                                                </li>
+                                            {% for column in configuration.columns %}{% if (column.code not in currentConfig.config.columns) %}
+                                                <li class="list-group-item">
+                                                    <input name="cf[columns][]" type="hidden" value="{{ column.code }}" />
+                                                    <i class="fa fa-grip-lines float-right"></i>
+                                                    {{ column.name }}
+                                                </li>
+                                            {% endif %}{% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-2 mt-2">
+                                <div class="row">
+                                    <div class="col-12 col-sm-6">
+                                        <button type="button" class="btn btn-outline-secondary btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-cancel"><i class="fas fa-times"></i> {{ 'spipu.ui.action.cancel'|trans }}</button>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <button type="submit" class="btn btn-primary btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-save"><i class="fas fa-save"></i> {{ 'spipu.ui.action.save'|trans }}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
