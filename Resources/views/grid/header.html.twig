@@ -1,0 +1,62 @@
+{% set infoFilters = manager.infoFilters %}
+{% set infoQuickSearch = manager.infoQuickSearch %}
+<div class="row mb-2">
+    <div class="col-12 col-xl-5">
+        {% if (manager.definition.personalize) %}
+            {% set configuration=manager.personalizeDefinition %}
+            {% set currentConfig=configuration.configs[configuration.current] %}
+            <div class="collapse multi-collapse-config show" id="config-collapse-select">
+                <form class="form-inline justify-content-center justify-content-lg-start" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-select-form">
+                    <input name="cf[action]" type="hidden" value="select" />
+                    <div class="form-group mb-2 mr-2">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <label for="grid_config_select" class="input-group-text border-dark">{{ 'spipu.ui.grid.config.display'|trans }}</label>
+                            </div>
+                            <select class="custom-select border-dark" id="grid_config_select" name="cf[id]">
+                                {% for config in configuration.configs %}
+                                    <option value="{{ config.id }}">{{ config.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-secondary border-dark" data-toggle="collapse" data-target=".multi-collapse-config" aria-expanded="false" aria-controls="config-collapse-select config-collapse-config">
+                                    <i class="fas fa-search"></i> {{ 'spipu.ui.grid.config.configure'|trans }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+    <div class="col-12 col-xl-7">
+        {% if infoFilters|length or infoQuickSearch|length %}
+            <div class="collapse multi-collapse {% if manager.request.filters|length == 0 %}show{% endif %}" id="quick-search-collapse">
+                <form class="form-inline justify-content-center justify-content-lg-end" data-grid-code="{{ manager.definition.code }}" data-grid-role="quick-search-form">
+                    {% if infoFilters|length %}
+                        <div class="form-group mb-2">
+                            <a class="btn btn-outline-secondary" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="filter-collapse quick-search-collapse">
+                                <i class="fas fa-search"></i> {{ 'spipu.ui.grid.filter.title'|trans }}
+                            </a>
+                        </div>
+                    {% endif %}
+                    {% if infoQuickSearch|length %}
+                        <div class="form-group mb-2 ml-2">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <select class="custom-select btn btn-outline-secondary border-dark" name="qs[field]">
+                                        {% for column in infoQuickSearch %}
+                                            <option value="{{ column.code }}" {% if (manager.request.quickSearchField == column.code) %}selected{% endif %}>{{ column.name|trans() }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <input type="text" class="form-control" aria-label="quick search" name="qs[value]" value="{{ manager.request.quickSearchValue }}">
+                                <div class="input-group-append"><button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i> {{ 'spipu.ui.grid.quick_search.search'|trans }}</button></div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+        {% endif %}
+    </div>
+</div>

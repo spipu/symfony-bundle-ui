@@ -96,6 +96,7 @@ class Grid
      */
     private $templates = [
         'all'     => '@SpipuUi/grid/all.html.twig',
+        'header'  => '@SpipuUi/grid/header.html.twig',
         'filters' => '@SpipuUi/grid/filters.html.twig',
         'config'  => '@SpipuUi/grid/config.html.twig',
         'pager'   => '@SpipuUi/grid/pager.html.twig',
@@ -382,6 +383,25 @@ class Grid
     public function setTemplateAll(string $templateAll): self
     {
         $this->templates['all'] = $templateAll;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplateHeader(): string
+    {
+        return $this->templates['header'];
+    }
+
+    /**
+     * @param string $templateFilters
+     * @return self
+     */
+    public function setTemplateHeader(string $templateFilters): self
+    {
+        $this->templates['header'] = $templateFilters;
 
         return $this;
     }
