@@ -33,6 +33,10 @@ spipu:
                 columns_show: "Colonnes affichées"
                 columns_hide: "Colonnes cachées"
 
+            config_create:
+                title: "Créer un nouvel affichage"
+                label: "Nom de l'affichage"
+
             quick_search:
                 search: "Recherche"
 
@@ -50,6 +54,7 @@ spipu:
             update:    "Mettre à jour"
             configure: "configurer"
             cancel:    "Annuler"
+            new:       "Nouveau"
 
         success:
             created:  "L'item a été créé"

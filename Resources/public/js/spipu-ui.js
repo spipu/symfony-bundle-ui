@@ -94,6 +94,8 @@ SpipuUiGrid.prototype.personalizeInit = function () {
     items.css('cursor', 'move');
 
     this.getElement('config-cancel').click($.proxy(this.personalizeCancel, this));
+    this.getElement('config-create-cancel').click($.proxy(this.personalizeCancel, this));
+    this.getElement('config-select').on('change', $.proxy(this.personalizeSelect, this));
 
     this.personalizeSortColumnsInit();
     this.personalizeSortColumnsStyle();
@@ -101,6 +103,18 @@ SpipuUiGrid.prototype.personalizeInit = function () {
 
 SpipuUiGrid.prototype.personalizeCancel = function () {
     window.location.reload();
+}
+
+SpipuUiGrid.prototype.personalizeSelect = function () {
+    let value = parseInt(this.getElement('config-select').val());
+    if (value < 1) {
+        this.getElement('config-select-collapse').collapse('hide');
+        this.getElement('config-columns-collapse').collapse('hide');
+        this.getElement('config-create-collapse').collapse('show');
+        return;
+    }
+
+    this.getElement('config-select-form').submit();
 }
 
 SpipuUiGrid.prototype.personalizeSortColumnsDrag = function (event) {

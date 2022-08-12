@@ -33,6 +33,10 @@ spipu:
                 columns_show: "Displayed Columns"
                 columns_hide: "Hidden Columns"
 
+            config_create:
+                title: "Create a new display"
+                label: "Name of the display"
+
             quick_search:
                 search: "Search"
 
@@ -50,6 +54,7 @@ spipu:
             update:    "Update"
             configure: "Configure"
             cancel:    "Cancel"
+            new:       "New"
 
         success:
             created:  "The item has been created"

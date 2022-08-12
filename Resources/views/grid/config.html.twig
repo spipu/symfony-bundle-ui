@@ -1,7 +1,37 @@
 {% if (manager.definition.personalize) %}
     {% set configuration=manager.personalizeDefinition %}
     {% set currentConfig=configuration.configs[configuration.current] %}
-    <div class="row collapse multi-collapse-config" id="config-collapse-config">
+    <div class="row collapse multi-collapse-create" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-create-collapse">
+        <div class="col-12 mb-2">
+            <div class="card">
+                <div class="card-header font-weight-bold">
+                    {{ 'spipu.ui.grid.config_create.title'|trans({'%name': currentConfig.name}) }}
+                </div>
+                <div class="card-body">
+                    <form method="get" action="{{ manager.currentUrl }}" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-create">
+                        <input name="cf[action]" type="hidden" value="create" />
+                        <div class="row mb-2">
+                            <div class="col-12 col-md-4">
+                                <label>{{ 'spipu.ui.grid.config_create.label'|trans }}</label>
+                            </div>
+                            <div class="col-12 col-md-8">
+                                <input type="text" name="cf[name]" class="form-control form-control-sm col-12">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-6">
+                                <button type="button" class="btn btn-outline-secondary btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-create-cancel"><i class="fas fa-times"></i> {{ 'spipu.ui.action.cancel'|trans }}</button>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <button type="submit" class="btn btn-success btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-create-submit"><i class="fas fa-edit"></i> {{ 'spipu.ui.action.create'|trans }}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row collapse multi-collapse-config" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-columns-collapse">
         <div class="col-12 mb-2">
             <div class="card">
                 <div class="card-header font-weight-bold">
@@ -50,7 +80,7 @@
                                         <button type="button" class="btn btn-outline-secondary btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-cancel"><i class="fas fa-times"></i> {{ 'spipu.ui.action.cancel'|trans }}</button>
                                     </div>
                                     <div class="col-12 col-sm-6">
-                                        <button type="submit" class="btn btn-primary btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-save"><i class="fas fa-save"></i> {{ 'spipu.ui.action.save'|trans }}</button>
+                                        <button type="submit" class="btn btn-success btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-save"><i class="fas fa-save"></i> {{ 'spipu.ui.action.save'|trans }}</button>
                                     </div>
                                 </div>
                             </div>

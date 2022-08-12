@@ -5,7 +5,7 @@
         {% if (manager.definition.personalize) %}
             {% set configuration=manager.personalizeDefinition %}
             {% set currentConfig=configuration.configs[configuration.current] %}
-            <div class="collapse multi-collapse-config show" id="config-collapse-select">
+            <div class="collapse multi-collapse-config show" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-select-collapse">
                 <form class="form-inline justify-content-center justify-content-lg-start" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-select-form">
                     <input name="cf[action]" type="hidden" value="select" />
                     <div class="form-group mb-2 mr-2">
@@ -13,14 +13,15 @@
                             <div class="input-group-prepend">
                                 <label for="grid_config_select" class="input-group-text border-dark">{{ 'spipu.ui.grid.config.display'|trans }}</label>
                             </div>
-                            <select class="custom-select border-dark" id="grid_config_select" name="cf[id]">
+                            <select autocomplete="off" class="custom-select border-dark" name="cf[id]" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-select" value="{{ currentConfig.id }}">
                                 {% for config in configuration.configs %}
-                                    <option value="{{ config.id }}">{{ config.name }}</option>
+                                    <option {% if currentConfig.id == config.id %}selected="selected"{% endif %} value="{{ config.id }}">{{ config.name }}</option>
                                 {% endfor %}
+                                <option value="0">+ {{ 'spipu.ui.action.new'|trans|lower }}</option>
                             </select>
                             <div class="input-group-append">
                                 <button type="button" class="btn btn-outline-secondary border-dark" data-toggle="collapse" data-target=".multi-collapse-config" aria-expanded="false" aria-controls="config-collapse-select config-collapse-config">
-                                    <i class="fas fa-search"></i> {{ 'spipu.ui.grid.config.configure'|trans }}
+                                    <i class="fas fa-cog"></i> {{ 'spipu.ui.grid.config.configure'|trans }}
                                 </button>
                             </div>
                         </div>
@@ -51,7 +52,11 @@
                                     </select>
                                 </div>
                                 <input type="text" class="form-control" aria-label="quick search" name="qs[value]" value="{{ manager.request.quickSearchValue }}">
-                                <div class="input-group-append"><button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i> {{ 'spipu.ui.grid.quick_search.search'|trans }}</button></div>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="submit">
+                                        <i class="fas fa-search"></i> {{ 'spipu.ui.grid.quick_search.search'|trans }}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     {% endif %}
