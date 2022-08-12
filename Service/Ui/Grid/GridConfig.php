@@ -15,14 +15,13 @@ namespace Spipu\UiBundle\Service\Ui\Grid;
 
 use Spipu\UiBundle\Entity\Grid\Grid;
 use Spipu\UiBundle\Entity\GridConfig as GridConfigEntity;
+use Spipu\UiBundle\Exception\UiException;
 use Spipu\UiBundle\Repository\GridConfigRepository;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GridConfig
 {
-    public const DEFAULT_NAME = 'default';
-
     /**
      * @var Security
      */
@@ -116,32 +115,47 @@ class GridConfig
         $gridConfig = $this->gridConfigRepository->getUserConfigByName(
             $gridIdentifier,
             $userIdentifier,
-            self::DEFAULT_NAME
+            GridConfigEntity::DEFAULT_NAME
         );
 
         if (!$gridConfig) {
-            $columns = [];
-            foreach ($grid->getColumns() as $column) {
-                if ($column->isDisplayed()) {
-                    $columns[$column->getCode()] = $column->getPosition();
-                }
-            }
-            asort($columns);
-
-            $config = [
-                'columns' => array_keys($columns),
-            ];
-
-            $gridConfig = new GridConfigEntity();
-            $gridConfig
-                ->setGridIdentifier($gridIdentifier)
-                ->setUserIdentifier($userIdentifier)
-                ->setName(self::DEFAULT_NAME)
-                ->setConfig($config)
-            ;
-
-            $this->gridConfigRepository->add($gridConfig);
+            $gridConfig = $this->createUserConfig($grid, GridConfigEntity::DEFAULT_NAME);
         }
+
+        return $gridConfig;
+    }
+
+    /**
+     * @param Grid $grid
+     * @param string $name
+     * @return GridConfigEntity
+     */
+    public function createUserConfig(Grid $grid, string $name): GridConfigEntity
+    {
+        $gridIdentifier = $this->getGridIdentifier($grid);
+        $userIdentifier = $this->getUserIdentifier();
+
+        $columns = [];
+        foreach ($grid->getColumns() as $column) {
+            if ($column->isDisplayed()) {
+                $columns[$column->getCode()] = $column->getPosition();
+            }
+        }
+        asort($columns);
+
+        $config = [
+            'columns' => array_keys($columns),
+        ];
+
+        $gridConfig = new GridConfigEntity();
+        $gridConfig
+            ->setGridIdentifier($gridIdentifier)
+            ->setUserIdentifier($userIdentifier)
+            ->setName(substr($name, 0, 64))
+            ->setConfig($config)
+        ;
+
+        $this->gridConfigRepository->add($gridConfig);
 
         return $gridConfig;
     }
@@ -166,14 +180,14 @@ class GridConfig
 
     /**
      * @param Grid $grid
+     * @param int|null $currentConfigId
      * @return array
      */
-    public function getPersonalizeDefinition(Grid $grid): array
+    public function getPersonalizeDefinition(Grid $grid, ?int $currentConfigId): array
     {
         $definition = [
             'columns' => [],
             'configs' => [],
-            'current' => null,
         ];
 
         foreach ($grid->getColumns() as $column) {
@@ -183,14 +197,75 @@ class GridConfig
             ];
         }
 
+        $defaultConfigId = null;
         $configs = $this->getUserConfigs($grid);
         foreach ($configs as $config) {
             $definition['configs'][$config->getId()] = $config;
-            if ($config->getName() === GridConfig::DEFAULT_NAME) {
-                $definition['current'] = $config->getId();
+            if ($config->isDefault()) {
+                $defaultConfigId = $config->getId();
             }
         }
+        if (!array_key_exists($currentConfigId, $definition['configs'])) {
+            $currentConfigId = null;
+        }
+        $definition['current'] = $currentConfigId ?? $defaultConfigId;
 
         return $definition;
+    }
+
+    /**
+     * @param Grid $grid
+     * @param string $action
+     * @param array $params
+     * @return GridConfigEntity|null
+     * @throws UiException
+     */
+    public function makeAction(Grid $grid, string $action, array $params): ?GridConfigEntity
+    {
+        switch ($action) {
+            case 'create':
+                return $this->makeActionCreate($grid, $params);
+
+            case 'select':
+                return $this->makeActionSelect($grid, $params);
+
+            default:
+                throw new UiException('Unknown grid config action');
+        }
+    }
+
+    /**
+     * @param Grid $grid
+     * @param array $params
+     * @return GridConfigEntity|null
+     */
+    private function makeActionCreate(Grid $grid, array $params): ?GridConfigEntity
+    {
+        if (!array_key_exists('name', $params) || !is_string($params['name'])) {
+            return null;
+        }
+
+        $name = trim(strip_tags($params['name']));
+        if ($name === '') {
+            return null;
+        }
+
+        return $this->createUserConfig($grid, $name);
+    }
+
+
+
+    /**
+     * @param Grid $grid
+     * @param array $params
+     * @return GridConfigEntity|null
+     */
+    private function makeActionSelect(Grid $grid, array $params): ?GridConfigEntity
+    {
+        if (!array_key_exists('id', $params) || !is_numeric($params['id'])) {
+            return null;
+        }
+
+        return $this->getUserConfig($grid, (int) $params['id']);
     }
 }

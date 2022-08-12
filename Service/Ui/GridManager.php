@@ -24,11 +24,13 @@ use Spipu\UiBundle\Service\Ui\Grid\GridRequest;
 use Spipu\UiBundle\Service\Ui\Definition\GridDefinitionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Spipu\UiBundle\Entity\Grid\Grid as GridDefinition;
 use Spipu\UiBundle\Entity\Grid\Action as GridAction;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Throwable;
 use Twig\Environment as Twig;
 use Twig\Error\Error as TwigError;
 
@@ -214,6 +216,37 @@ class GridManager implements GridManagerInterface
     /**
      * @return void
      */
+    public function prepareConfig(): void
+    {
+        if (!$this->definition->isPersonalize()) {
+            return;
+        }
+
+        $configParams = $this->request->getConfigParams();
+        if ($configParams === null) {
+            return;
+        }
+
+        $configAction = (string) $configParams['action'];
+        unset($configParams['action']);
+
+        try {
+            $gridConfig = $this->gridConfig->makeAction($this->getDefinition(), $configAction, $configParams);
+            if ($gridConfig !== null) {
+                $this->request->setCurrentConfig($gridConfig->getId());
+                $redirect = new RedirectResponse($this->request->getDefaultUrl());
+                $redirect->sendHeaders();
+                $redirect->sendContent();
+                exit;
+            }
+        } catch (Throwable $e) {
+            $this->addFlash('danger', $e->getMessage());
+        }
+    }
+
+    /**
+     * @return void
+     */
     public function loadPage(): void
     {
         $this->nbPages = 1;
@@ -236,6 +269,7 @@ class GridManager implements GridManagerInterface
     public function validate(): bool
     {
         $this->prepareRequest();
+        $this->prepareConfig();
         $this->loadPage();
 
         return true;
@@ -562,6 +596,20 @@ class GridManager implements GridManagerInterface
      */
     public function getPersonalizeDefinition(): array
     {
-        return $this->gridConfig->getPersonalizeDefinition($this->getDefinition());
+        $currentConfigId = $this->request->getGridConfigId();
+
+        return $this->gridConfig->getPersonalizeDefinition($this->getDefinition(), $currentConfigId);
+    }
+
+    /**
+     * Adds a flash message to the current session for type.
+     *
+     * @param string $type
+     * @param string $message
+     * @return void
+     */
+    private function addFlash(string $type, string $message): void
+    {
+        $this->request->getSymfonyRequest()->getSession()->getFlashBag()->add($type, $message);
     }
 }

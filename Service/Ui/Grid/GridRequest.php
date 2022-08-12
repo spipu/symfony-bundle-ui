@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Service\Ui\Grid;
 
+use Spipu\UiBundle\Entity\GridConfig as GridConfigEntity;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Spipu\UiBundle\Entity\Grid\Grid as GridDefinition;
 use Symfony\Component\Routing\RouterInterface;
@@ -30,6 +31,7 @@ class GridRequest
     public const KEY_PAGE_CURRENT = 'pc';
     public const KEY_SORT_COLUMN  = 'sc';
     public const KEY_SORT_ORDER   = 'so';
+    public const KEY_CONFIG       = 'cf';
     public const KEY_FILTERS      = 'fl';
     public const KEY_QUICK_SEARCH = 'qs';
 
@@ -82,6 +84,11 @@ class GridRequest
      * @var array
      */
     private $quickSearch = [];
+
+    /**
+     * @var int|null
+     */
+    private $gridConfigId = null;
 
     /**
      * @var string
@@ -223,6 +230,47 @@ class GridRequest
 
         $this->setSessionValue('sort_column', $this->sortColumn);
         $this->setSessionValue('sort_order', $this->sortOrder);
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getConfigParams(): ?array
+    {
+        $params = (array) $this->request->get(self::KEY_CONFIG, []);
+
+        $this->gridConfigId = $this->getSessionValue('config_id', null);
+        if (array_key_exists('id', $params) && is_numeric($params['id'])) {
+            $this->setCurrentConfig((int) $params['id']);
+        }
+        $this->gridConfigId = (int) $this->gridConfigId;
+        if ($this->gridConfigId < 0) {
+            $this->gridConfigId = null;
+        }
+
+        if (empty($params) || !array_key_exists('action', $params) || !is_string($params['action'])) {
+            return null;
+        }
+
+        return $params;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getGridConfigId(): ?int
+    {
+        return $this->gridConfigId;
+    }
+
+    /**
+     * @param int $gridConfigId
+     * @return void
+     */
+    public function setCurrentConfig(int $gridConfigId): void
+    {
+        $this->gridConfigId = $gridConfigId;
+        $this->setSessionValue('config_id', $gridConfigId);
     }
 
     /**
@@ -474,5 +522,21 @@ class GridRequest
         $params = array_merge($this->routeParameters, $requestParams, $params);
 
         return $this->router->generate($this->routeName, $params);
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultUrl(): string
+    {
+        return $this->router->generate($this->routeName, $this->routeParameters);
+    }
+
+    /**
+     * @return SymfonyRequest
+     */
+    public function getSymfonyRequest(): SymfonyRequest
+    {
+        return $this->request;
     }
 }

@@ -15,7 +15,7 @@
                                 <label>{{ 'spipu.ui.grid.config_create.label'|trans }}</label>
                             </div>
                             <div class="col-12 col-md-8">
-                                <input type="text" name="cf[name]" class="form-control form-control-sm col-12">
+                                <input type="text" name="cf[name]" class="form-control form-control-sm col-12" minlength="3" maxlength="64">
                             </div>
                         </div>
                         <div class="row">
@@ -39,8 +39,8 @@
                 </div>
                 <div class="card-body">
                     <form method="get" action="{{ manager.currentUrl }}" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-form">
-                        <input name="cf[action]" type="hidden" value="update" />
-                        <input name="cf[id]" type="hidden" value="{{ currentConfig.id }}" />
+                        <input name="cf[action]" type="hidden" value="update" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-form-action" />
+                        <input name="cf[id]" type="hidden" value="{{ currentConfig.id }}"/>
                         <div class="row">
                             <div class="col-12">
                                 <div class="row mb-2">
@@ -76,11 +76,14 @@
                             </div>
                             <div class="col-12 mb-2 mt-2">
                                 <div class="row">
-                                    <div class="col-12 col-sm-6">
+                                    <div class="col-12 col-sm-4">
                                         <button type="button" class="btn btn-outline-secondary btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-cancel"><i class="fas fa-times"></i> {{ 'spipu.ui.action.cancel'|trans }}</button>
                                     </div>
-                                    <div class="col-12 col-sm-6">
+                                    <div class="col-12 col-sm-4">
                                         <button type="submit" class="btn btn-success btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-save"><i class="fas fa-save"></i> {{ 'spipu.ui.action.save'|trans }}</button>
+                                    </div>
+                                    <div class="col-12 col-sm-4">
+                                        <button type="button" class="btn btn-outline-danger btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-delete"><i class="fas fa-trash"></i> {{ 'spipu.ui.action.delete'|trans }}</button>
                                     </div>
                                 </div>
                             </div>

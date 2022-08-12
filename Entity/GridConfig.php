@@ -17,6 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class GridConfig
 {
+    public const DEFAULT_NAME = 'default';
+
     use TimestampableTrait;
 
     /**
@@ -41,7 +43,7 @@ class GridConfig
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=64)
      */
     private $name;
 
@@ -117,6 +119,19 @@ class GridConfig
     }
 
     /**
+     * @param int $length
+     * @return string
+     */
+    public function getCutName(int $length): string
+    {
+        if (strlen($this->name) < $length - 3) {
+            return $this->name;
+        }
+
+        return substr($this->name, 0, $length - 3) . '...';
+    }
+
+    /**
      * @return array
      */
     public function getConfig(): array
@@ -133,5 +148,13 @@ class GridConfig
         $this->config = $config;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDefault(): bool
+    {
+        return $this->name === self::DEFAULT_NAME;
     }
 }
