@@ -215,6 +215,7 @@ class GridManager implements GridManagerInterface
 
     /**
      * @return void
+     * @SuppressWarnings(PMD.ExitExpression)
      */
     public function prepareConfig(): void
     {
@@ -241,6 +242,8 @@ class GridManager implements GridManagerInterface
 
         $redirect = new RedirectResponse($this->request->getDefaultUrl());
         $redirect->sendHeaders();
+        $redirect->sendContent();
+        exit;
     }
 
     /**
