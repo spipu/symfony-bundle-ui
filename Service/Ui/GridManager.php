@@ -234,14 +234,13 @@ class GridManager implements GridManagerInterface
             $gridConfig = $this->gridConfig->makeAction($this->getDefinition(), $configAction, $configParams);
             if ($gridConfig !== null) {
                 $this->request->setCurrentConfig($gridConfig->getId());
-                $redirect = new RedirectResponse($this->request->getDefaultUrl());
-                $redirect->sendHeaders();
-                $redirect->sendContent();
-                exit;
             }
         } catch (Throwable $e) {
             $this->addFlash('danger', $e->getMessage());
         }
+
+        $redirect = new RedirectResponse($this->request->getDefaultUrl());
+        $redirect->sendHeaders();
     }
 
     /**

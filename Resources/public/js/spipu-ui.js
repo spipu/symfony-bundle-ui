@@ -93,9 +93,9 @@ SpipuUiGrid.prototype.personalizeInit = function () {
     items.on('drag', $.proxy(this.personalizeSortColumnsDrag, this));
     items.css('cursor', 'move');
 
-    this.getElement('config-cancel').click($.proxy(this.personalizeCancel, this));
     this.getElement('config-create-cancel').click($.proxy(this.personalizeCancel, this));
-    this.getElement('config-create-delete').click($.proxy(this.personalizeDelete, this));
+    this.getElement('config-cancel').click($.proxy(this.personalizeCancel, this));
+    this.getElement('config-delete').click($.proxy(this.personalizeDelete, this));
     this.getElement('config-select').on('change', $.proxy(this.personalizeSelect, this));
 
     this.personalizeSortColumnsInit();
@@ -108,7 +108,6 @@ SpipuUiGrid.prototype.personalizeCancel = function () {
 
 SpipuUiGrid.prototype.personalizeDelete = function () {
     this.getElement('config-form-action').val('delete');
-    this.getElement('config-form').submit();
 }
 
 SpipuUiGrid.prototype.personalizeSelect = function () {

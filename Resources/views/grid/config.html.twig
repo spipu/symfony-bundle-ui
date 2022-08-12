@@ -77,13 +77,15 @@
                             <div class="col-12 mb-2 mt-2">
                                 <div class="row">
                                     <div class="col-12 col-sm-4">
+                                        {% if not currentConfig.isDefault %}
+                                            <button type="submit" class="btn btn-outline-danger btn-block confirm-action" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-delete"><i class="fas fa-trash"></i> {{ 'spipu.ui.action.delete'|trans }}</button>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-12 col-sm-4">
                                         <button type="button" class="btn btn-outline-secondary btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-cancel"><i class="fas fa-times"></i> {{ 'spipu.ui.action.cancel'|trans }}</button>
                                     </div>
                                     <div class="col-12 col-sm-4">
                                         <button type="submit" class="btn btn-success btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-save"><i class="fas fa-save"></i> {{ 'spipu.ui.action.save'|trans }}</button>
-                                    </div>
-                                    <div class="col-12 col-sm-4">
-                                        <button type="button" class="btn btn-outline-danger btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-delete"><i class="fas fa-trash"></i> {{ 'spipu.ui.action.delete'|trans }}</button>
                                     </div>
                                 </div>
                             </div>

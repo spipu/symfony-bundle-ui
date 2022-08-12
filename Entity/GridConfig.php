@@ -17,9 +17,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class GridConfig
 {
-    public const DEFAULT_NAME = 'default';
-
     use TimestampableTrait;
+
+    public const DEFAULT_NAME = 'default';
 
     /**
      * @var int|null

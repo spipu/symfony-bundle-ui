@@ -222,6 +222,8 @@ class GridConfig
      */
     public function makeAction(Grid $grid, string $action, array $params): ?GridConfigEntity
     {
+        $action = strip_tags($action);
+
         switch ($action) {
             case 'create':
                 return $this->makeActionCreate($grid, $params);
@@ -229,8 +231,11 @@ class GridConfig
             case 'select':
                 return $this->makeActionSelect($grid, $params);
 
+            case 'delete':
+                return $this->makeActionDelete($grid, $params);
+
             default:
-                throw new UiException('Unknown grid config action');
+                throw new UiException('Unknown grid config action: ' . $action);
         }
     }
 
@@ -253,8 +258,6 @@ class GridConfig
         return $this->createUserConfig($grid, $name);
     }
 
-
-
     /**
      * @param Grid $grid
      * @param array $params
@@ -267,5 +270,24 @@ class GridConfig
         }
 
         return $this->getUserConfig($grid, (int) $params['id']);
+    }
+
+    /**
+     * @param Grid $grid
+     * @param array $params
+     * @return GridConfigEntity|null
+     */
+    private function makeActionDelete(Grid $grid, array $params): ?GridConfigEntity
+    {
+        if (!array_key_exists('id', $params) || !is_numeric($params['id'])) {
+            return null;
+        }
+
+        $gridConfig = $this->getUserConfig($grid, (int) $params['id']);
+        if ($gridConfig && !$gridConfig->isDefault()) {
+            $this->gridConfigRepository->remove($gridConfig);
+        }
+
+        return $this->getDefaultUserConfig($grid);
     }
 }
