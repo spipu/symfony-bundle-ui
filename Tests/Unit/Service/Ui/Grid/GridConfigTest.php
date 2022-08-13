@@ -66,7 +66,8 @@ class GridConfigTest extends TestCase
             $gridConfigRepository,
             $translator,
             $gridIdentifier,
-            $userIdentifier
+            $userIdentifier,
+            SymfonyMock::getEntityManager($testCase)
         );
     }
 

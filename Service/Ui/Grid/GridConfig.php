@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Service\Ui\Grid;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Spipu\UiBundle\Entity\Grid\Grid;
 use Spipu\UiBundle\Entity\GridConfig as GridConfigEntity;
 use Spipu\UiBundle\Exception\UiException;
@@ -48,24 +49,32 @@ class GridConfig
     private $userIdentifier;
 
     /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
      * @param Security $security
      * @param GridConfigRepository $gridConfigRepository
      * @param TranslatorInterface $translator
      * @param GridIdentifierInterface $gridIdentifier
      * @param UserIdentifierInterface $userIdentifier
+     * @param EntityManagerInterface $entityManager
      */
     public function __construct(
         Security $security,
         GridConfigRepository $gridConfigRepository,
         TranslatorInterface $translator,
         GridIdentifierInterface $gridIdentifier,
-        UserIdentifierInterface $userIdentifier
+        UserIdentifierInterface $userIdentifier,
+        EntityManagerInterface $entityManager
     ) {
         $this->security = $security;
         $this->gridConfigRepository = $gridConfigRepository;
         $this->translator = $translator;
         $this->gridIdentifier = $gridIdentifier;
         $this->userIdentifier = $userIdentifier;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -155,7 +164,8 @@ class GridConfig
             ->setConfig($config)
         ;
 
-        $this->gridConfigRepository->add($gridConfig);
+        $this->entityManager->persist($gridConfig);
+        $this->entityManager->flush();
 
         return $gridConfig;
     }
@@ -234,6 +244,9 @@ class GridConfig
             case 'delete':
                 return $this->makeActionDelete($grid, $params);
 
+            case 'update':
+                return $this->makeActionUpdate($grid, $params);
+
             default:
                 throw new UiException('Unknown grid config action: ' . $action);
         }
@@ -279,15 +292,59 @@ class GridConfig
      */
     private function makeActionDelete(Grid $grid, array $params): ?GridConfigEntity
     {
-        if (!array_key_exists('id', $params) || !is_numeric($params['id'])) {
-            return null;
-        }
-
-        $gridConfig = $this->getUserConfig($grid, (int) $params['id']);
+        $gridConfig = $this->makeActionSelect($grid, $params);
         if ($gridConfig && !$gridConfig->isDefault()) {
-            $this->gridConfigRepository->remove($gridConfig);
+            $this->entityManager->remove($gridConfig);
+            $this->entityManager->flush();
         }
 
         return $this->getDefaultUserConfig($grid);
+    }
+
+    /**
+     * @param Grid $grid
+     * @param array $params
+     * @return GridConfigEntity|null
+     * @throws UiException
+     */
+    private function makeActionUpdate(Grid $grid, array $params): ?GridConfigEntity
+    {
+        $gridConfig = $this->makeActionSelect($grid, $params);
+        if (
+            !$gridConfig
+            || !array_key_exists('columns', $params)
+            || !is_array($params['columns'])
+        ) {
+            throw new UiException('bad data');
+        }
+
+        $displayedColumns = [];
+        foreach ($params['columns'] as $column) {
+            if (!is_string($column)) {
+                throw new UiException('bad data');
+            }
+            if ($column === '----') {
+                break;
+            }
+            if ($grid->getColumn($column) === null) {
+                throw new UiException('bad data');
+            }
+            $displayedColumns[] = $column;
+        }
+
+        if (count($displayedColumns) === 0) {
+            throw new UiException('you must at least display one column');
+        }
+
+        $gridConfig->setConfig(
+            [
+                'columns' => $displayedColumns,
+            ]
+        );
+
+        $this->entityManager->flush();
+
+
+        return $gridConfig;
     }
 }

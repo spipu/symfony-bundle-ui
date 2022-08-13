@@ -23,26 +23,6 @@ class GridConfigRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param GridConfig $entity
-     * @return void
-     */
-    public function add(GridConfig $entity): void
-    {
-        $this->_em->persist($entity);
-        $this->_em->flush();
-    }
-
-    /**
-     * @param GridConfig $entity
-     * @return void
-     */
-    public function remove(GridConfig $entity): void
-    {
-        $this->_em->remove($entity);
-        $this->_em->flush();
-    }
-
-    /**
      * @param string $gridIdentifier
      * @param string $userIdentifier
      * @return GridConfig[]
