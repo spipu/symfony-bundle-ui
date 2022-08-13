@@ -16,6 +16,7 @@ namespace Spipu\UiBundle\Service\Ui;
 use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Entity\Grid\Action;
 use Spipu\UiBundle\Entity\Grid\Column;
+use Spipu\UiBundle\Entity\GridConfig as GridConfigEntity;
 use Spipu\UiBundle\Event\GridDefinitionEvent;
 use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Service\Ui\Grid\DataProvider\DataProviderInterface;
@@ -38,6 +39,7 @@ use Twig\Error\Error as TwigError;
  * @SuppressWarnings(PMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PMD.CouplingBetweenObjects)
  * @SuppressWarnings(PMD.CyclomaticComplexity)
+ * @SuppressWarnings(PMD.TooManyFields)
  */
 class GridManager implements GridManagerInterface
 {
@@ -110,6 +112,21 @@ class GridManager implements GridManagerInterface
      * @var DataProviderInterface
      */
     private $dataProvider;
+
+    /**
+     * @var GridConfigEntity|null
+     */
+    private $currentGridConfig;
+
+    /**
+     * @var array|null
+     */
+    private $gridConfigDefinition;
+
+    /**
+     * @var bool
+     */
+    private $currentGridConfigLoaded = false;
 
     /**
      * GridManager constructor.
@@ -598,9 +615,49 @@ class GridManager implements GridManagerInterface
      */
     public function getPersonalizeDefinition(): array
     {
-        $currentConfigId = $this->request->getGridConfigId();
+        if ($this->currentGridConfigLoaded === false) {
+            $this->loadCurrentGridConfig();
+        }
 
-        return $this->gridConfig->getPersonalizeDefinition($this->getDefinition(), $currentConfigId);
+        return $this->gridConfigDefinition;
+    }
+
+    /**
+     * @return GridConfigEntity|null
+     */
+    public function getCurrentGridConfig(): ?GridConfigEntity
+    {
+        if ($this->currentGridConfigLoaded === false) {
+            $this->loadCurrentGridConfig();
+        }
+
+        return $this->currentGridConfig;
+    }
+
+    /**
+     * @return void
+     */
+    private function loadCurrentGridConfig(): void
+    {
+        $this->currentGridConfigLoaded = true;
+
+        $this->currentGridConfig = null;
+        $this->gridConfigDefinition = [];
+
+        if (!$this->definition->isPersonalize()) {
+            return;
+        }
+
+        $currentConfigId = $this->request->getGridConfigId();
+        $this->currentGridConfig = $this->gridConfig->getUserConfig($this->definition, $currentConfigId);
+        if ($this->currentGridConfig === null) {
+            $currentConfigId = null;
+        }
+
+        $this->gridConfigDefinition = $this->gridConfig->getPersonalizeDefinition(
+            $this->getDefinition(),
+            $currentConfigId
+        );
     }
 
     /**

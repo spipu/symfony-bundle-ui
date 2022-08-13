@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Entity\Grid;
 
+use Spipu\UiBundle\Entity\GridConfig;
 use Spipu\UiBundle\Entity\OptionsTrait;
 use Spipu\UiBundle\Entity\PositionInterface;
 use Spipu\UiBundle\Exception\GridException;
@@ -638,11 +639,23 @@ class Grid
     }
 
     /**
+     * @param GridConfig|null $gridConfig
      * @return Column[]
      */
-    public function getDisplayedColumns(): array
+    public function getDisplayedColumns(?GridConfig $gridConfig = null): array
     {
         $columns = [];
+
+        if ($gridConfig) {
+            foreach ($gridConfig->getConfigColumns() as $columnKey) {
+                $column = $this->getColumn($columnKey);
+                if ($column !== null) {
+                    $columns[] = $column;
+                }
+            }
+
+            return $columns;
+        }
 
         foreach ($this->columns as $column) {
             if ($column->isDisplayed()) {

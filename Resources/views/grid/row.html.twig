@@ -2,7 +2,7 @@
 {% if manager.definition.massActions|length > 0 %}
     <td data-grid-role="checkbox"><input type="checkbox" value="{{ attribute(row, manager.definition.dataProviderPrimaryKey) }}" data-grid-code="{{ manager.definition.code }}" data-grid-role="checkbox" /></td>
 {% endif %}
-{% for column in manager.definition.displayedColumns %}
+{% for column in manager.definition.displayedColumns(manager.currentGridConfig) %}
     {% apply spaceless %}{% include column.type.templateField with {'manager': manager, 'row': row, 'column': column, 'data': manager.value(row, column.entityField)} %}{% endapply %}
 
 {% endfor %}

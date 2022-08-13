@@ -41,7 +41,7 @@
 {% if hasMassAction %}
                 <th scope="col" style="width: 30px"><input type="checkbox" data-grid-code="{{ manager.definition.code }}" data-grid-role="checkbox-all" /></th>
 {% endif %}
-{% for column in manager.definition.displayedColumns %}
+{% for column in manager.definition.displayedColumns(manager.currentGridConfig) %}
 {%   if column.sortable %}
 {%       if manager.request.sortColumn == column.code and manager.request.sortOrder == 'asc' %}{%  set sortOrder='desc' %}{% else %}{%  set sortOrder='asc' %}{% endif %}
                 <th scope="col" class="sorting {% if manager.request.sortColumn == column.code %}sorting_{{ manager.request.sortOrder }}{% endif %}">

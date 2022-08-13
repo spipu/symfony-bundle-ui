@@ -140,6 +140,18 @@ class GridConfig
     }
 
     /**
+     * @return string[]
+     */
+    public function getConfigColumns(): array
+    {
+        if (!array_key_exists('columns', $this->config)) {
+            return [];
+        }
+
+        return $this->config['columns'];
+    }
+
+    /**
      * @param array $config
      * @return $this
      */
