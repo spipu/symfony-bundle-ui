@@ -67,11 +67,13 @@ SpipuUiGrid.prototype.getValue = function (target) {
 };
 
 SpipuUiGrid.prototype.init = function () {
-    this.filtersInit();
-
     if (this.getElement('checkbox-all')) {
         this.massActionsInit();
         this.massActionsUpdate();
+    }
+
+    if (this.getElement('filter-open')) {
+        this.filtersInit();
     }
 
     if (this.getElement('config-form')) {
@@ -81,6 +83,14 @@ SpipuUiGrid.prototype.init = function () {
 
 SpipuUiGrid.prototype.filtersInit = function () {
     this.getElement('filter-cancel').click($.proxy(this.filtersReset, this));
+    this.getElement('filter-open').click($.proxy(this.filtersOpen, this));
+}
+
+SpipuUiGrid.prototype.filtersOpen = function () {
+    this.getElement('search-header-collapse').collapse('hide');
+    this.getElement('config-columns-collapse').collapse('hide');
+    this.getElement('config-create-collapse').collapse('hide');
+    this.getElement('filter-collapse').collapse('show');
 }
 
 SpipuUiGrid.prototype.personalizeInit = function () {
@@ -93,11 +103,11 @@ SpipuUiGrid.prototype.personalizeInit = function () {
     items.on('drag', $.proxy(this.personalizeSortColumnsDrag, this));
     items.css('cursor', 'move');
 
-    this.getElement('config-create-cancel').click($.proxy(this.personalizeCancel, this));
-    this.getElement('config-cancel').click($.proxy(this.personalizeCancel, this));
-    this.getElement('config-delete').click($.proxy(this.personalizeDelete, this));
     this.getElement('config-select').on('change', $.proxy(this.personalizeSelect, this));
-
+    this.getElement('config-create').click($.proxy(this.personalizeCreate, this));
+    this.getElement('config-delete').click($.proxy(this.personalizeDelete, this));
+    this.getElement('config-configure').click($.proxy(this.personalizeConfigure, this));
+    this.getElement('config-cancel').click($.proxy(this.personalizeCancel, this));
     this.personalizeSortColumnsInit();
     this.personalizeSortColumnsStyle();
 }
@@ -110,15 +120,23 @@ SpipuUiGrid.prototype.personalizeDelete = function () {
     this.getElement('config-form-action').val('delete');
 }
 
-SpipuUiGrid.prototype.personalizeSelect = function () {
-    let value = parseInt(this.getElement('config-select').val());
-    if (value < 1) {
-        this.getElement('config-select-collapse').collapse('hide');
-        this.getElement('config-columns-collapse').collapse('hide');
-        this.getElement('config-create-collapse').collapse('show');
-        return;
-    }
+SpipuUiGrid.prototype.personalizeCreate = function () {
+    this.getElement('filter-collapse').collapse('hide');
+    this.getElement('search-header-collapse').collapse('hide');
+    this.getElement('config-select-collapse').collapse('hide');
+    this.getElement('config-columns-collapse').collapse('hide');
+    this.getElement('config-create-collapse').collapse('show');
+}
 
+SpipuUiGrid.prototype.personalizeConfigure = function () {
+    this.getElement('filter-collapse').collapse('hide');
+    this.getElement('search-header-collapse').collapse('hide');
+    this.getElement('config-select-collapse').collapse('hide');
+    this.getElement('config-create-collapse').collapse('hide');
+    this.getElement('config-columns-collapse').collapse('show');
+}
+
+SpipuUiGrid.prototype.personalizeSelect = function () {
     this.getElement('config-select-form').submit();
 }
 

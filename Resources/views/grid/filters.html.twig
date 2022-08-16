@@ -1,6 +1,6 @@
 {% set infoFilters = manager.infoFilters %}
 {% if infoFilters|length %}
-<div class="row collapse multi-collapse {% if manager.request.filters|length > 0 %}show{% endif %}" id="filter-collapse">
+<div class="row collapse {% if manager.request.filters|length > 0 %}show{% endif %}" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-collapse">
     <div class="col-12 mb-2">
         <div class="card">
             <div class="card-header">

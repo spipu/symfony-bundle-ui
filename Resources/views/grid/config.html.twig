@@ -1,7 +1,7 @@
 {% if (manager.definition.personalize) %}
     {% set configuration=manager.personalizeDefinition %}
     {% set currentConfig=configuration.configs[configuration.current] %}
-    <div class="row collapse multi-collapse-create" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-create-collapse">
+    <div class="row collapse" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-create-collapse">
         <div class="col-12 mb-2">
             <div class="card">
                 <div class="card-header font-weight-bold">
@@ -20,7 +20,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12 col-sm-6">
-                                <button type="button" class="btn btn-outline-secondary btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-create-cancel"><i class="fas fa-times"></i> {{ 'spipu.ui.action.cancel'|trans }}</button>
+                                <button type="button" class="btn btn-outline-secondary btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-cancel"><i class="fas fa-times"></i> {{ 'spipu.ui.action.cancel'|trans }}</button>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <button type="submit" class="btn btn-success btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-create-submit"><i class="fas fa-edit"></i> {{ 'spipu.ui.action.create'|trans }}</button>
@@ -31,7 +31,7 @@
             </div>
         </div>
     </div>
-    <div class="row collapse multi-collapse-config" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-columns-collapse">
+    <div class="row collapse" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-columns-collapse">
         <div class="col-12 mb-2">
             <div class="card">
                 <div class="card-header font-weight-bold">
