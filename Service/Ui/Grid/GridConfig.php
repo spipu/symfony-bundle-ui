@@ -21,6 +21,9 @@ use Spipu\UiBundle\Repository\GridConfigRepository;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @SuppressWarnings(PMD.ExcessiveClassComplexity)
+ */
 class GridConfig
 {
     /**
@@ -154,6 +157,10 @@ class GridConfig
 
         $config = [
             'columns' => array_keys($columns),
+            'sort' => [
+                'column' => $grid->getDefaultSortColumn(),
+                'order'  => $grid->getDefaultSortOrder(),
+            ],
         ];
 
         $gridConfig = new GridConfigEntity();
@@ -310,9 +317,33 @@ class GridConfig
     private function makeActionUpdate(Grid $grid, array $params): ?GridConfigEntity
     {
         $gridConfig = $this->makeActionSelect($grid, $params);
+        if (!$gridConfig) {
+            throw new UiException('bad data');
+        }
+
+        $config = [
+            'columns' => $this->prepareUpdateColumns($params, $grid),
+            'sort'    => $this->prepareUpdateSort($params, $grid),
+        ];
+
+        $gridConfig->setConfig($config);
+
+        $this->entityManager->flush();
+
+
+        return $gridConfig;
+    }
+
+    /**
+     * @param array $params
+     * @param Grid $grid
+     * @return array
+     * @throws UiException
+     */
+    protected function prepareUpdateColumns(array $params, Grid $grid): array
+    {
         if (
-            !$gridConfig
-            || !array_key_exists('columns', $params)
+            !array_key_exists('columns', $params)
             || !is_array($params['columns'])
         ) {
             throw new UiException('bad data');
@@ -336,15 +367,44 @@ class GridConfig
             throw new UiException('you must at least display one column');
         }
 
-        $gridConfig->setConfig(
-            [
-                'columns' => $displayedColumns,
-            ]
-        );
+        return $displayedColumns;
+    }
 
-        $this->entityManager->flush();
+    /**
+     * @param array $params
+     * @param Grid $grid
+     * @return array
+     * @throws UiException
+     */
+    protected function prepareUpdateSort(array $params, Grid $grid): array
+    {
+        if (!array_key_exists('sort', $params)) {
+            return [];
+        }
 
+        if (
+            !is_array($params['sort'])
+            || !array_key_exists('column', $params['sort'])
+            || !array_key_exists('order', $params['sort'])
+            || !is_string($params['sort']['column'])
+            || !is_string($params['sort']['order'])
+        ) {
+            throw new UiException('bad data');
+        }
 
-        return $gridConfig;
+        $column = $params['sort']['column'];
+        $order = $params['sort']['order'];
+
+        if (
+            $grid->getColumn($column) === null
+            || !in_array($order, ['asc', 'desc'])
+        ) {
+            throw new UiException('bad data');
+        }
+
+        return [
+            'column' => $column,
+            'order'  => $order,
+        ];
     }
 }

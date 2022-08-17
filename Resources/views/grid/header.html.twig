@@ -13,13 +13,10 @@
                             <div class="input-group-prepend">
                                 <label for="grid_config_select" class="input-group-text border-dark">{{ 'spipu.ui.grid.config.display'|trans }}</label>
                             </div>
-                            <select autocomplete="off" class="custom-select border-dark" name="cf[id]" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-select" value="{{ currentConfig.id }}">
+                            <select autocomplete="off" class="custom-select border-dark" name="cf[id]" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-select">
                                 {% for config in configuration.configs %}
-                                    <option {% if currentConfig.id == config.id %}selected="selected"{% endif %} value="{{ config.id }}">
-                                        {{ config.getCutName(30) }}
-                                    </option>
+                                    <option {% if currentConfig.id == config.id %}selected="selected"{% endif %} value="{{ config.id }}">{{ config.getCutName(30) }}</option>
                                 {% endfor %}
-                                <option value="0">+ {{ 'spipu.ui.action.new'|trans|lower }}</option>
                             </select>
                             <div class="input-group-append">
                                 <button type="button" class="btn btn-outline-secondary border-dark" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-configure">

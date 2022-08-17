@@ -44,7 +44,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="row mb-2">
-                                    <div class="col-12">
+                                    <div class="col-12 col-lg-6">
                                         <div class="card">
                                             <ul class="list-group list-group-flush" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-form-columns">
                                                 <li class="list-group-item list-group-item-primary font-weight-bold">
@@ -71,6 +71,40 @@
                                             {% endif %}{% endfor %}
                                             </ul>
                                         </div>
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        {% if manager.definition.sortableColumns|length %}
+                                            <div class="card mb-3">
+                                                <div class="card-header font-weight-bold">
+                                                    {{ 'spipu.ui.grid.sort.title'|trans }}
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-7">
+                                                            <select autocomplete="off" class="custom-select" name="cf[sort][column]">
+                                                                {% for column in manager.definition.sortableColumns %}
+                                                                    <option value="{{ column.code }}" {% if currentConfig.configSortColumn == column.code %}selected="selected"{% endif %}>{{ column.name|trans }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <select autocomplete="off" class="custom-select" name="cf[sort][order]">
+                                                                <option value="asc"  {% if currentConfig.configSortOrder == 'asc'  %}selected="selected"{% endif %}>{{ 'spipu.ui.grid.sort.asc'|trans }}</option>
+                                                                <option value="desc" {% if currentConfig.configSortOrder == 'desc' %}selected="selected"{% endif %}>{{ 'spipu.ui.grid.sort.desc'|trans }}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        <!-- div class="card">
+                                            <div class="card-header font-weight-bold">
+                                                Filters
+                                            </div>
+                                            <div class="card-body">
+
+                                            </div>
+                                        </div -->
                                     </div>
                                 </div>
                             </div>

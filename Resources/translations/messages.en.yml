@@ -26,6 +26,11 @@ spipu:
                 to:             "To"
                 no_result:      "No item found"
 
+            sort:
+                title: "Default sort"
+                asc: "ascending"
+                desc: "descending"
+
             config:
                 title:     "Configure display \"%name\""
                 display:   "Display"

@@ -152,6 +152,48 @@ class GridConfig
     }
 
     /**
+     * @return string|null
+     */
+    public function getConfigSortColumn(): ?string
+    {
+        $sortConfig = $this->getConfigSort();
+        if (!array_key_exists('column', $sortConfig)) {
+            return null;
+        }
+
+        return $sortConfig['column'];
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getConfigSortOrder(): ?string
+    {
+        $sortConfig = $this->getConfigSort();
+        if (!array_key_exists('order', $sortConfig)) {
+            return null;
+        }
+
+        return $sortConfig['order'];
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getConfigSort(): array
+    {
+        if (!array_key_exists('sort', $this->config)) {
+            return [
+                'column' => null,
+                'order'  => null,
+            ];
+        }
+
+        return $this->config['sort'];
+    }
+
+    /**
      * @param array $config
      * @return $this
      */

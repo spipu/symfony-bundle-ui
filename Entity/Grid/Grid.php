@@ -665,4 +665,20 @@ class Grid
 
         return $columns;
     }
+
+    /**
+     * @return Column[]
+     */
+    public function getSortableColumns(): array
+    {
+        $columns = [];
+
+        foreach ($this->columns as $column) {
+            if ($column->isSortable()) {
+                $columns[$column->getCode()] = $column;
+            }
+        }
+
+        return $columns;
+    }
 }
