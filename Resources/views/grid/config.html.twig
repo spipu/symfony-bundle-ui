@@ -51,7 +51,7 @@
                                             </div>
                                             <ul class="list-group list-group-flush" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-form-columns-show">
                                                 <li class="list-group-item m-0 p-0 pt-1">
-                                                {% for columnKey in currentConfig.config.columns %}
+                                                {% for columnKey in currentConfig.configColumns %}
                                                     <li class="list-group-item d-flex align-items-center">
                                                         <input name="cf[columns][]" type="hidden" value="{{ columnKey }}" />
                                                         <span class="flex-grow-1">{{ configuration.columns[columnKey].name }}</span>
@@ -72,7 +72,7 @@
                                                 {{ 'spipu.ui.grid.config.columns_hide'|trans }}
                                             </div>
                                             <ul class="list-group list-group-flush" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-form-columns-hide">
-                                                {% for column in configuration.columns %}{% if (column.code not in currentConfig.config.columns) %}
+                                                {% for column in configuration.columns %}{% if (column.code not in currentConfig.configColumns) %}
                                                     {% set columnKey = column.code %}
                                                     <li class="list-group-item d-flex align-items-center">
                                                         <input name="cf[columns][]" type="hidden" value="{{ columnKey }}" />
@@ -88,7 +88,8 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
-                                        {% if manager.definition.sortableColumns|length %}
+                                        {% set sortableColumns = manager.definition.sortableColumns %}
+                                        {% if sortableColumns|length %}
                                             <div class="card mb-3">
                                                 <div class="card-header">
                                                     {{ 'spipu.ui.grid.sort.title'|trans }}
@@ -96,20 +97,49 @@
                                                 <div class="card-body">
                                                     <div class="row">
                                                         <div class="col-7">
-                                                            <select autocomplete="off" class="custom-select" name="cf[sort][column]">
-                                                                {% for column in manager.definition.sortableColumns %}
+                                                            <select autocomplete="off" class="form-control" name="cf[sort][column]">
+                                                                {% for column in sortableColumns %}
                                                                     <option value="{{ column.code }}" {% if currentConfig.configSortColumn == column.code %}selected="selected"{% endif %}>{{ column.name|trans }}</option>
                                                                 {% endfor %}
                                                             </select>
                                                         </div>
                                                         <div class="col-5">
-                                                            <select autocomplete="off" class="custom-select" name="cf[sort][order]">
+                                                            <select autocomplete="off" class="form-control" name="cf[sort][order]">
                                                                 <option value="asc"  {% if currentConfig.configSortOrder == 'asc'  %}selected="selected"{% endif %}>{{ 'spipu.ui.grid.sort.asc'|trans }}</option>
                                                                 <option value="desc" {% if currentConfig.configSortOrder == 'desc' %}selected="selected"{% endif %}>{{ 'spipu.ui.grid.sort.desc'|trans }}</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        {% endif %}
+                                        {% set selectFilterColumns = manager.definition.filterableSelectColumns %}
+                                        {% if selectFilterColumns|length %}
+                                            <div class="card mb-3">
+                                                <div class="card-header border-0">
+                                                    {{ 'spipu.ui.grid.filter.filters'|trans }}
+                                                </div>
+                                                <table class="table mb-0">
+                                                    <tbody>
+                                                        {% for column in selectFilterColumns %}
+                                                            {% set filter_value = currentConfig.configFilter(column.code) %}
+                                                            <tr>
+                                                                <td>
+                                                                    {{ column.name|trans }}
+                                                                </td>
+                                                                <td>
+                                                                    <select autocomplete="off" class="form-control form-control-sm" name="cf[filters][{{ column.code }}]">
+                                                                        <option value=""> - - - - - </option>
+                                                                        {% for value, text in column.type.options.options %}
+                                                                            {% if column.type.translate %}{% set text = text|trans %}{% endif %}
+                                                                            <option value="{{ value }}" {% if ('_' ~ filter_value) == ('_' ~ value) %}selected="selected"{% endif %}>{{ text }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         {% endif %}
                                     </div>

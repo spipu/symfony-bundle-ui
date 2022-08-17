@@ -161,6 +161,7 @@ class GridConfig
                 'column' => $grid->getDefaultSortColumn(),
                 'order'  => $grid->getDefaultSortOrder(),
             ],
+            'filters' => [],
         ];
 
         $gridConfig = new GridConfigEntity();
@@ -324,6 +325,7 @@ class GridConfig
         $config = [
             'columns' => $this->prepareUpdateColumns($params, $grid),
             'sort'    => $this->prepareUpdateSort($params, $grid),
+            'filters' => $this->prepareUpdateFilters($params, $grid),
         ];
 
         $gridConfig->setConfig($config);
@@ -406,5 +408,36 @@ class GridConfig
             'column' => $column,
             'order'  => $order,
         ];
+    }
+
+    /**
+     * @param array $params
+     * @param Grid $grid
+     * @return array
+     * @throws UiException
+     */
+    protected function prepareUpdateFilters(array $params, Grid $grid): array
+    {
+        if (!array_key_exists('filters', $params)) {
+            return [];
+        }
+        if (!is_array($params['filters'])) {
+            throw new UiException('bad data');
+        }
+
+        $values = $params['filters'];
+        $filters = [];
+
+        foreach ($values as $code => $value) {
+            if ($grid->getColumn($code) === null) {
+                throw new UiException('bad data');
+            }
+            $value = (string) $value;
+            if ($value !== '') {
+                $filters[$code] = $value;
+            }
+        }
+
+        return $filters;
     }
 }

@@ -25,6 +25,7 @@ spipu:
                 from:           "De"
                 to:             "A"
                 no_result:      "Aucun item trouvé"
+                filters:        "Filtres"
 
             sort:
                 title: "Tri par défaut"

@@ -25,6 +25,7 @@ spipu:
                 from:           "From"
                 to:             "To"
                 no_result:      "No item found"
+                filters:        "Filters"
 
             sort:
                 title: "Default sort"

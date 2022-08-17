@@ -152,6 +152,41 @@ class GridConfig
     }
 
     /**
+     * @param string $key
+     * @return string
+     */
+    public function getConfigFilter(string $key): string
+    {
+        $values = $this->getConfigFilters();
+        if (!array_key_exists($key, $values)) {
+            return '';
+        }
+
+        $value = $values[$key];
+        if ($value === null) {
+            return '';
+        }
+
+        if (is_bool($value)) {
+            $value = (int) $value;
+        }
+
+        return (string) $value;
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfigFilters(): array
+    {
+        if (!array_key_exists('filters', $this->config)) {
+            return [];
+        }
+
+        return $this->config['filters'];
+    }
+
+    /**
      * @return string|null
      */
     public function getConfigSortColumn(): ?string
@@ -177,7 +212,6 @@ class GridConfig
         return $sortConfig['order'];
     }
 
-
     /**
      * @return array
      */
@@ -192,7 +226,6 @@ class GridConfig
 
         return $this->config['sort'];
     }
-
     /**
      * @param array $config
      * @return $this

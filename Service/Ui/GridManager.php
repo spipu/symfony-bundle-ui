@@ -501,14 +501,7 @@ class GridManager implements GridManagerInterface
      */
     public function getInfoFilters(): array
     {
-        $columns = [];
-        foreach ($this->definition->getColumns() as $column) {
-            if ($column->getFilter()->isFilterable()) {
-                $columns[$column->getCode()] = $column;
-            }
-        }
-
-        return $columns;
+        return $this->definition->getFilterableColumns();
     }
 
     /**
@@ -517,14 +510,7 @@ class GridManager implements GridManagerInterface
      */
     public function getInfoQuickSearch(): array
     {
-        $columns = [];
-        foreach ($this->definition->getColumns() as $column) {
-            if ($column->getFilter()->isQuickSearch()) {
-                $columns[$column->getCode()] = $column;
-            }
-        }
-
-        return $columns;
+        return $this->definition->getQuickSearchColumns();
     }
 
     /**

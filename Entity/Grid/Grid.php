@@ -681,4 +681,52 @@ class Grid
 
         return $columns;
     }
+
+    /**
+     * @return Column[]
+     */
+    public function getFilterableColumns(): array
+    {
+        $columns = [];
+
+        foreach ($this->columns as $column) {
+            if ($column->getFilter()->isFilterable()) {
+                $columns[$column->getCode()] = $column;
+            }
+        }
+
+        return $columns;
+    }
+
+    /**
+     * @return Column[]
+     */
+    public function getQuickSearchColumns(): array
+    {
+        $columns = [];
+
+        foreach ($this->columns as $column) {
+            if ($column->getFilter()->isQuickSearch()) {
+                $columns[$column->getCode()] = $column;
+            }
+        }
+
+        return $columns;
+    }
+
+    /**
+     * @return Column[]
+     */
+    public function getFilterableSelectColumns(): array
+    {
+        $columns = [];
+
+        foreach ($this->columns as $column) {
+            if ($column->getFilter()->isFilterable() && $column->getType()->getType() === ColumnType::TYPE_SELECT) {
+                $columns[$column->getCode()] = $column;
+            }
+        }
+
+        return $columns;
+    }
 }
