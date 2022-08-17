@@ -298,6 +298,7 @@ class GridRequest
             ->removeSessionValue('sort_column')
             ->removeSessionValue('sort_order')
             ->removeSessionValue('page_current')
+            ->removeSessionValue('filters')
         ;
     }
 
@@ -315,7 +316,7 @@ class GridRequest
      */
     private function prepareFilters(): void
     {
-        $this->filters = [];
+        $this->filters = ($this->gridConfig ? $this->gridConfig->getConfigFilters() : []);
         $this->filters = $this->getSessionValue('filters', $this->filters);
         $this->filters = (array) $this->request->get(self::KEY_FILTERS, $this->filters);
 

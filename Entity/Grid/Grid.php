@@ -722,7 +722,11 @@ class Grid
         $columns = [];
 
         foreach ($this->columns as $column) {
-            if ($column->getFilter()->isFilterable() && $column->getType()->getType() === ColumnType::TYPE_SELECT) {
+            if (
+                $column->getFilter()->isFilterable()
+                && !$column->getFilter()->isRange()
+                && $column->getType()->getType() === ColumnType::TYPE_SELECT
+            ) {
                 $columns[$column->getCode()] = $column;
             }
         }
