@@ -43,39 +43,54 @@
                         <input name="cf[id]" type="hidden" value="{{ currentConfig.id }}"/>
                         <div class="row">
                             <div class="col-12">
-                                <div class="row mb-2">
+                                <div class="row">
                                     <div class="col-12 col-lg-6">
-                                        <div class="card">
-                                            <ul class="list-group list-group-flush" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-form-columns">
-                                                <li class="list-group-item list-group-item-primary font-weight-bold">
-                                                    {{ 'spipu.ui.grid.config.columns_show'|trans }}
-                                                </li>
-                                            {% for columnKey in currentConfig.config.columns %}
-                                                <li class="list-group-item">
-                                                    <input name="cf[columns][]" type="hidden" value="{{ columnKey }}" />
-                                                    <i class="fa fa-grip-lines float-right"></i>
-                                                    {{ configuration.columns[columnKey].name }}
-                                                </li>
-                                            {% endfor %}
-                                                <li class="list-group-item list-group-item-dark font-weight-bold">
+                                        <div class="card border-success mb-3">
+                                            <div class="card-header alert alert-success mb-0">
+                                                {{ 'spipu.ui.grid.config.columns_show'|trans }}
+                                            </div>
+                                            <ul class="list-group list-group-flush" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-form-columns-show">
+                                                <li class="list-group-item m-0 p-0 pt-1">
+                                                {% for columnKey in currentConfig.config.columns %}
+                                                    <li class="list-group-item d-flex align-items-center">
+                                                        <input name="cf[columns][]" type="hidden" value="{{ columnKey }}" />
+                                                        <span class="flex-grow-1">{{ configuration.columns[columnKey].name }}</span>
+                                                        <span class="float-right">
+                                                            <i class="list-action-sort ml-2 fa  fa-grip-lines"></i>
+                                                            <i class="list-action-hide ml-2 far fa-minus-square text-danger"  role="button"></i>
+                                                            <i class="list-action-show ml-2 far fa-plus-square  text-success" role="button"></i>
+                                                        </span>
+                                                    </li>
+                                                {% endfor %}
+                                                <li class="list-group-item m-0 p-0 pt-1 list-fake-row">
                                                     <input name="cf[columns][]" type="hidden" value="----" />
-                                                    <i class="fa fa-grip-lines float-right"></i>
-                                                    {{ 'spipu.ui.grid.config.columns_hide'|trans }}
                                                 </li>
-                                            {% for column in configuration.columns %}{% if (column.code not in currentConfig.config.columns) %}
-                                                <li class="list-group-item">
-                                                    <input name="cf[columns][]" type="hidden" value="{{ column.code }}" />
-                                                    <i class="fa fa-grip-lines float-right"></i>
-                                                    {{ column.name }}
-                                                </li>
-                                            {% endif %}{% endfor %}
+                                            </ul>
+                                        </div>
+                                        <div class="card mb-3">
+                                            <div class="card-header">
+                                                {{ 'spipu.ui.grid.config.columns_hide'|trans }}
+                                            </div>
+                                            <ul class="list-group list-group-flush" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-form-columns-hide">
+                                                {% for column in configuration.columns %}{% if (column.code not in currentConfig.config.columns) %}
+                                                    {% set columnKey = column.code %}
+                                                    <li class="list-group-item d-flex align-items-center">
+                                                        <input name="cf[columns][]" type="hidden" value="{{ columnKey }}" />
+                                                        <span class="flex-grow-1">{{ configuration.columns[columnKey].name }}</span>
+                                                        <span class="float-right">
+                                                            <i class="list-action-sort ml-2 fa  fa-grip-lines"></i>
+                                                            <i class="list-action-hide ml-2 far fa-minus-square text-danger"  role="button"></i>
+                                                            <i class="list-action-show ml-2 far fa-plus-square  text-success" role="button"></i>
+                                                        </span>
+                                                    </li>
+                                                {% endif %}{% endfor %}
                                             </ul>
                                         </div>
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         {% if manager.definition.sortableColumns|length %}
                                             <div class="card mb-3">
-                                                <div class="card-header font-weight-bold">
+                                                <div class="card-header">
                                                     {{ 'spipu.ui.grid.sort.title'|trans }}
                                                 </div>
                                                 <div class="card-body">
@@ -97,14 +112,6 @@
                                                 </div>
                                             </div>
                                         {% endif %}
-                                        <!-- div class="card">
-                                            <div class="card-header font-weight-bold">
-                                                Filters
-                                            </div>
-                                            <div class="card-body">
-
-                                            </div>
-                                        </div -->
                                     </div>
                                 </div>
                             </div>

@@ -639,17 +639,16 @@ class GridManager implements GridManagerInterface
         }
 
         $currentConfigId = $this->request->getGridConfigId();
-        if ($currentConfigId !== null) {
-            $this->currentGridConfig = $this->gridConfig->getUserConfig($this->definition, $currentConfigId);
-            if ($this->currentGridConfig === null) {
-                $currentConfigId = null;
-            }
-        }
 
         $this->gridConfigDefinition = $this->gridConfig->getPersonalizeDefinition(
             $this->getDefinition(),
             $currentConfigId
         );
+
+        $currentConfigId = $this->gridConfigDefinition['current'];
+        if ($currentConfigId !== null) {
+            $this->currentGridConfig = $this->gridConfigDefinition['configs'][$currentConfigId];
+        }
     }
 
     /**
