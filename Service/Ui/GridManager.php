@@ -124,11 +124,6 @@ class GridManager implements GridManagerInterface
     private $gridConfigDefinition;
 
     /**
-     * @var bool
-     */
-    private $currentGridConfigLoaded = false;
-
-    /**
      * GridManager constructor.
      * @param ContainerInterface $container
      * @param SymfonyRequest $symfonyRequest
@@ -227,14 +222,20 @@ class GridManager implements GridManagerInterface
 
         $this->definition->prepareSort();
 
-        $this->request->prepare($this->routeName, $this->routeParameters);
+        $this->request->setRoute($this->routeName, $this->routeParameters);
+
+        $this->prepareConfig();
+        $this->loadCurrentGridConfig();
+
+        $this->request->setCurrentConfig($this->currentGridConfig);
+        $this->request->prepare();
     }
 
     /**
      * @return void
      * @SuppressWarnings(PMD.ExitExpression)
      */
-    public function prepareConfig(): void
+    private function prepareConfig(): void
     {
         if (!$this->definition->isPersonalize()) {
             return;
@@ -251,7 +252,7 @@ class GridManager implements GridManagerInterface
         try {
             $gridConfig = $this->gridConfig->makeAction($this->getDefinition(), $configAction, $configParams);
             if ($gridConfig !== null) {
-                $this->request->setCurrentConfig($gridConfig->getId());
+                $this->request->updateCurrentConfigId($gridConfig->getId());
             }
         } catch (Throwable $e) {
             $this->addFlash('danger', $e->getMessage());
@@ -288,7 +289,6 @@ class GridManager implements GridManagerInterface
     public function validate(): bool
     {
         $this->prepareRequest();
-        $this->prepareConfig();
         $this->loadPage();
 
         return true;
@@ -615,10 +615,6 @@ class GridManager implements GridManagerInterface
      */
     public function getPersonalizeDefinition(): array
     {
-        if ($this->currentGridConfigLoaded === false) {
-            $this->loadCurrentGridConfig();
-        }
-
         return $this->gridConfigDefinition;
     }
 
@@ -627,10 +623,6 @@ class GridManager implements GridManagerInterface
      */
     public function getCurrentGridConfig(): ?GridConfigEntity
     {
-        if ($this->currentGridConfigLoaded === false) {
-            $this->loadCurrentGridConfig();
-        }
-
         return $this->currentGridConfig;
     }
 
@@ -639,8 +631,6 @@ class GridManager implements GridManagerInterface
      */
     private function loadCurrentGridConfig(): void
     {
-        $this->currentGridConfigLoaded = true;
-
         $this->currentGridConfig = null;
         $this->gridConfigDefinition = [];
 
@@ -649,9 +639,11 @@ class GridManager implements GridManagerInterface
         }
 
         $currentConfigId = $this->request->getGridConfigId();
-        $this->currentGridConfig = $this->gridConfig->getUserConfig($this->definition, $currentConfigId);
-        if ($this->currentGridConfig === null) {
-            $currentConfigId = null;
+        if ($currentConfigId !== null) {
+            $this->currentGridConfig = $this->gridConfig->getUserConfig($this->definition, $currentConfigId);
+            if ($this->currentGridConfig === null) {
+                $currentConfigId = null;
+            }
         }
 
         $this->gridConfigDefinition = $this->gridConfig->getPersonalizeDefinition(

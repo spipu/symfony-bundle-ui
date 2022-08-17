@@ -101,6 +101,11 @@ class GridRequest
     private $routeParameters;
 
     /**
+     * @var GridConfigEntity|null
+     */
+    private $gridConfig;
+
+    /**
      * Request constructor.
      * @param SymfonyRequest $request
      * @param RouterInterface $router
@@ -121,7 +126,7 @@ class GridRequest
      * @param array $routeParameters
      * @return void
      */
-    public function prepare(string $routeName, array $routeParameters): void
+    public function setRoute(string $routeName, array $routeParameters): void
     {
         $this->routeName = $routeName;
         $this->routeParameters = $routeParameters;
@@ -133,7 +138,14 @@ class GridRequest
                 implode('-', array_merge([$this->routeName], $this->routeParameters))
             ]
         );
+    }
 
+    /**
+
+     * @return void
+     */
+    public function prepare(): void
+    {
         $this->preparePager();
         $this->prepareSort();
         $this->prepareFilters();
@@ -172,6 +184,16 @@ class GridRequest
     }
 
     /**
+     * @param string $key
+     * @return GridRequest
+     */
+    private function removeSessionValue(string $key): self
+    {
+        $this->request->getSession()->remove($this->getSessionKey($key));
+
+        return $this;
+    }
+    /**
      * @return void
      */
     private function preparePager(): void
@@ -204,11 +226,11 @@ class GridRequest
      */
     private function prepareSort(): void
     {
-        $this->sortColumn = '';
+        $this->sortColumn = ($this->gridConfig ? ($this->gridConfig->getConfigSortColumn() ?? '') : '');
         $this->sortColumn = (string) $this->getSessionValue('sort_column', $this->sortColumn);
         $this->sortColumn = (string) $this->request->get(self::KEY_SORT_COLUMN, $this->sortColumn);
 
-        $this->sortOrder = '';
+        $this->sortOrder = ($this->gridConfig ? ($this->gridConfig->getConfigSortOrder() ?? '') : '');
         $this->sortOrder = (string) $this->getSessionValue('sort_order', $this->sortOrder);
         $this->sortOrder = (string) $this->request->get(self::KEY_SORT_ORDER, $this->sortOrder);
 
@@ -241,7 +263,7 @@ class GridRequest
 
         $this->gridConfigId = $this->getSessionValue('config_id', null);
         if (array_key_exists('id', $params) && is_numeric($params['id'])) {
-            $this->setCurrentConfig((int) $params['id']);
+            $this->updateCurrentConfigId((int) $params['id']);
         }
         $this->gridConfigId = (int) $this->gridConfigId;
         if ($this->gridConfigId < 0) {
@@ -267,10 +289,25 @@ class GridRequest
      * @param int $gridConfigId
      * @return void
      */
-    public function setCurrentConfig(int $gridConfigId): void
+    public function updateCurrentConfigId(int $gridConfigId): void
     {
         $this->gridConfigId = $gridConfigId;
-        $this->setSessionValue('config_id', $gridConfigId);
+
+        $this
+            ->setSessionValue('config_id', $gridConfigId)
+            ->removeSessionValue('sort_column')
+            ->removeSessionValue('sort_order')
+            ->removeSessionValue('page_current')
+        ;
+    }
+
+    /**
+     * @param GridConfigEntity|null $gridConfig
+     * @return void
+     */
+    public function setCurrentConfig(?GridConfigEntity $gridConfig): void
+    {
+        $this->gridConfig = $gridConfig;
     }
 
     /**
