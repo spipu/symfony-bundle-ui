@@ -199,7 +199,8 @@ class GridManager implements GridManagerInterface
 
         $this->definition->prepareSort();
 
-        $this->request->prepare($this->routeName, $this->routeParameters);
+        $this->request->setRoute($this->routeName, $this->routeParameters);
+        $this->request->prepare();
     }
 
     /**

@@ -114,7 +114,7 @@ class GridRequest
      * @param array $routeParameters
      * @return void
      */
-    public function prepare(string $routeName, array $routeParameters): void
+    public function setRoute(string $routeName, array $routeParameters): void
     {
         $this->routeName = $routeName;
         $this->routeParameters = $routeParameters;
@@ -126,7 +126,13 @@ class GridRequest
                 implode('-', array_merge([$this->routeName], $this->routeParameters))
             ]
         );
+    }
 
+    /**
+     * @return void
+     */
+    public function prepare(): void
+    {
         $this->preparePager();
         $this->prepareSort();
         $this->prepareFilters();
