@@ -12,25 +12,29 @@ services:
         class: Spipu\UiBundle\Service\Menu\Definition
 
     Spipu\UiBundle\Service\Ui\GridFactory:
+        autowire: true
         arguments:
-            - '@service_container'
+            $container: '@service_container'
 
     Spipu\UiBundle\Service\Ui\FormFactory:
+        autowire: true
         arguments:
-            - '@service_container'
+            $container: '@service_container'
 
     Spipu\UiBundle\Service\Ui\ShowFactory:
-        arguments:
-            - '@service_container'
+        autowire: true
 
     Spipu\UiBundle\Form\Options\ActiveStatus:
         public: true
+        autowire: true
 
     Spipu\UiBundle\Form\Options\BooleanStatus:
         public: true
+        autowire: true
 
     Spipu\UiBundle\Form\Options\YesNo:
         public: true
+        autowire: true
 
     Spipu\UiBundle\Service\Menu\Manager:
         arguments:
@@ -38,31 +42,32 @@ services:
            - "@spipu.ui.service.menu_definition"
 
     Spipu\UiBundle\Twig\OptionsExtension:
+        autowire: true
+        tags: ["twig.extension"]
         arguments:
             - "@service_container"
-        tags:
-            - "twig.extension"
 
     Spipu\UiBundle\Twig\UiExtension:
-        arguments:
-            - '@Spipu\UiBundle\Service\Menu\Manager'
-        tags:
-            - "twig.extension"
+        autowire: true
+        tags: ["twig.extension"]
 
     Spipu\UiBundle\Service\Ui\Grid\DataProvider\Doctrine:
         public: true
-        arguments:
-            - '@service_container'
+        autowire: true
 
     # Assets
     Spipu\UiBundle\Assets\Bootstrap:
+        autowire: true
         tags: ['spipu.asset']
 
     Spipu\UiBundle\Assets\FontAwesome:
+        autowire: true
         tags: ['spipu.asset']
 
     Spipu\UiBundle\Assets\Jquery:
+        autowire: true
         tags: ['spipu.asset']
 
     Spipu\UiBundle\Assets\Popper:
+        autowire: true
         tags: ['spipu.asset']

@@ -9,7 +9,7 @@ spipu:
             value_no:  "Non"
 
         page:
-            home:  "Acueil"
+            home:  "Accueil"
             admin: "Admin"
 
         grid:

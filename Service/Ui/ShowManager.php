@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of a Spipu Bundle
  *
@@ -8,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\UiBundle\Service\Ui;
 
@@ -18,20 +19,21 @@ use Spipu\UiBundle\Entity\Form\Form;
 use Spipu\UiBundle\Event\FormDefinitionEvent;
 use Spipu\UiBundle\Exception\FormException;
 use Spipu\UiBundle\Service\Ui\Definition\EntityDefinitionInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Twig\Environment as Twig;
+use Twig\Error\Error as TwigError;
 
 class ShowManager implements ShowManagerInterface
 {
     /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
+
+    /**
+     * @var Twig
+     */
+    private $twig;
 
     /**
      * @var EntityDefinitionInterface
@@ -50,17 +52,17 @@ class ShowManager implements ShowManagerInterface
 
     /**
      * Manager constructor.
-     * @param ContainerInterface $container
      * @param EventDispatcherInterface $eventDispatcher
+     * @param Twig $twig
      * @param EntityDefinitionInterface $definition
      */
     public function __construct(
-        ContainerInterface $container,
         EventDispatcherInterface $eventDispatcher,
+        Twig $twig,
         EntityDefinitionInterface $definition
     ) {
-        $this->container = $container;
         $this->eventDispatcher = $eventDispatcher;
+        $this->twig = $twig;
         $this->definition = $definition;
     }
 
@@ -105,11 +107,11 @@ class ShowManager implements ShowManagerInterface
 
     /**
      * @return string
-     * @throws \Twig_Error
+     * @throws TwigError
      */
     public function display(): string
     {
-        return $this->container->get('twig')->render(
+        return $this->twig->render(
             $this->formDefinition->getTemplateView(),
             [
                 'manager' => $this,

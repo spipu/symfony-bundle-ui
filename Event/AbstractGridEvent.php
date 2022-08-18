@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of a Spipu Bundle
  *
@@ -8,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\UiBundle\Event;
 
@@ -20,7 +21,7 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 abstract class AbstractGridEvent extends Event
 {
-    const PREFIX_NAME = '';
+    public const PREFIX_NAME = '';
 
     /**
      * @var Grid

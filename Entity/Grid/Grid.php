@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of a Spipu Bundle
  *
@@ -8,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\UiBundle\Entity\Grid;
 
@@ -19,6 +20,7 @@ use Spipu\UiBundle\Exception\GridException;
 /**
  * Class Grid
  * @SuppressWarnings(PMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PMD.ExcessivePublicCount)
  */
 class Grid
 {
@@ -83,6 +85,11 @@ class Grid
      * @var Action[]
      */
     private $globalActions = [];
+
+    /**
+     * @var bool
+     */
+    private $personalize = false;
 
     /**
      * @var string[]
@@ -536,6 +543,25 @@ class Grid
     }
 
     /**
+     * @param bool $personalize
+     * @return Grid
+     * @SuppressWarnings(PMD.BooleanArgumentFlag)
+     */
+    public function setPersonalize(bool $personalize = false): Grid
+    {
+        $this->personalize = $personalize;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPersonalize(): bool
+    {
+        return $this->personalize;
+    }
+
+    /**
      * Sort the columns and the actions
      *
      * @return void
@@ -569,5 +595,21 @@ class Grid
                 return ($rowA->getPosition() <=> $rowB->getPosition());
             }
         );
+    }
+
+    /**
+     * @return Column[]
+     */
+    public function getDisplayedColumns(): array
+    {
+        $columns = [];
+
+        foreach ($this->columns as $column) {
+            if ($column->isDisplayed()) {
+                $columns[$column->getCode()] = $column;
+            }
+        }
+
+        return $columns;
     }
 }

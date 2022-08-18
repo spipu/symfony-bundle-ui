@@ -1,6 +1,7 @@
 <?php
 namespace Spipu\UiBundle\Tests\Unit\Service\Ui;
 
+use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Entity\Grid;
 use Spipu\UiBundle\Event\GridDefinitionEvent;
 use Spipu\UiBundle\Exception\GridException;
@@ -17,6 +18,20 @@ use Symfony\Component\HttpFoundation\Request;
 
 class GridManagerTest extends AbstractTest
 {
+    /**
+     * @param ContainerInterface $container
+     * @return GridFactory
+     */
+    private function getGridFactory(ContainerInterface $container): GridFactory
+    {
+        return new GridFactory(
+            $container,
+            $container->get('security.authorization_checker'),
+            $container->get('event_dispatcher'),
+            $container->get('twig')
+        );
+    }
+
     public function testManager()
     {
         $dataProviderMock = SpipuUiMock::getDataProviderMock();
@@ -31,7 +46,7 @@ class GridManagerTest extends AbstractTest
             ->method('dispatch')
             ->with($this->anything(), GridDefinitionEvent::PREFIX_NAME . $definition->getDefinition()->getCode());
 
-        $factory = new GridFactory($container);
+        $factory = $this->getGridFactory($container);
 
         $manager = $this->prepareManager($factory, $container, $definition, []);
 
@@ -462,6 +477,7 @@ class GridManagerTest extends AbstractTest
         $manager = $this->prepareManagerReset($definition, []);
 
         $rows = $manager->getRows();
+        /** @var EntityInterface $row */
         $row = array_shift($rows);
 
         $this->assertSame($row->getFieldAA(), $manager->getValue($row, 'fieldAA'));
@@ -477,6 +493,7 @@ class GridManagerTest extends AbstractTest
         $definition = SpipuUiMock::getGridDefinitionMock();
 
         $manager = $this->prepareManagerReset($definition, []);
+        /** @var EntityInterface $row */
         $row = $manager->getRows()[0];
 
         $action = new Grid\Action('enable', 'Enable', 30, 'enable');
@@ -544,6 +561,24 @@ class GridManagerTest extends AbstractTest
             )
         );
 
+        // Test callback
+        $this->assertTrue(
+            $manager->isGrantedAction(
+                $action->setConditions(
+                    ['fieldAA' => ['callback' => function ($row) { return $row->getFieldAA() === '1'; }]]
+                ),
+                $row
+            )
+        );
+        $this->assertFalse(
+            $manager->isGrantedAction(
+                $action->setConditions(
+                    ['fieldAA' => ['callback' => function ($row) { return $row->getFieldAA() === '2'; }]]
+                ),
+                $row
+            )
+        );
+
         $this->expectException(GridException::class);
         $manager->isGrantedAction($action->setConditions(['fieldAA'  => ['wrong' => 1]]), $row);
     }
@@ -553,7 +588,7 @@ class GridManagerTest extends AbstractTest
         $container = $this->getContainerMock(['data_provider' => new \stdClass()]);
         $definition = SpipuUiMock::getGridDefinitionMock();
 
-        $factory = new GridFactory($container);
+        $factory = $this->getGridFactory($container);
 
         $this->expectException(GridException::class);
         $factory->create($definition);
@@ -565,7 +600,7 @@ class GridManagerTest extends AbstractTest
 
         $definition = SpipuUiMock::getGridDefinitionMock();
 
-        $factory = new GridFactory($container);
+        $factory = $this->getGridFactory($container);
         $manager = $factory->create($definition);
 
         $this->expectException(GridException::class);
@@ -578,7 +613,9 @@ class GridManagerTest extends AbstractTest
 
         $manager = $this->prepareManagerReset($definition, []);
 
-        $dataProvider = new Doctrine($this->getContainerMock());
+        $container = $this->getContainerMock();
+
+        $dataProvider = new Doctrine($container->get('doctrine.orm.default_entity_manager'));
         $dataProvider->setGridRequest($manager->getRequest());
         $dataProvider->setGridDefinition($manager->getDefinition());
         $dataProvider->addCondition(['id' => 1]);
@@ -601,7 +638,7 @@ class GridManagerTest extends AbstractTest
 
         $container = $this->getContainerMock(['data_provider' => $dataProviderMock]);
 
-        $factory = new GridFactory($container);
+        $factory = $this->getGridFactory($container);
 
         return $this->prepareManager($factory, $container, $definition, $getValues);
     }

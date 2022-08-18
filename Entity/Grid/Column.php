@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of a Spipu Bundle
  *
@@ -8,14 +9,13 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\UiBundle\Entity\Grid;
 
 use Spipu\UiBundle\Entity\OptionsTrait;
 use Spipu\UiBundle\Entity\PositionInterface;
 use Spipu\UiBundle\Entity\PositionTrait;
-use Spipu\UiBundle\Exception\GridException;
 
 class Column implements PositionInterface
 {
@@ -53,12 +53,16 @@ class Column implements PositionInterface
     private $sortable = false;
 
     /**
+     * @var bool
+     */
+    private $displayed = true;
+
+    /**
      * Column constructor.
      * @param string $code
      * @param string $name
      * @param string $entityField
      * @param int $position
-     * @throws GridException
      */
     public function __construct(
         string $code,
@@ -179,5 +183,24 @@ class Column implements PositionInterface
         $this->entityField = $entityField;
 
         return $this;
+    }
+
+    /**
+     * @param bool $displayed
+     * @return Column
+     */
+    public function setDisplayed(bool $displayed): self
+    {
+        $this->displayed = $displayed;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDisplayed(): bool
+    {
+        return $this->displayed;
     }
 }

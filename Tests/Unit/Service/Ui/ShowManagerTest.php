@@ -7,15 +7,28 @@ use Spipu\UiBundle\Service\Ui\ShowFactory;
 use Spipu\UiBundle\Service\Ui\ShowManager;
 use Spipu\UiBundle\Service\Ui\ShowManagerInterface;
 use Spipu\UiBundle\Tests\SpipuUiMock;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ShowManagerTest extends AbstractTest
 {
+    /**
+     * @param ContainerInterface $container
+     * @return ShowFactory
+     */
+    private function getShowFactory(ContainerInterface $container): ShowFactory
+    {
+        return new ShowFactory(
+            $container->get('event_dispatcher'),
+            $container->get('twig')
+        );
+    }
+
     public function testManager()
     {
         $container = $this->getContainerMock();
         $definition = SpipuUiMock::getEntityDefinitionMock();
 
-        $factory = new ShowFactory($container);
+        $factory = $this->getShowFactory($container);
 
         /** @var ShowManager $manager */
         $manager = $factory->create($definition);
@@ -51,7 +64,7 @@ class ShowManagerTest extends AbstractTest
         $container = $this->getContainerMock();
         $definition = SpipuUiMock::getEntityDefinitionMock();
 
-        $factory = new ShowFactory($container);
+        $factory = $this->getShowFactory($container);
         $manager = $factory->create($definition);
 
         $this->expectException(FormException::class);

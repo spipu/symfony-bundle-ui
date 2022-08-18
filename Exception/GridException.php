@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of a Spipu Bundle
  *
@@ -8,11 +9,10 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\UiBundle\Exception;
 
 class GridException extends UiException
 {
-
 }

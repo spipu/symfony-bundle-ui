@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of a Spipu Bundle
  *
@@ -8,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\UiBundle\Assets;
 
@@ -29,7 +30,7 @@ class FontAwesome implements AssetInterface
      * Jquery constructor.
      * @param string $version
      */
-    public function __construct(string $version = '5.15.3')
+    public function __construct(string $version = '5.15.4')
     {
         $this->version = $version;
     }

@@ -35,7 +35,7 @@ class ColumnTypeTest extends TestCase
     {
         $entity = new Grid\ColumnType($type);
         $this->assertSame($type, $entity->getType());
-        $this->assertSame('@SpipuUi/grid/field/'.$type.'.html.twig', $entity->getTemplateField());
+        $this->assertSame('@SpipuUi/grid/field/' . $type . '.html.twig', $entity->getTemplateField());
         $this->assertSame($translate, $entity->isTranslate());
         $this->assertSame(null, $entity->getOptions());
 

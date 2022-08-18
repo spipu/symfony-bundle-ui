@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of a Spipu Bundle
  *
@@ -8,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\UiBundle\Entity\Grid;
 
@@ -17,13 +18,13 @@ use Spipu\UiBundle\Form\Options\OptionsInterface;
 
 class ColumnType
 {
-    const TYPE_TEXT     = 'text';
-    const TYPE_INTEGER  = 'integer';
-    const TYPE_FLOAT    = 'float';
-    const TYPE_SELECT   = 'select';
-    const TYPE_DATE     = 'date';
-    const TYPE_DATETIME = 'datetime';
-    const TYPE_COLOR    = 'color';
+    public const TYPE_TEXT     = 'text';
+    public const TYPE_INTEGER  = 'integer';
+    public const TYPE_FLOAT    = 'float';
+    public const TYPE_SELECT   = 'select';
+    public const TYPE_DATE     = 'date';
+    public const TYPE_DATETIME = 'datetime';
+    public const TYPE_COLOR    = 'color';
 
     /**
      * @var string
@@ -154,7 +155,7 @@ class ColumnType
         $this->validateType($type);
 
         $this->type = $type;
-        $this->templateField = '@SpipuUi/grid/field/'.$type.'.html.twig';
+        $this->templateField = '@SpipuUi/grid/field/' . $type . '.html.twig';
         $this->translate = ($type === 'select');
 
         return $this;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of a Spipu Bundle
  *
@@ -8,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\UiBundle\Service\Ui;
 
@@ -25,9 +26,10 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Spipu\UiBundle\Entity\Grid\Grid as GridDefinition;
 use Spipu\UiBundle\Entity\Grid\Action as GridAction;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Twig\Environment as Twig;
+use Twig\Error\Error as TwigError;
 
 /**
  * @SuppressWarnings(PMD.ExcessiveClassComplexity)
@@ -60,6 +62,11 @@ class GridManager implements GridManagerInterface
      * @var RouterInterface
      */
     private $router;
+
+    /**
+     * @var Twig
+     */
+    private $twig;
 
     /**
      * @var GridDefinition
@@ -100,47 +107,46 @@ class GridManager implements GridManagerInterface
      * GridManager constructor.
      * @param ContainerInterface $container
      * @param SymfonyRequest $symfonyRequest
-     * @param SessionInterface $session
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param RouterInterface $router
      * @param EventDispatcherInterface $eventDispatcher
+     * @param Twig $twig
      * @param GridDefinitionInterface $gridDefinition
      * @throws GridException
      */
     public function __construct(
         ContainerInterface $container,
         SymfonyRequest $symfonyRequest,
-        SessionInterface $session,
         AuthorizationCheckerInterface $authorizationChecker,
         RouterInterface $router,
         EventDispatcherInterface $eventDispatcher,
+        Twig $twig,
         GridDefinitionInterface $gridDefinition
     ) {
         $this->container = $container;
         $this->authorizationChecker = $authorizationChecker;
         $this->eventDispatcher = $eventDispatcher;
         $this->router = $router;
+        $this->twig = $twig;
         $this->definition = $gridDefinition->getDefinition();
 
         $event = new GridDefinitionEvent($this->definition);
         $this->eventDispatcher->dispatch($event, $event->getEventCode());
 
-        $this->request = $this->initGridRequest($symfonyRequest, $session, $router);
+        $this->request = $this->initGridRequest($symfonyRequest, $router);
         $this->dataProvider = $this->initDataProvider();
     }
 
     /**
      * @param SymfonyRequest $symfonyRequest
-     * @param SessionInterface $session
      * @param RouterInterface $router
      * @return GridRequest
      */
     private function initGridRequest(
         SymfonyRequest $symfonyRequest,
-        SessionInterface $session,
         RouterInterface $router
     ): GridRequest {
-        return new GridRequest($symfonyRequest, $session, $router, $this->definition);
+        return new GridRequest($symfonyRequest, $router, $this->definition);
     }
 
     /**
@@ -252,10 +258,11 @@ class GridManager implements GridManagerInterface
 
     /**
      * @return string
+     * @throws TwigError
      */
     public function display(): string
     {
-        return $this->container->get('twig')->render(
+        return $this->twig->render(
             $this->getDefinition()->getTemplateAll(),
             [
                 'manager' => $this,
@@ -412,8 +419,8 @@ class GridManager implements GridManagerInterface
     public function getValue(EntityInterface $object, string $field)
     {
         $methods = [
-            'get'.ucfirst($field),
-            'is'.ucfirst($field),
+            'get' . ucfirst($field),
+            'is' . ucfirst($field),
             $field,
         ];
 
@@ -423,7 +430,7 @@ class GridManager implements GridManagerInterface
             }
         }
 
-        throw new GridException('Unable to find the field '.$field.' on the object '.get_class($object));
+        throw new GridException('Unable to find the field ' . $field . ' on the object ' . get_class($object));
     }
 
     /**

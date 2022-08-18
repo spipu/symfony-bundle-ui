@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of a Spipu Bundle
  *
@@ -8,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\UiBundle\Entity\Form;
 
@@ -49,7 +50,7 @@ class Field implements PositionInterface
     /**
      * @var array
      */
-    private $options = [];
+    private $options;
 
     /**
      * @var mixed
@@ -152,7 +153,7 @@ class Field implements PositionInterface
     {
         if ($key === 'choices') {
             if (!is_object($value) || !($value instanceof OptionsInterface)) {
-                throw new FormException('The choices of field '.$this->code.' must implement OptionsInterface');
+                throw new FormException('The choices of field ' . $this->code . ' must implement OptionsInterface');
             }
         }
 

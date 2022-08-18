@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of a Spipu Bundle
  *
@@ -8,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\UiBundle\Service\Ui\Grid\DataProvider;
 
@@ -106,6 +107,7 @@ abstract class AbstractDataProvider implements DataProviderInterface
 
     /**
      * @return array
+     * @throws GridException
      */
     public function getFilters(): array
     {

@@ -1,4 +1,14 @@
 <?php
+
+/**
+ * This file is part of a Spipu Bundle
+ *
+ * (c) Laurent Minguet
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Spipu\UiBundle\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -27,7 +37,6 @@ class SpipuUiMock extends TestCase
     {
         $gridRequest = new GridRequest(
             SymfonyMock::getRequestStack($testCase, $getValues)->getCurrentRequest(),
-            SymfonyMock::getSession($testCase),
             SymfonyMock::getRouter($testCase),
             $definition
         );
@@ -344,8 +353,8 @@ class DataProviderMock extends AbstractDataProvider
         $entity
             ->setFieldAA($key)
             ->setFieldAB($key)
-            ->setFieldBA('Name '.str_pad((string) $key, 6, '0', STR_PAD_LEFT))
-            ->setFieldBB('Name '.str_pad((string) $key, 6, '0', STR_PAD_LEFT));
+            ->setFieldBA('Name ' . str_pad((string) $key, 6, '0', STR_PAD_LEFT))
+            ->setFieldBB('Name ' . str_pad((string) $key, 6, '0', STR_PAD_LEFT));
 
         $this->entities[] = $entity;
     }
@@ -385,8 +394,8 @@ class DataProviderMock extends AbstractDataProvider
 
 class OptionIntegerMock extends AbstractOptions
 {
-    const VALUE_YES = 1;
-    const VALUE_NO = 0;
+    public const VALUE_YES = 1;
+    public const VALUE_NO = 0;
 
     /**
      * Build the list of the available options
@@ -403,8 +412,8 @@ class OptionIntegerMock extends AbstractOptions
 
 class OptionStringMock extends AbstractOptions
 {
-    const VALUE_YES = 'yes';
-    const VALUE_NO = 'no';
+    public const VALUE_YES = 'yes';
+    public const VALUE_NO = 'no';
 
     /**
      * Build the list of the available options

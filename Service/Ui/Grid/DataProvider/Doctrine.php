@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of a Spipu Bundle
  *
@@ -8,44 +9,42 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\UiBundle\Service\Ui\Grid\DataProvider;
 
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\Expr\Andx;
 use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Entity\Grid\ColumnType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Spipu\UiBundle\Exception\GridException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Doctrine extends AbstractDataProvider
 {
     /**
-     * @var ContainerInterface
+     * @var EntityManagerInterface
      */
-    private $container;
+    protected $entityManager;
 
     /**
      * @var array
      */
-    private $conditions = [];
+    protected $conditions = [];
 
     /**
      * @var array
      */
-    private $mappingValues = [];
+    protected $mappingValues = [];
 
     /**
      * Doctrine constructor.
-     * @param ContainerInterface $container
+     * @param EntityManagerInterface $entityManager
      */
     public function __construct(
-        ContainerInterface $container
+        EntityManagerInterface $entityManager
     ) {
-        $this->container = $container;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -79,10 +78,7 @@ class Doctrine extends AbstractDataProvider
     {
         $this->validate();
 
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = $this->container->get('doctrine.orm.default_entity_manager');
-
-        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder = $this->entityManager->createQueryBuilder();
 
         $queryBuilder
             ->select('main')
@@ -122,7 +118,7 @@ class Doctrine extends AbstractDataProvider
      * @param mixed $value
      * @return array
      */
-    private function prepareQueryBuilderFilter(
+    protected function prepareQueryBuilderFilter(
         QueryBuilder $queryBuilder,
         Andx $where,
         string $code,
@@ -131,33 +127,33 @@ class Doctrine extends AbstractDataProvider
         $parameters = [];
 
         $column = $this->definition->getColumn($code);
-        $entityField = 'main.'.$column->getEntityField();
+        $entityField = 'main.' . $column->getEntityField();
 
         if ($column->getFilter()->isRange()) {
             if (is_array($value) && array_key_exists('from', $value)) {
-                $where->add($queryBuilder->expr()->gte($entityField, ':'.$code.'_from'));
-                $parameters[':'.$code.'_from'] = $this->applyMappingValue($code, $value['from']);
+                $where->add($queryBuilder->expr()->gte($entityField, ':' . $code . '_from'));
+                $parameters[':' . $code . '_from'] = $this->applyMappingValue($code, $value['from']);
             }
             if (is_array($value) && array_key_exists('to', $value)) {
-                $where->add($queryBuilder->expr()->lte($entityField, ':'.$code.'_to'));
-                $parameters[':'.$code.'_to'] = $this->applyMappingValue($code, $value['to']);
+                $where->add($queryBuilder->expr()->lte($entityField, ':' . $code . '_to'));
+                $parameters[':' . $code . '_to'] = $this->applyMappingValue($code, $value['to']);
             }
             return $parameters;
         }
 
         if ($column->getFilter()->isExactValue() || $column->getType()->getType() == ColumnType::TYPE_SELECT) {
             $value = $this->applyMappingValue($code, $value);
-            $expression = $queryBuilder->expr()->eq($entityField, ':'.$code);
+            $expression = $queryBuilder->expr()->eq($entityField, ':' . $code);
             if (is_array($value)) {
-                $expression = $queryBuilder->expr()->in($entityField, ':'.$code);
+                $expression = $queryBuilder->expr()->in($entityField, ':' . $code);
             }
             $where->add($expression);
-            $parameters[':'.$code] = $value;
+            $parameters[':' . $code] = $value;
             return $parameters;
         }
 
-        $where->add($queryBuilder->expr()->like($entityField, ':'.$code));
-        $parameters[':'.$code] = '%'.$value.'%';
+        $where->add($queryBuilder->expr()->like($entityField, ':' . $code));
+        $parameters[':' . $code] = '%' . $value . '%';
 
         return $parameters;
     }
@@ -169,7 +165,7 @@ class Doctrine extends AbstractDataProvider
      * @param mixed $value
      * @return array
      */
-    private function prepareQueryBuilderQuickSearch(
+    protected function prepareQueryBuilderQuickSearch(
         QueryBuilder $queryBuilder,
         Andx $where,
         string $code,
@@ -178,16 +174,17 @@ class Doctrine extends AbstractDataProvider
         $parameters = [];
 
         $column = $this->definition->getColumn($code);
-        $entityField = 'main.'.$column->getEntityField();
+        $entityField = 'main.' . $column->getEntityField();
 
-        $where->add($queryBuilder->expr()->like($entityField, ':'.$code));
-        $parameters[':'.$code] = $value.'%';
+        $where->add($queryBuilder->expr()->like($entityField, ':' . $code));
+        $parameters[':' . $code] = $value . '%';
 
         return $parameters;
     }
 
     /**
      * @return int
+     * @throws GridException
      */
     public function getNbTotalRows(): int
     {
@@ -199,6 +196,7 @@ class Doctrine extends AbstractDataProvider
 
     /**
      * @return EntityInterface[]
+     * @throws GridException
      */
     public function getPageRows(): array
     {
@@ -214,7 +212,7 @@ class Doctrine extends AbstractDataProvider
 
         if ($this->request->getSortColumn()) {
             $queryBuilder->orderBy(
-                'main.'.$this->definition->getColumn($this->request->getSortColumn())->getEntityField(),
+                'main.' . $this->definition->getColumn($this->request->getSortColumn())->getEntityField(),
                 $this->request->getSortOrder()
             );
         }
@@ -227,7 +225,7 @@ class Doctrine extends AbstractDataProvider
      * @param mixed $originalValue
      * @return mixed
      */
-    private function applyMappingValue(string $fieldCode, $originalValue)
+    protected function applyMappingValue(string $fieldCode, $originalValue)
     {
         if (!array_key_exists($fieldCode, $this->mappingValues)) {
             return $originalValue;

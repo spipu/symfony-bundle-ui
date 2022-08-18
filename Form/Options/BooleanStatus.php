@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of a Spipu Bundle
  *
@@ -8,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\UiBundle\Form\Options;
 
 class BooleanStatus extends AbstractOptions
 {
-    const VALUE_TRUE = 1;
-    const VALUE_FALSE = 0;
+    public const VALUE_TRUE = 1;
+    public const VALUE_FALSE = 0;
 
     /**
      * Build the list of the available options

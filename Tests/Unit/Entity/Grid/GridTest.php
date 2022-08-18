@@ -127,6 +127,8 @@ class GridTest extends TestCase
         $columnC = new Grid\Column('code_c', 'name_c', 'field_c', 20);
         $columnD = new Grid\Column('code_d', 'name_d', 'field_d', 40);
 
+        $columnC->setDisplayed(false);
+
         $entity->addColumn($columnA);
         $entity->addColumn($columnB);
         $entity->addColumn($columnC);
@@ -145,6 +147,15 @@ class GridTest extends TestCase
                 $columnD->getCode() => $columnD,
             ],
             $entity->getColumns()
+        );
+
+        $this->assertSame(
+            [
+                $columnA->getCode() => $columnA,
+                $columnB->getCode() => $columnB,
+                $columnD->getCode() => $columnD,
+            ],
+            $entity->getDisplayedColumns()
         );
 
         $entity->removeColumn('code_wrong');

@@ -19,6 +19,7 @@ class ActionTest extends TestCase
         $this->assertSame(null, $entity->getNeededRole());
         $this->assertSame(null, $entity->getIcon());
         $this->assertSame([], $entity->getConditions());
+        $this->assertSame(null, $entity->getBuildCallback());
 
         $entity
             ->setCssClass('css')
@@ -30,5 +31,8 @@ class ActionTest extends TestCase
         $this->assertSame('role', $entity->getNeededRole());
         $this->assertSame('icon', $entity->getIcon());
         $this->assertSame(['id' => 1], $entity->getConditions());
+
+        $entity->setBuildCallback('strlen');
+        $this->assertSame('strlen', $entity->getBuildCallback());
     }
 }

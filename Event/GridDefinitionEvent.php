@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of a Spipu Bundle
  *
@@ -8,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\UiBundle\Event;
 
@@ -17,5 +18,5 @@ namespace Spipu\UiBundle\Event;
  */
 class GridDefinitionEvent extends AbstractGridEvent
 {
-    const PREFIX_NAME = 'spipu.ui.grid.definition.';
+    public const PREFIX_NAME = 'spipu.ui.grid.definition.';
 }

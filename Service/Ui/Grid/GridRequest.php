@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of a Spipu Bundle
  *
@@ -8,12 +9,11 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Spipu\UiBundle\Service\Ui\Grid;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Spipu\UiBundle\Entity\Grid\Grid as GridDefinition;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -24,24 +24,19 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class GridRequest
 {
-    const MAX_AUTHORIZED_PAGE_LENGTH = 10000;
+    public const MAX_AUTHORIZED_PAGE_LENGTH = 10000;
 
-    const KEY_PAGE_LENGTH  = 'pl';
-    const KEY_PAGE_CURRENT = 'pc';
-    const KEY_SORT_COLUMN  = 'sc';
-    const KEY_SORT_ORDER   = 'so';
-    const KEY_FILTERS      = 'fl';
-    const KEY_QUICK_SEARCH = 'qs';
+    public const KEY_PAGE_LENGTH  = 'pl';
+    public const KEY_PAGE_CURRENT = 'pc';
+    public const KEY_SORT_COLUMN  = 'sc';
+    public const KEY_SORT_ORDER   = 'so';
+    public const KEY_FILTERS      = 'fl';
+    public const KEY_QUICK_SEARCH = 'qs';
 
     /**
      * @var SymfonyRequest
      */
     private $request;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
 
     /**
      * @var RouterInterface
@@ -101,18 +96,15 @@ class GridRequest
     /**
      * Request constructor.
      * @param SymfonyRequest $request
-     * @param SessionInterface $session
      * @param RouterInterface $router
      * @param GridDefinition $definition
      */
     public function __construct(
         SymfonyRequest $request,
-        SessionInterface $session,
         RouterInterface $router,
         GridDefinition $definition
     ) {
         $this->request = $request;
-        $this->session = $session;
         $this->definition = $definition;
         $this->router = $router;
     }
@@ -147,7 +139,7 @@ class GridRequest
      */
     private function getSessionKey(string $key): string
     {
-        return $this->sessionPrefixGridKey.'.'.$key;
+        return $this->sessionPrefixGridKey . '.' . $key;
     }
 
     /**
@@ -157,7 +149,7 @@ class GridRequest
      */
     public function getSessionValue(string $key, $default)
     {
-        return $this->session->get($this->getSessionKey($key), $default);
+        return $this->request->getSession()->get($this->getSessionKey($key), $default);
     }
 
     /**
@@ -167,7 +159,7 @@ class GridRequest
      */
     private function setSessionValue(string $key, $value): self
     {
-        $this->session->set($this->getSessionKey($key), $value);
+        $this->request->getSession()->set($this->getSessionKey($key), $value);
 
         return $this;
     }
@@ -436,7 +428,7 @@ class GridRequest
     /**
      * @return string|null
      */
-    public function getQuickSearchField() :?string
+    public function getQuickSearchField(): ?string
     {
         if (!array_key_exists('field', $this->quickSearch)) {
             return null;
@@ -448,7 +440,7 @@ class GridRequest
     /**
      * @return string|null
      */
-    public function getQuickSearchValue() :?string
+    public function getQuickSearchValue(): ?string
     {
         if (!array_key_exists('value', $this->quickSearch)) {
             return null;
