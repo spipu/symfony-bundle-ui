@@ -141,7 +141,6 @@ class GridRequest
     }
 
     /**
-
      * @return void
      */
     public function prepare(): void

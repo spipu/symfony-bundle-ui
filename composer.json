@@ -9,13 +9,12 @@
             "email": "contact@minguet.fr"
         }
     ],
-    "version": "1.0",
     "require": {
         "ext-zip": "*",
         "symfony/framework-bundle": "^5.4",
         "symfony/twig-bundle": "^5.4",
         "symfony/http-kernel": "^5.4",
-        "spipu/core-bundle":   "*",
+        "spipu/core-bundle":   "^2.0",
         "twbs/bootstrap":      "^4.0"
     },
     "autoload": {
