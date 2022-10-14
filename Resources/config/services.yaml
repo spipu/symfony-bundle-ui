@@ -11,6 +11,15 @@ services:
     spipu.ui.service.menu_definition:
         class: Spipu\UiBundle\Service\Menu\Definition
 
+    spipu.ui.service.grid_identifier:
+        class: Spipu\UiBundle\Service\Ui\Grid\GridIdentifier
+        autowire: true
+
+    spipu.ui.service.user_identifier:
+        class: Spipu\UiBundle\Service\Ui\Grid\UserIdentifier
+        autowire: true
+
+    # Factories
     Spipu\UiBundle\Service\Ui\GridFactory:
         autowire: true
         arguments:
@@ -24,6 +33,22 @@ services:
     Spipu\UiBundle\Service\Ui\ShowFactory:
         autowire: true
 
+    # Grid services
+    Spipu\UiBundle\Service\Ui\Grid\DataProvider\Doctrine:
+        public: true
+        autowire: true
+
+    Spipu\UiBundle\Repository\GridConfigRepository:
+        autowire: true
+        autoconfigure: true
+
+    Spipu\UiBundle\Service\Ui\Grid\GridConfig:
+        autowire: true
+        arguments:
+            $gridIdentifier: '@spipu.ui.service.grid_identifier'
+            $userIdentifier: '@spipu.ui.service.user_identifier'
+
+    # Options
     Spipu\UiBundle\Form\Options\ActiveStatus:
         public: true
         autowire: true
@@ -36,11 +61,13 @@ services:
         public: true
         autowire: true
 
+    # Menu
     Spipu\UiBundle\Service\Menu\Manager:
         arguments:
            - "@security.authorization_checker"
            - "@spipu.ui.service.menu_definition"
 
+    # Twig
     Spipu\UiBundle\Twig\OptionsExtension:
         autowire: true
         tags: ["twig.extension"]
@@ -50,10 +77,6 @@ services:
     Spipu\UiBundle\Twig\UiExtension:
         autowire: true
         tags: ["twig.extension"]
-
-    Spipu\UiBundle\Service\Ui\Grid\DataProvider\Doctrine:
-        public: true
-        autowire: true
 
     # Assets
     Spipu\UiBundle\Assets\Bootstrap:

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Entity\Grid;
 
+use Spipu\UiBundle\Entity\GridConfig;
 use Spipu\UiBundle\Entity\OptionsTrait;
 use Spipu\UiBundle\Entity\PositionInterface;
 use Spipu\UiBundle\Exception\GridException;
@@ -96,7 +97,9 @@ class Grid
      */
     private $templates = [
         'all'     => '@SpipuUi/grid/all.html.twig',
+        'header'  => '@SpipuUi/grid/header.html.twig',
         'filters' => '@SpipuUi/grid/filters.html.twig',
+        'config'  => '@SpipuUi/grid/config.html.twig',
         'pager'   => '@SpipuUi/grid/pager.html.twig',
         'page'    => '@SpipuUi/grid/page.html.twig',
         'row'     => '@SpipuUi/grid/row.html.twig',
@@ -388,6 +391,25 @@ class Grid
     /**
      * @return string
      */
+    public function getTemplateHeader(): string
+    {
+        return $this->templates['header'];
+    }
+
+    /**
+     * @param string $templateFilters
+     * @return self
+     */
+    public function setTemplateHeader(string $templateFilters): self
+    {
+        $this->templates['header'] = $templateFilters;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function getTemplateFilters(): string
     {
         return $this->templates['filters'];
@@ -400,6 +422,25 @@ class Grid
     public function setTemplateFilters(string $templateFilters): self
     {
         $this->templates['filters'] = $templateFilters;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplateConfig(): string
+    {
+        return $this->templates['config'];
+    }
+
+    /**
+     * @param string $templateConfig
+     * @return self
+     */
+    public function setTemplateConfig(string $templateConfig): self
+    {
+        $this->templates['config'] = $templateConfig;
 
         return $this;
     }
@@ -598,14 +639,94 @@ class Grid
     }
 
     /**
+     * @param GridConfig|null $gridConfig
      * @return Column[]
      */
-    public function getDisplayedColumns(): array
+    public function getDisplayedColumns(?GridConfig $gridConfig = null): array
+    {
+        $columns = [];
+
+        if ($gridConfig) {
+            foreach ($gridConfig->getConfigColumns() as $columnKey) {
+                $column = $this->getColumn($columnKey);
+                if ($column !== null) {
+                    $columns[] = $column;
+                }
+            }
+
+            return $columns;
+        }
+
+        foreach ($this->columns as $column) {
+            if ($column->isDisplayed()) {
+                $columns[$column->getCode()] = $column;
+            }
+        }
+
+        return $columns;
+    }
+
+    /**
+     * @return Column[]
+     */
+    public function getSortableColumns(): array
     {
         $columns = [];
 
         foreach ($this->columns as $column) {
-            if ($column->isDisplayed()) {
+            if ($column->isSortable()) {
+                $columns[$column->getCode()] = $column;
+            }
+        }
+
+        return $columns;
+    }
+
+    /**
+     * @return Column[]
+     */
+    public function getFilterableColumns(): array
+    {
+        $columns = [];
+
+        foreach ($this->columns as $column) {
+            if ($column->getFilter()->isFilterable()) {
+                $columns[$column->getCode()] = $column;
+            }
+        }
+
+        return $columns;
+    }
+
+    /**
+     * @return Column[]
+     */
+    public function getQuickSearchColumns(): array
+    {
+        $columns = [];
+
+        foreach ($this->columns as $column) {
+            if ($column->getFilter()->isQuickSearch()) {
+                $columns[$column->getCode()] = $column;
+            }
+        }
+
+        return $columns;
+    }
+
+    /**
+     * @return Column[]
+     */
+    public function getFilterableSelectColumns(): array
+    {
+        $columns = [];
+
+        foreach ($this->columns as $column) {
+            if (
+                $column->getFilter()->isFilterable()
+                && !$column->getFilter()->isRange()
+                && $column->getType()->getType() === ColumnType::TYPE_SELECT
+            ) {
                 $columns[$column->getCode()] = $column;
             }
         }

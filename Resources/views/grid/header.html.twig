@@ -1,0 +1,71 @@
+{% set infoFilters = manager.infoFilters %}
+{% set infoQuickSearch = manager.infoQuickSearch %}
+<div class="row mb-2">
+    <div class="col-12 col-lg-6 col-xl-5">
+        {% if (manager.definition.personalize) %}
+            {% set configuration=manager.personalizeDefinition %}
+            {% set currentConfig=configuration.configs[configuration.current] %}
+            <div class="collapse show" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-select-collapse">
+                <form class="justify-content-center justify-content-xl-start" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-select-form">
+                    <input name="cf[action]" type="hidden" value="select" />
+                    <div class="form-group mb-2 text-center text-xl-right">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <label for="grid_config_select" class="input-group-text border-dark">{{ 'spipu.ui.grid.config.display'|trans }}</label>
+                            </div>
+                            <select autocomplete="off" class="custom-select border-dark" name="cf[id]" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-select">
+                                {% for config in configuration.configs %}
+                                    <option {% if currentConfig.id == config.id %}selected="selected"{% endif %} value="{{ config.id }}">{{ config.getCutName(30) }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-secondary border-dark" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-configure">
+                                    <i class="fas fa-cog"></i> {{ 'spipu.ui.grid.config.configure'|trans }}
+                                </button>
+                            </div>
+                        </div>
+                        <a class="form-text text-muted" role="button" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-create">
+                           <small>{{ 'spipu.ui.grid.config_create.title'|trans }}</small>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+    <div class="col-12 col-lg-6 col-xl-5 offset-xl-2">
+        {% if infoFilters|length or infoQuickSearch|length %}
+            <div class="collapse {% if manager.request.filters|length == 0 %}show{% endif %}" data-grid-code="{{ manager.definition.code }}" data-grid-role="search-header-collapse">
+                <form class="justify-content-center justify-content-xl-end" data-grid-code="{{ manager.definition.code }}" data-grid-role="quick-search-form">
+                    <div class="form-group mb-2 text-center text-xl-right">
+                        {% if infoQuickSearch|length %}
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <select class="custom-select btn btn-outline-secondary border-dark" name="qs[field]">
+                                        {% for column in infoQuickSearch %}
+                                            <option value="{{ column.code }}" {% if (manager.request.quickSearchField == column.code) %}selected{% endif %}>{{ column.name|trans() }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <input type="text" class="form-control" aria-label="quick search" name="qs[value]" value="{{ manager.request.quickSearchValue }}">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="submit">
+                                        <i class="fas fa-search"></i> {{ 'spipu.ui.grid.quick_search.search'|trans }}
+                                    </button>
+                                </div>
+                            </div>
+                            {% if infoFilters|length %}
+                                <a class="form-text text-muted" role="button" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-open">
+                                    <small>{{ 'spipu.ui.grid.filter.title'|trans }}</small>
+                                </a>
+                            {% endif %}
+                        {% elseif infoFilters|length %}
+                            <a class="btn btn-outline-secondary" type="button" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-open">
+                                <i class="fas fa-search"></i> {{ 'spipu.ui.grid.filter.title'|trans }}
+                            </a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+</div>

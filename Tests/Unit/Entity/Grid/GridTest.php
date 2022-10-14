@@ -40,6 +40,7 @@ class GridTest extends TestCase
         $entity = new Grid\Grid('grid_code');
 
         $this->assertSame('@SpipuUi/grid/all.html.twig', $entity->getTemplateAll());
+        $this->assertSame('@SpipuUi/grid/header.html.twig', $entity->getTemplateHeader());
         $this->assertSame('@SpipuUi/grid/filters.html.twig', $entity->getTemplateFilters());
         $this->assertSame('@SpipuUi/grid/pager.html.twig', $entity->getTemplatePager());
         $this->assertSame('@SpipuUi/grid/page.html.twig', $entity->getTemplatePage());
@@ -48,6 +49,7 @@ class GridTest extends TestCase
 
         $entity
             ->setTemplateAll('test_all.html.twig')
+            ->setTemplateHeader('test_header.html.twig')
             ->setTemplateFilters('test_filters.html.twig')
             ->setTemplatePager('test_pager.html.twig')
             ->setTemplatePage('test_page.html.twig')
@@ -55,6 +57,7 @@ class GridTest extends TestCase
             ->setTemplateActions('test_actions.html.twig');
 
         $this->assertSame('test_all.html.twig', $entity->getTemplateAll());
+        $this->assertSame('test_header.html.twig', $entity->getTemplateHeader());
         $this->assertSame('test_filters.html.twig', $entity->getTemplateFilters());
         $this->assertSame('test_pager.html.twig', $entity->getTemplatePager());
         $this->assertSame('test_page.html.twig', $entity->getTemplatePage());

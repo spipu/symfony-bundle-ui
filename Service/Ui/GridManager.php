@@ -16,18 +16,22 @@ namespace Spipu\UiBundle\Service\Ui;
 use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Entity\Grid\Action;
 use Spipu\UiBundle\Entity\Grid\Column;
+use Spipu\UiBundle\Entity\GridConfig as GridConfigEntity;
 use Spipu\UiBundle\Event\GridDefinitionEvent;
 use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Service\Ui\Grid\DataProvider\DataProviderInterface;
+use Spipu\UiBundle\Service\Ui\Grid\GridConfig;
 use Spipu\UiBundle\Service\Ui\Grid\GridRequest;
 use Spipu\UiBundle\Service\Ui\Definition\GridDefinitionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Spipu\UiBundle\Entity\Grid\Grid as GridDefinition;
 use Spipu\UiBundle\Entity\Grid\Action as GridAction;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Throwable;
 use Twig\Environment as Twig;
 use Twig\Error\Error as TwigError;
 
@@ -35,6 +39,7 @@ use Twig\Error\Error as TwigError;
  * @SuppressWarnings(PMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PMD.CouplingBetweenObjects)
  * @SuppressWarnings(PMD.CyclomaticComplexity)
+ * @SuppressWarnings(PMD.TooManyFields)
  */
 class GridManager implements GridManagerInterface
 {
@@ -67,6 +72,11 @@ class GridManager implements GridManagerInterface
      * @var Twig
      */
     private $twig;
+
+    /**
+     * @var GridConfig
+     */
+    private $gridConfig;
 
     /**
      * @var GridDefinition
@@ -104,6 +114,16 @@ class GridManager implements GridManagerInterface
     private $dataProvider;
 
     /**
+     * @var GridConfigEntity|null
+     */
+    private $currentGridConfig;
+
+    /**
+     * @var array|null
+     */
+    private $gridConfigDefinition;
+
+    /**
      * GridManager constructor.
      * @param ContainerInterface $container
      * @param SymfonyRequest $symfonyRequest
@@ -111,6 +131,7 @@ class GridManager implements GridManagerInterface
      * @param RouterInterface $router
      * @param EventDispatcherInterface $eventDispatcher
      * @param Twig $twig
+     * @param GridConfig $gridConfig
      * @param GridDefinitionInterface $gridDefinition
      * @throws GridException
      */
@@ -121,6 +142,7 @@ class GridManager implements GridManagerInterface
         RouterInterface $router,
         EventDispatcherInterface $eventDispatcher,
         Twig $twig,
+        GridConfig $gridConfig,
         GridDefinitionInterface $gridDefinition
     ) {
         $this->container = $container;
@@ -135,6 +157,7 @@ class GridManager implements GridManagerInterface
 
         $this->request = $this->initGridRequest($symfonyRequest, $router);
         $this->dataProvider = $this->initDataProvider();
+        $this->gridConfig = $gridConfig;
     }
 
     /**
@@ -200,7 +223,45 @@ class GridManager implements GridManagerInterface
         $this->definition->prepareSort();
 
         $this->request->setRoute($this->routeName, $this->routeParameters);
+
+        $this->prepareConfig();
+        $this->loadCurrentGridConfig();
+
+        $this->request->setCurrentConfig($this->currentGridConfig);
         $this->request->prepare();
+    }
+
+    /**
+     * @return void
+     * @SuppressWarnings(PMD.ExitExpression)
+     */
+    private function prepareConfig(): void
+    {
+        if (!$this->definition->isPersonalize()) {
+            return;
+        }
+
+        $configParams = $this->request->getConfigParams();
+        if ($configParams === null) {
+            return;
+        }
+
+        $configAction = (string) $configParams['action'];
+        unset($configParams['action']);
+
+        try {
+            $gridConfig = $this->gridConfig->makeAction($this->getDefinition(), $configAction, $configParams);
+            if ($gridConfig !== null) {
+                $this->request->updateCurrentConfigId($gridConfig->getId());
+            }
+        } catch (Throwable $e) {
+            $this->addFlash('danger', $e->getMessage());
+        }
+
+        $redirect = new RedirectResponse($this->request->getDefaultUrl());
+        $redirect->sendHeaders();
+        $redirect->sendContent();
+        exit;
     }
 
     /**
@@ -440,14 +501,7 @@ class GridManager implements GridManagerInterface
      */
     public function getInfoFilters(): array
     {
-        $columns = [];
-        foreach ($this->definition->getColumns() as $column) {
-            if ($column->getFilter()->isFilterable()) {
-                $columns[$column->getCode()] = $column;
-            }
-        }
-
-        return $columns;
+        return $this->definition->getFilterableColumns();
     }
 
     /**
@@ -456,14 +510,7 @@ class GridManager implements GridManagerInterface
      */
     public function getInfoQuickSearch(): array
     {
-        $columns = [];
-        foreach ($this->definition->getColumns() as $column) {
-            if ($column->getFilter()->isQuickSearch()) {
-                $columns[$column->getCode()] = $column;
-            }
-        }
-
-        return $columns;
+        return $this->definition->getQuickSearchColumns();
     }
 
     /**
@@ -547,5 +594,58 @@ class GridManager implements GridManagerInterface
         }
 
         return $this->router->generate($action->getRouteName(), array_merge($action->getRouteParams(), $actionParams));
+    }
+
+    /**
+     * @return array
+     */
+    public function getPersonalizeDefinition(): array
+    {
+        return $this->gridConfigDefinition;
+    }
+
+    /**
+     * @return GridConfigEntity|null
+     */
+    public function getCurrentGridConfig(): ?GridConfigEntity
+    {
+        return $this->currentGridConfig;
+    }
+
+    /**
+     * @return void
+     */
+    private function loadCurrentGridConfig(): void
+    {
+        $this->currentGridConfig = null;
+        $this->gridConfigDefinition = [];
+
+        if (!$this->definition->isPersonalize()) {
+            return;
+        }
+
+        $currentConfigId = $this->request->getGridConfigId();
+
+        $this->gridConfigDefinition = $this->gridConfig->getPersonalizeDefinition(
+            $this->getDefinition(),
+            $currentConfigId
+        );
+
+        $currentConfigId = $this->gridConfigDefinition['current'];
+        if ($currentConfigId !== null) {
+            $this->currentGridConfig = $this->gridConfigDefinition['configs'][$currentConfigId];
+        }
+    }
+
+    /**
+     * Adds a flash message to the current session for type.
+     *
+     * @param string $type
+     * @param string $message
+     * @return void
+     */
+    private function addFlash(string $type, string $message): void
+    {
+        $this->request->getSymfonyRequest()->getSession()->getFlashBag()->add($type, $message);
     }
 }

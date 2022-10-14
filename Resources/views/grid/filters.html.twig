@@ -1,37 +1,6 @@
 {% set infoFilters = manager.infoFilters %}
-{% set infoQuickSearch = manager.infoQuickSearch %}
-{% if infoFilters|length or infoQuickSearch|length %}
-<div class="row collapse multi-collapse {% if manager.request.filters|length == 0 %}show{% endif %}" id="quick-search-collapse">
-    <div class="col-12 mb-2">
-        <form class="form-inline justify-content-center" data-grid-code="{{ manager.definition.code }}" data-grid-role="quick-search-form">
-            {% if infoFilters|length %}
-                <div class="form-group mb-2  mr-2">
-                    <a class="btn btn-outline-secondary" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="filter-collapse quick-search-collapse">
-                        <i class="fas fa-search"></i> {{ 'spipu.ui.grid.filter.title'|trans }}
-                    </a>
-                </div>
-            {% endif %}
-            {% if infoQuickSearch|length %}
-                <div class="form-group mb-2">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <select class="custom-select btn btn-outline-secondary border-dark" name="qs[field]">
-                                {% for column in infoQuickSearch %}
-                                    <option value="{{ column.code }}" {% if (manager.request.quickSearchField == column.code) %}selected{% endif %}>{{ column.name|trans() }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <input type="text" class="form-control" aria-label="Text input with dropdown button" name="qs[value]" value="{{ manager.request.quickSearchValue }}">
-                        <div class="input-group-append"><button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i> {{ 'spipu.ui.grid.quick_search.search'|trans }}</button></div>
-                    </div>
-                </div>
-            {% endif %}
-        </form>
-    </div>
-</div>
-{% endif %}
 {% if infoFilters|length %}
-<div class="row collapse multi-collapse {% if manager.request.filters|length > 0 %}show{% endif %}" id="filter-collapse">
+<div class="row collapse {% if manager.request.filters|length > 0 %}show{% endif %}" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-collapse">
     <div class="col-12 mb-2">
         <div class="card">
             <div class="card-header">
@@ -73,13 +42,13 @@
 {% endfor %}
                         </div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12 mb-2 mt-2">
                         <div class="row">
                             <div class="col-xs-12 col-sm-6">
-                                <button type="button" class="btn btn-secondary m-2 btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-cancel"><i class="fas fa-times"></i> {{ 'spipu.ui.grid.filter.clean'|trans }}</button>
+                                <button type="button" class="btn btn-outline-secondary btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-cancel"><i class="fas fa-times"></i> {{ 'spipu.ui.grid.filter.clean'|trans }}</button>
                             </div>
                             <div class="col-xs-12 col-sm-6">
-                                <button type="submit" class="btn btn-primary m-2 btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-submit"><i class="fas fa-search"></i> {{ 'spipu.ui.grid.filter.search'|trans }}</button>
+                                <button type="submit" class="btn btn-primary btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-submit"><i class="fas fa-search"></i> {{ 'spipu.ui.grid.filter.search'|trans }}</button>
                             </div>
                         </div>
                     </div>

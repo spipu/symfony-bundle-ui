@@ -15,8 +15,11 @@ namespace Spipu\UiBundle\Service\Ui;
 
 use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Service\Ui\Definition\GridDefinitionInterface;
+use Spipu\UiBundle\Service\Ui\Grid\GridConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig\Environment as Twig;
 
@@ -28,9 +31,19 @@ class GridFactory
     private $container;
 
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * @var AuthorizationCheckerInterface
      */
     private $authorizationChecker;
+
+    /**
+     * @var RouterInterface
+     */
+    private $router;
 
     /**
      * @var EventDispatcherInterface
@@ -43,22 +56,36 @@ class GridFactory
     private $twig;
 
     /**
+     * @var GridConfig
+     */
+    private $gridConfig;
+
+    /**
      * GridFactory constructor.
      * @param ContainerInterface $container
+     * @param RequestStack $requestStack
      * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param RouterInterface $router
      * @param EventDispatcherInterface $eventDispatcher
      * @param Twig $twig
+     * @param GridConfig $gridConfig
      */
     public function __construct(
         ContainerInterface $container,
+        RequestStack $requestStack,
         AuthorizationCheckerInterface $authorizationChecker,
+        RouterInterface $router,
         EventDispatcherInterface $eventDispatcher,
-        Twig $twig
+        Twig $twig,
+        GridConfig $gridConfig
     ) {
         $this->container = $container;
+        $this->requestStack = $requestStack;
         $this->authorizationChecker = $authorizationChecker;
+        $this->router = $router;
         $this->eventDispatcher = $eventDispatcher;
         $this->twig = $twig;
+        $this->gridConfig = $gridConfig;
     }
 
     /**
@@ -70,11 +97,12 @@ class GridFactory
     {
         return new GridManager(
             $this->container,
-            $this->container->get('request_stack')->getCurrentRequest(),
+            $this->requestStack->getCurrentRequest(),
             $this->authorizationChecker,
-            $this->container->get('router'),
+            $this->router,
             $this->eventDispatcher,
             $this->twig,
+            $this->gridConfig,
             $gridDefinition
         );
     }

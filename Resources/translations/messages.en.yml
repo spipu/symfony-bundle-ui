@@ -25,22 +25,42 @@ spipu:
                 from:           "From"
                 to:             "To"
                 no_result:      "No item found"
+                filters:        "Filters"
+
+            sort:
+                title: "Default sort"
+                asc: "ascending"
+                desc: "descending"
+
+            config:
+                title:     "Configure display \"%name\""
+                display:   "Display"
+                configure: "Configure"
+                columns_show: "Displayed Columns"
+                columns_hide: "Hidden Columns"
+
+            config_create:
+                title: "Create a new display"
+                label: "Name of the display"
 
             quick_search:
                 search: "Search"
 
             action:
-                label:          "Actions"
+                label: "Actions"
 
         action:
-            back:    "Back"
-            create:  "Create"
-            edit:    "Edit"
-            delete:  "Delete"
-            save:    "Save"
-            show:    "Show"
-            submit:  "Submit"
-            update:  "Update"
+            back:      "Back"
+            create:    "Create"
+            edit:      "Edit"
+            delete:    "Delete"
+            save:      "Save"
+            show:      "Show"
+            submit:    "Submit"
+            update:    "Update"
+            configure: "Configure"
+            cancel:    "Cancel"
+            new:       "New"
 
         success:
             created:  "The item has been created"
