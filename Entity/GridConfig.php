@@ -13,11 +13,10 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Entity;
 
-use Spipu\UiBundle\Repository\GridConfigRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=GridConfigRepository::class)
+ * @ORM\Entity(repositoryClass="Spipu\UiBundle\Repository\GridConfigRepository")
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(
  *     name="spipu_ui_grid_config",
