@@ -26,7 +26,7 @@
             {% endif %}{% endapply %}
 
             <div class="row">
-                <div class="col-12"><h1>{% block main_title %}{% endblock %}</h1></div>
+                {% block main_title_container %}<div class="col-12"><h1>{% block main_title %}{% endblock %}</h1></div>{% endblock %}
                 <div class="col-12 pb-1 text-right">{% apply spaceless %}{% block main_actions %}{% endblock %}{% endapply %}</div>
             </div>
 
