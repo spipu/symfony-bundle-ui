@@ -1,6 +1,6 @@
 {% if ((manager.definition.massActions|length > 0)) %}{% set hasMassAction = 1 %}{% else %}{% set hasMassAction=0 %}{% endif %}
 {% if ((manager.definition.rowActions|length > 0)) %}{% set hasRowAction = 1 %}{% else %}{% set hasRowAction=0 %}{% endif %}
-<div class="row {{ manager.definition.option('div-css-class', '') }}">
+<div class="row {{ manager.definition.option('div-css-class', '') }}"><div class="col-12">
     <table class="{{ manager.definition.option('table-css-class', 'table table-striped table-hover table-sm') }}">
         <thead class="{{ manager.definition.option('thead-css-class', '') }}">
             <tr>
@@ -69,4 +69,4 @@
 {%  endfor %}
         </tbody>
     </table>
-</div>
+</div></div>
