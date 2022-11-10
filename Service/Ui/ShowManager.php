@@ -126,4 +126,12 @@ class ShowManager implements ShowManagerInterface
     {
         return $this->formDefinition->getFieldSets();
     }
+
+    /**
+     * @return Form
+     */
+    public function getDefinition(): Form
+    {
+        return $this->formDefinition;
+    }
 }

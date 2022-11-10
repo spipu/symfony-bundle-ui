@@ -8,6 +8,7 @@ function SpipuUi()
 SpipuUi.prototype.init = function () {
     this.initConfirm();
     this.initGrids();
+    this.initForms();
     this.initCheckboxTrees();
 }
 
@@ -27,6 +28,14 @@ SpipuUi.prototype.initGrids = function () {
     $("span[data-grid-role=total-rows]").each(
         function () {
             new SpipuUiGrid($(this).data('grid-code'));
+        }
+    )
+};
+
+SpipuUi.prototype.initForms = function () {
+    $("div[data-form-role=form]").each(
+        function () {
+            new SpipuUiForm($(this).data('form-code'));
         }
     )
 };
@@ -342,6 +351,92 @@ SpipuUiGrid.prototype.actionSelected = function (target) {
 
     form.appendTo('body').submit();
 };
+
+// Spipu Ui - Form
+function SpipuUiForm(code)
+{
+    this.code = code;
+    this.fields = {};
+
+    this.init();
+}
+
+SpipuUiForm.prototype.init = function () {
+    let uiForm = this;
+
+    $("div[data-form-code=" + this.code + "][data-form-role=field]").each(
+        function () {
+            uiForm.addField(this);
+        }
+    );
+
+    for (let fieldCode in this.fields) {
+        if (!this.fields.hasOwnProperty(fieldCode)) {
+            continue;
+        }
+
+        this.initField(this.fields[fieldCode]);
+    }
+}
+
+SpipuUiForm.prototype.addField = function (divNode) {
+    let fieldCode = $(divNode).data('field-code');
+    let fieldNode = $(divNode).find('input');
+    if (fieldNode.length === 0) {
+        fieldNode = $(divNode).find('select');
+    }
+    if (fieldNode.length === 0) {
+        fieldNode = $(divNode).find('textarea');
+    }
+    if (fieldNode.length === 0) {
+        return;
+    }
+
+    this.fields[fieldCode] = {
+        'code': fieldCode,
+        'node': fieldNode[0],
+        'constraints': $(divNode).data('field-constraints')
+    };
+}
+
+SpipuUiForm.prototype.initField = function (field) {
+    if (field.constraints.length === 0) {
+        return;
+    }
+
+    for (let constraintId in field.constraints) {
+        this.initFieldConstraint(field, field.constraints[constraintId]);
+    }
+}
+
+SpipuUiForm.prototype.initFieldConstraint = function (field, constraint) {
+    let askedFieldCode = constraint.field;
+    if (this.fields[askedFieldCode] === undefined) {
+        return;
+    }
+
+    this.updateFieldConstraint(field, constraint);
+    $(this.fields[askedFieldCode].node).on(
+        'change',
+        $.proxy(function () { this.updateFieldConstraint(field, constraint); }, this)
+    )
+}
+
+SpipuUiForm.prototype.updateFieldConstraint = function (field, constraint) {
+    let askedFieldCode = constraint.field;
+
+    let askedField = this.fields[askedFieldCode];
+    let askedNode  = askedField.node;
+    let askedValue = constraint.value;
+
+    let currentValue = askedNode.value;
+    if (askedNode.tagName.toLowerCase() === 'input' && askedNode.type.toLowerCase() === 'checkbox' && !askedNode.checked) {
+        currentValue = '';
+    }
+    let isGoodValue = (askedValue === currentValue);
+
+    $(field.node).prop('disabled', !isGoodValue);
+}
 
 // Spipu Ui - CheckBox Tree
 function SpipuUiCheckboxTree(mainNode)

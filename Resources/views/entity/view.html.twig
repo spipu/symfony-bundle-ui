@@ -1,14 +1,14 @@
-<div class="row">
+<div class="row" data-form-code="{{ manager.definition.code }}" data-form-role="view">
 {% for fieldSet in manager.fieldsets %}{%  if not fieldSet.isHiddenInView %}
-    <div class="{{ fieldSet.cssClass }}">
+    <div class="{{ fieldSet.cssClass }}" data-form-code="{{ manager.definition.code }}" data-form-role="fieldset" data-fieldset-code="{{ fieldSet.code }}">
         <div class="card mb-3">
             <div class="card-header font-weight-bold">{{ fieldSet.name|trans }}</div>
             <table class="table table-striped table-hover table-sm mb-0">
 {% for field in fieldSet.fields|filter(field => not field.isHiddenInView) %}
                 <tr><th>{{ field.label|trans }}</th></tr>
-                <tr><td data-field-name="{{ field.code }}">{% apply spaceless %}
-                    {%  set data = attribute(manager.resource, field.code) %}
-                    {%  if field.isList %}
+                <tr><td data-form-code="{{ manager.definition.code }}" data-form-role="field" data-field-name="{{ field.code }}">{% apply spaceless %}
+                    {% set data = attribute(manager.resource, field.code) %}
+                    {% if field.isList %}
                         <ul class="mb-0">
                             {% for value in data %}
                                 <li>{% include field.templateView with {'manager': manager, 'field': field, 'data': value} %}</li>

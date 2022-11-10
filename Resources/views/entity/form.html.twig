@@ -1,21 +1,23 @@
 {%set form = manager.formView %}
 {{ form_start(form, {'attr': {'id': 'form_' ~ manager.definition.code}}) }}
-<div class="row">
-{% for fieldSet in manager.fieldsets %}{%  if not fieldSet.isHiddenInForm %}
-    <div class="{{ fieldSet.cssClass }}">
-        <div class="card mb-3">
-            <div class="card-header"><b>{{ fieldSet.name|trans }}</b></div>
-            <div class="card-body">
-{% for field in fieldSet.fields %}{%  if not field.isHiddenInForm %}
-    {{ form_row(attribute(form, field.code)) }}
+    <div class="row" data-form-code="{{ manager.definition.code }}" data-form-role="form">
+{% for fieldSet in manager.fieldsets %}{% if not fieldSet.isHiddenInForm %}
+        <div class="{{ fieldSet.cssClass }}" data-form-code="{{ manager.definition.code }}" data-form-role="fieldset" data-fieldset-code="{{ fieldSet.code }}">
+            <div class="card mb-3">
+                <div class="card-header"><b>{{ fieldSet.name|trans }}</b></div>
+                <div class="card-body">
+{% for field in fieldSet.fields %}{% if not field.isHiddenInForm %}
+                    <div data-form-code="{{ manager.definition.code }}" data-form-role="field" data-field-code="{{ field.code }}" data-field-constraints="{{ field.constraintsAsArray|json_encode }}">
+                        {{ form_row(attribute(form, field.code)) }}
+                    </div>
 {% endif %}{% endfor %}
+                </div>
             </div>
         </div>
-    </div>
 {% endif %}{% endfor %}
-    {{ form_widget(form) }}
-    <div class="col-12 col-12">
-        <button class="btn-success btn col-12"><i class="fas fa-{{ manager.submitIcon }}"></i> {{ manager.submitLabel|trans() }}</button>
+        {{ form_widget(form) }}
+        <div class="col-12 col-12" data-form-code="{{ manager.definition.code }}" data-form-role="submit">
+            <button class="btn-success btn col-12"><i class="fas fa-{{ manager.submitIcon }}"></i> {{ manager.submitLabel|trans() }}</button>
+        </div>
     </div>
-</div>
 {{ form_end(form) }}

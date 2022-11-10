@@ -63,6 +63,11 @@ class Field implements PositionInterface
     private $templateView;
 
     /**
+     * @var FieldConstraint[]
+     */
+    private $constraints = [];
+
+    /**
      * Fieldset constructor.
      * @param string $code
      * @param string $type
@@ -295,5 +300,73 @@ class Field implements PositionInterface
         $this->templateView = $templateView;
 
         return $this;
+    }
+
+    /**
+     * @param FieldConstraint $fieldConstraint
+     * @return $this
+     */
+    public function addConstraint(FieldConstraint $fieldConstraint): self
+    {
+        $this->constraints[$fieldConstraint->getCode()] = $fieldConstraint;
+
+        return $this;
+    }
+
+    /**
+     * @param string $code
+     * @return ?FieldConstraint
+     */
+    public function getConstraint(string $code): ?FieldConstraint
+    {
+        if (!array_key_exists($code, $this->constraints)) {
+            return null;
+        }
+
+        return $this->constraints[$code];
+    }
+
+    /**
+     * @param string $code
+     * @return $this
+     */
+    public function deleteConstraint(string $code): self
+    {
+        if (array_key_exists($code, $this->constraints)) {
+            unset($this->constraints[$code]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getConstraints(): array
+    {
+        return $this->constraints;
+    }
+
+    /**
+     * @return $this
+     */
+    public function resetConstraints(): self
+    {
+        $this->constraints = [];
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getConstraintsAsArray(): array
+    {
+        $values = [];
+        foreach ($this->constraints as $constraint) {
+            $values[] = ['field' => $constraint->getFieldCode(), 'value' => $constraint->getFieldValue()];
+        }
+
+        return $values;
     }
 }
