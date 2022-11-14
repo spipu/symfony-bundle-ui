@@ -54,7 +54,9 @@ class GridTest extends TestCase
             ->setTemplatePager('test_pager.html.twig')
             ->setTemplatePage('test_page.html.twig')
             ->setTemplateRow('test_row.html.twig')
-            ->setTemplateActions('test_actions.html.twig');
+            ->setTemplateActions('test_actions.html.twig')
+            ->setTemplateConfig('test_config.html.twig')
+        ;
 
         $this->assertSame('test_all.html.twig', $entity->getTemplateAll());
         $this->assertSame('test_header.html.twig', $entity->getTemplateHeader());
@@ -63,6 +65,7 @@ class GridTest extends TestCase
         $this->assertSame('test_page.html.twig', $entity->getTemplatePage());
         $this->assertSame('test_row.html.twig', $entity->getTemplateRow());
         $this->assertSame('test_actions.html.twig', $entity->getTemplateActions());
+        $this->assertSame('test_config.html.twig', $entity->getTemplateConfig());
     }
 
     public function testEntityPager()

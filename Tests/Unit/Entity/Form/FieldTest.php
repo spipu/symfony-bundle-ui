@@ -38,6 +38,40 @@ class FieldTest extends TestCase
         $this->assertSame(null, $entity->getValue());
         $entity->setValue('test');
         $this->assertSame('test', $entity->getValue());
+
+        $constraint1 = new Form\FieldConstraint('foo', 'field1', 'value1');
+        $constraint2 = new Form\FieldConstraint('Bar', 'field2', 'value2');
+
+        $this->assertSame(null, $entity->getConstraint($constraint1->getCode()));
+        $this->assertSame(null, $entity->getConstraint($constraint2->getCode()));
+        $this->assertEmpty($entity->getConstraints());
+        $this->assertEmpty($entity->getConstraintsAsArray());
+
+        $entity->addConstraint($constraint1);
+        $this->assertSame($constraint1, $entity->getConstraint($constraint1->getCode()));
+        $this->assertSame(null, $entity->getConstraint($constraint2->getCode()));
+        $this->assertSame([$constraint1->getCode() => $constraint1], $entity->getConstraints());
+        $this->assertSame([['field' => 'field1', 'value' => 'value1']], $entity->getConstraintsAsArray());
+
+        $entity->addConstraint($constraint2);
+        $entity->addConstraint($constraint2);
+        $this->assertSame($constraint1, $entity->getConstraint($constraint1->getCode()));
+        $this->assertSame($constraint2, $entity->getConstraint($constraint2->getCode()));
+        $this->assertSame([$constraint1->getCode() => $constraint1, $constraint2->getCode() => $constraint2], $entity->getConstraints());
+        $this->assertSame([['field' => 'field1', 'value' => 'value1'], ['field' => 'field2', 'value' => 'value2']], $entity->getConstraintsAsArray());
+
+        $entity->deleteConstraint($constraint1->getCode());
+        $this->assertSame(null, $entity->getConstraint($constraint1->getCode()));
+        $this->assertSame($constraint2, $entity->getConstraint($constraint2->getCode()));
+        $this->assertSame([$constraint2->getCode() => $constraint2], $entity->getConstraints());
+        $this->assertSame([['field' => 'field2', 'value' => 'value2']], $entity->getConstraintsAsArray());
+
+        $entity->addConstraint($constraint1);
+        $entity->resetConstraints();
+        $this->assertSame(null, $entity->getConstraint($constraint1->getCode()));
+        $this->assertSame(null, $entity->getConstraint($constraint2->getCode()));
+        $this->assertEmpty($entity->getConstraints());
+        $this->assertEmpty($entity->getConstraintsAsArray());
     }
 
     public function testEntityTemplate()
