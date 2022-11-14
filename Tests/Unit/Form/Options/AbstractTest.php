@@ -30,5 +30,15 @@ abstract class AbstractTest extends TestCase
         $this->assertSame(true, $option->hasKey('1'));
 
         $this->assertSame(false, $option->hasKey(2));
+
+        $this->assertNotNull($option->getValueFromKey(false));
+        $this->assertNotNull($option->getValueFromKey(0));
+
+        $this->assertNotNull($option->getValueFromKey(true));
+        $this->assertNotNull($option->getValueFromKey(1));
+
+        $this->assertNull($option->getValueFromKey(2));
+
+        $option->resetOptions();
     }
 }
