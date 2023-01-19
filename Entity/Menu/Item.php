@@ -77,7 +77,17 @@ class Item
     /**
      * @var string|null
      */
-    private $icon = null;
+    private $icon;
+
+    /**
+     * @var string|null
+     */
+    private $iconThemeColor;
+
+    /**
+     * @var string|null
+     */
+    private $iconTitle;
 
     /**
      * Item constructor.
@@ -105,6 +115,9 @@ class Item
         $this->parentItem = null;
         $this->active = false;
         $this->allowed = false;
+        $this->icon = null;
+        $this->iconThemeColor = null;
+        $this->iconTitle = null;
     }
 
     /**
@@ -284,12 +297,32 @@ class Item
     }
 
     /**
+     * @return string|null
+     */
+    public function getIconThemeColor(): ?string
+    {
+        return $this->iconThemeColor;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getIconTitle(): ?string
+    {
+        return $this->iconTitle;
+    }
+
+    /**
      * @param string $icon
+     * @param string $iconThemeColor
+     * @param string|null $iconTitle
      * @return self
      */
-    public function setIcon(string $icon): self
+    public function setIcon(string $icon, string $iconThemeColor = 'secondary', ?string $iconTitle = null): self
     {
         $this->icon = $icon;
+        $this->iconThemeColor = $iconThemeColor;
+        $this->iconTitle = $iconTitle;
 
         return $this;
     }

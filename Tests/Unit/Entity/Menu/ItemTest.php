@@ -18,6 +18,8 @@ class ItemTest extends TestCase
         $this->assertSame('main_route', $main->getRoute());
         $this->assertSame([], $main->getRouteParams());
         $this->assertSame(null, $main->getIcon());
+        $this->assertSame(null, $main->getIconThemeColor());
+        $this->assertSame(null, $main->getIconTitle());
         $this->assertSame(null, $main->getConnected());
         $this->assertSame(null, $main->getRole());
         $this->assertSame(null, $main->getParentItem());
@@ -32,8 +34,15 @@ class ItemTest extends TestCase
         ;
 
         $this->assertSame('main_icon', $main->getIcon());
+        $this->assertSame('secondary', $main->getIconThemeColor());
+        $this->assertSame(null, $main->getIconTitle());
         $this->assertSame(true, $main->isActive());
         $this->assertSame(true, $main->isAllowed());
+
+        $main->setIcon('main_icon', 'primary', 'icon');
+        $this->assertSame('main_icon', $main->getIcon());
+        $this->assertSame('primary', $main->getIconThemeColor());
+        $this->assertSame('icon', $main->getIconTitle());
 
         $main->setACL(false);
         $this->assertSame(false, $main->getConnected());
