@@ -12,6 +12,9 @@ declare(strict_types = 1);
 
 namespace Spipu\UiBundle\Entity\Menu;
 
+/**
+ * @SuppressWarnings(PMD.TooManyFields)
+ */
 class Item
 {
     /**
@@ -90,6 +93,11 @@ class Item
     private $iconTitle;
 
     /**
+     * @var string|null
+     */
+    private $cssClass;
+
+    /**
      * Item constructor.
      * @param string $name
      * @param null|string $code
@@ -118,6 +126,7 @@ class Item
         $this->icon = null;
         $this->iconThemeColor = null;
         $this->iconTitle = null;
+        $this->cssClass = null;
     }
 
     /**
@@ -333,5 +342,24 @@ class Item
     public static function resetAll(): void
     {
         self::$lastId = 0;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCssClass(): ?string
+    {
+        return $this->cssClass;
+    }
+
+    /**
+     * @param string|null $cssClass
+     * @return Item
+     */
+    public function setCssClass(?string $cssClass): self
+    {
+        $this->cssClass = $cssClass;
+
+        return $this;
     }
 }
