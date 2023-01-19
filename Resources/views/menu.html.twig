@@ -1,6 +1,15 @@
 {%  set mainItem = getMenu(currentItem) %}
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top ">
-    <a class="navbar-brand" href="{% if mainItem.route %}{{ path(mainItem.route, mainItem.routeParams) }}{% else %}#{% endif %}">{{ mainItem.name }}</a>
+<nav {% block menu_navbar_style %}class="navbar navbar-expand-md navbar-dark bg-dark fixed-top"{% endblock %}>
+    <a class="navbar-brand" href="{% if mainItem.route %}{{ path(mainItem.route, mainItem.routeParams) }}{% else %}#{% endif %}">
+        {% if mainItem.icon %}
+            <span class="badge badge-light text-{{ mainItem.iconThemeColor }}" {% if mainItem.iconTitle %}title="{{ mainItem.iconTitle }}"{% endif %}>
+                <i class="fas fa-{{ mainItem.icon }}"></i>
+                {{ mainItem.name }}
+            </span>
+        {% else %}
+            {{ mainItem.name }}
+        {% endif %}
+    </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu-navbar" aria-controls="menu-navbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
