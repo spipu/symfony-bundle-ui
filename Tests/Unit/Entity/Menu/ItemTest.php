@@ -38,11 +38,15 @@ class ItemTest extends TestCase
         $this->assertSame(null, $main->getIconTitle());
         $this->assertSame(true, $main->isActive());
         $this->assertSame(true, $main->isAllowed());
+        $this->assertSame(null, $main->getCssClass());
 
         $main->setIcon('main_icon', 'primary', 'icon');
         $this->assertSame('main_icon', $main->getIcon());
         $this->assertSame('primary', $main->getIconThemeColor());
         $this->assertSame('icon', $main->getIconTitle());
+
+        $main->setCssClass('my-class');
+        $this->assertSame('my-class', $main->getCssClass());
 
         $main->setACL(false);
         $this->assertSame(false, $main->getConnected());
