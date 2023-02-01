@@ -480,6 +480,12 @@ class GridManager implements GridManagerInterface
      */
     public function getValue(EntityInterface $object, string $field)
     {
+        $subMethod = null;
+        if (strpos($field, '.') !== false) {
+            [$subMethod, $field] = explode('.', $field, 2);
+            $subMethod = 'get' . ucfirst($subMethod);
+        }
+
         $methods = [
             'get' . ucfirst($field),
             'is' . ucfirst($field),
@@ -487,6 +493,9 @@ class GridManager implements GridManagerInterface
         ];
 
         foreach ($methods as $method) {
+            if ($subMethod !== null && method_exists($object, $subMethod)) {
+                $object = $object->{$subMethod}();
+            }
             if (method_exists($object, $method)) {
                 return $object->{$method}();
             }
