@@ -493,12 +493,12 @@ class GridManager implements GridManagerInterface
         ];
 
         foreach ($methods as $method) {
-            if ($subMethod !== null
+            if (
+                $subMethod !== null
                 && method_exists($object, $subMethod)
                 && method_exists($object->{$subMethod}(), $method)
             ) {
-                return $object->{$subMethod}()
-                    ->{$method}();
+                return $object->{$subMethod}()->{$method}();
             }
             if (method_exists($object, $method)) {
                 return $object->{$method}();
