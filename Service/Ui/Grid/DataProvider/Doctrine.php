@@ -15,6 +15,7 @@ namespace Spipu\UiBundle\Service\Ui\Grid\DataProvider;
 
 use Doctrine\ORM\Query\Expr\Andx;
 use Spipu\UiBundle\Entity\EntityInterface;
+use Spipu\UiBundle\Entity\Grid\Column;
 use Spipu\UiBundle\Entity\Grid\ColumnType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
@@ -127,7 +128,7 @@ class Doctrine extends AbstractDataProvider
         $parameters = [];
 
         $column = $this->definition->getColumn($code);
-        $entityField = 'main.' . $column->getEntityField();
+        $entityField = $this->getFieldFromColumn($column);
 
         if ($column->getFilter()->isRange()) {
             if (is_array($value) && array_key_exists('from', $value)) {
@@ -174,7 +175,7 @@ class Doctrine extends AbstractDataProvider
         $parameters = [];
 
         $column = $this->definition->getColumn($code);
-        $entityField = 'main.' . $column->getEntityField();
+        $entityField = $this->getFieldFromColumn($column);
 
         $where->add($queryBuilder->expr()->like($entityField, ':' . $code));
         $parameters[':' . $code] = $value . '%';
@@ -212,7 +213,7 @@ class Doctrine extends AbstractDataProvider
 
         if ($this->request->getSortColumn()) {
             $queryBuilder->orderBy(
-                'main.' . $this->definition->getColumn($this->request->getSortColumn())->getEntityField(),
+                $this->getFieldFromColumn($this->definition->getColumn($this->request->getSortColumn())),
                 $this->request->getSortOrder()
             );
         }
@@ -236,5 +237,17 @@ class Doctrine extends AbstractDataProvider
         }
 
         return $this->mappingValues[$fieldCode][$originalValue];
+    }
+
+    /**
+     * @param Column $column
+     *
+     * @return string
+     */
+    protected function getFieldFromColumn(Column $column): string
+    {
+        $hasNs = strpos($column->getEntityField(), '.') !== false;
+
+        return ($hasNs ? 'main.' : '') . $column->getEntityField();
     }
 }
