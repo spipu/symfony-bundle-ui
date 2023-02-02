@@ -246,8 +246,11 @@ class Doctrine extends AbstractDataProvider
      */
     protected function getFieldFromColumn(Column $column): string
     {
-        $hasNs = strpos($column->getEntityField(), '.') !== false;
+        $prefix = '';
+        if (strpos($column->getEntityField(), '.') === false) {
+            $prefix = 'main.';
+        }
 
-        return ($hasNs ? 'main.' : '') . $column->getEntityField();
+        return $prefix . $column->getEntityField();
     }
 }
