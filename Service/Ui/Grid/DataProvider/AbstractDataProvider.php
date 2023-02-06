@@ -97,6 +97,14 @@ abstract class AbstractDataProvider implements DataProviderInterface
     }
 
     /**
+     * @return void
+     */
+    public function resetDataProvider(): void
+    {
+        $this->filters = null;
+    }
+
+    /**
      * @param array $filters
      * @return void
      */

@@ -49,6 +49,17 @@ class Doctrine extends AbstractDataProvider
     }
 
     /**
+     * @return void
+     */
+    public function resetDataProvider(): void
+    {
+        parent::resetDataProvider();
+
+        $this->conditions = [];
+        $this->mappingValues = [];
+    }
+
+    /**
      * @param mixed $condition
      * @return void
      */
