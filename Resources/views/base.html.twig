@@ -17,13 +17,13 @@
 {% include '@SpipuUi/menu.html.twig' with {'currentItem': menuCurrentItem|default('')} %}
 
         <main role="main" class="{% block main_class %}container{% endblock %}">
-            {% apply spaceless %}{% if app.request.hasPreviousSession %}
+            {% block notifications_container %}{% apply spaceless %}{% if app.request.hasPreviousSession %}
                 {% for label, messages in app.flashes %}
                     {% for message in messages %}
                         <div class="alert alert-{{ label }}" role="alert">{{ message }}</div>
                     {% endfor %}
                 {% endfor %}
-            {% endif %}{% endapply %}
+            {% endif %}{% endapply %}{% endblock %}
 
             <div class="row">
                 {% block main_title_container %}<div class="col-12"><h1>{% block main_title %}{% endblock %}</h1></div>{% endblock %}
