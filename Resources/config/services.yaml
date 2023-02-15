@@ -49,6 +49,11 @@ services:
             $userIdentifier: '@spipu.ui.service.user_identifier'
 
     # Options
+    Spipu\UiBundle\Command\ResetGridConfigCommand:
+        autoconfigure: true
+        autowire: true
+
+    # Options
     Spipu\UiBundle\Form\Options\ActiveStatus:
         public: true
         autowire: true

@@ -91,8 +91,15 @@ class GridConfig
 
         $configs = $this->gridConfigRepository->getUserConfigs($gridIdentifier, $userIdentifier);
 
-        if (empty($configs)) {
-            $configs = [$this->getDefaultUserConfig($grid)];
+        $hasDefault = false;
+        foreach ($configs as $config) {
+            if ($config->isDefault()) {
+                $hasDefault = true;
+            }
+        }
+
+        if (!$hasDefault) {
+            $configs[] = $this->getDefaultUserConfig($grid);
         }
 
         return $configs;

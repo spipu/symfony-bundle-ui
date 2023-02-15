@@ -84,4 +84,18 @@ class GridConfigRepository extends ServiceEntityRepository
             ]
         );
     }
+
+    /**
+     * @return void
+     */
+    public function resetDefaults(): void
+    {
+        $this
+            ->getEntityManager()
+            ->createQueryBuilder()
+            ->delete('SpipuUiBundle:GridConfig', 'c')
+            ->where('c.name = :name')
+            ->setParameter('name', GridConfig::DEFAULT_NAME)
+            ->getQuery()->execute();
+    }
 }
