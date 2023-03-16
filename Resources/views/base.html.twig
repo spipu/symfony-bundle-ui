@@ -13,8 +13,9 @@
 {% endblock %}
     </head>
     <body>
-
-{% include '@SpipuUi/menu.html.twig' with {'currentItem': menuCurrentItem|default('')} %}
+        <header>
+            {% include '@SpipuUi/menu.html.twig' with {'currentItem': menuCurrentItem|default('')} %}
+        </header>
 
         <main role="main" class="{% block main_class %}container{% endblock %}">
             {% block notifications_container %}{% apply spaceless %}{% if app.request.hasPreviousSession %}
@@ -38,12 +39,24 @@
                 <span class="text-muted">{% block footer %}&copy; {{ "now"|date("Y") }} - Spipu{%  endblock %}</span>
             </div>
         </footer>
+        <div id="confirmPopup"></div>
+        <div id="globalAlertInfo" role="alert"></div>
 
 {% block javascripts %}
         <script src="{{ asset('/bundles/jquery/js/jquery.min.js') }}"></script>
         <script src="{{ asset('/bundles/popper/js/popper.min.js') }}"></script>
         <script src="{{ asset('/bundles/bootstrap/js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('/bundles/spipuui/js/spipu-document-ready.js') }}"></script>
+        <script src="{{ asset('/bundles/spipuui/js/spipu-translator.js') }}"></script>
+        <script src="{{ asset('/bundles/spipuui/js/spipu-bootstrap-tabs.js') }}"></script>
+        <script src="{{ asset('/bundles/spipuui/js/spipu-alert-info.js') }}"></script>
+        <script src="{{ asset('/bundles/spipuui/js/spipu-checkbox-tree.js') }}"></script>
+        <script src="{{ asset('/bundles/spipuui/js/spipu-confirm-popup.js') }}"></script>
+        <script src="{{ asset('/bundles/spipuui/js/spipu-form.js') }}"></script>
+        <script src="{{ asset('/bundles/spipuui/js/spipu-grid.js') }}"></script>
+        <script src="{{ asset('/bundles/spipuui/js/spipu-loading-popup.js') }}"></script>
         <script src="{{ asset('/bundles/spipuui/js/spipu-ui.js') }}"></script>
+        {{ include('@SpipuUi/translator.html.twig') }}
 {% endblock %}
     </body>
 </html>

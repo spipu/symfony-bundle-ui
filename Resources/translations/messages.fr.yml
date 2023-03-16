@@ -8,6 +8,12 @@ spipu:
             value_yes: "Oui"
             value_no:  "Non"
 
+        label:
+            cancel: "Annuler"
+            confirm: "Confirmer"
+            please_wait: "Merci de patienter..."
+            ignore: "Ignorer"
+
         page:
             home:  "Accueil"
             admin: "Admin"

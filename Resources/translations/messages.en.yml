@@ -8,6 +8,12 @@ spipu:
             value_yes: "Yes"
             value_no:  "No"
 
+        label:
+            cancel: "Cancel"
+            confirm: "Confirm"
+            please_wait: "Please wait..."
+            ignore: "Ignore"
+
         page:
             home:  "Home"
             admin: "Admin"
@@ -61,6 +67,8 @@ spipu:
             configure: "Configure"
             cancel:    "Cancel"
             new:       "New"
+            close:     "Close"
+            add:       "Add"
 
         success:
             created:  "The item has been created"
