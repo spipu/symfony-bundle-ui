@@ -69,6 +69,8 @@ spipu:
             configure: "configurer"
             cancel:    "Annuler"
             new:       "Nouveau"
+            close:     "Fermer"
+            add:       "Ajouter"
 
         success:
             created:  "L'item a été créé"
