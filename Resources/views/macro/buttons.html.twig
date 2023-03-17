@@ -41,5 +41,5 @@
 {% endmacro %}
 
 {% macro submitManagerForm(manager) %}
-    {{ _self.defaultButton('spipuUi.submitForm("' ~ manager.definition.code ~ '");', manager.submitLabel, 'success', manager.submitIcon) }}
+    {{ _self.defaultButton('spipuUiForms.submitForm("' ~ manager.definition.code ~ '");', manager.submitLabel, 'success', manager.submitIcon) }}
 {% endmacro %}

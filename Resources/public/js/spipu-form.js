@@ -1,5 +1,19 @@
 // spipu-form.js
 
+class SpipuUiForms {
+    init() {
+        $("div[data-form-role=form]").each(
+            function () {
+                new SpipuUiForm($(this).data('form-code'));
+            }
+        )
+    }
+
+    submitForm(code) {
+        $("form#form_" + code + " :submit").click();
+    }
+}
+
 class SpipuUiForm {
     constructor(code) {
         this.code = code;
@@ -86,10 +100,5 @@ class SpipuUiForm {
     }
 }
 
-window.documentReady.add(function () {
-    $("div[data-form-role=form]").each(
-        function () {
-            new SpipuUiForm($(this).data('form-code'));
-        }
-    )
-});
+window.spipuUiForms = new SpipuUiForms();
+window.documentReady.add(function () { window.spipuUiForms.init() });

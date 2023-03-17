@@ -13,6 +13,8 @@ spipu:
             confirm: "Confirm"
             please_wait: "Please wait..."
             ignore: "Ignore"
+            default_confirm_message: "Do you really want to %1 this item ?"
+            default_confirm_action: "make this action on"
 
         page:
             home:  "Home"
