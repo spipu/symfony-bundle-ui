@@ -16,19 +16,12 @@ namespace Spipu\UiBundle\Form\Options;
 abstract class AbstractOptions implements OptionsInterface
 {
     /**
-     * @var string[]
+     * @var string[]|null
      */
-    private $options;
+    private ?array $options = null;
 
-    /**
-     * Build the list of the available options
-     * @return array
-     */
     abstract protected function buildOptions(): array;
 
-    /**
-     * @return void
-     */
     private function loadOptions(): void
     {
         if (!is_array($this->options)) {
@@ -37,7 +30,6 @@ abstract class AbstractOptions implements OptionsInterface
     }
 
     /**
-     * List of available options
      * @return string[]
      */
     public function getOptions(): array
@@ -47,9 +39,6 @@ abstract class AbstractOptions implements OptionsInterface
         return $this->options;
     }
 
-    /**
-     * @return bool
-     */
     public function resetOptions(): bool
     {
         $this->options = null;
@@ -81,11 +70,7 @@ abstract class AbstractOptions implements OptionsInterface
         return [' ' => ''] + $this->getOptionsInverse();
     }
 
-    /**
-     * @param mixed $key
-     * @return bool
-     */
-    public function hasKey($key): bool
+    public function hasKey(mixed $key): bool
     {
         $this->loadOptions();
 
@@ -96,11 +81,7 @@ abstract class AbstractOptions implements OptionsInterface
         return array_key_exists($key, $this->options);
     }
 
-    /**
-     * @param mixed $key
-     * @return string|null
-     */
-    public function getValueFromKey($key): ?string
+    public function getValueFromKey(mixed $key): ?string
     {
         $this->loadOptions();
 

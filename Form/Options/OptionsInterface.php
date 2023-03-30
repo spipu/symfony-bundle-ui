@@ -15,19 +15,15 @@ namespace Spipu\UiBundle\Form\Options;
 
 interface OptionsInterface
 {
+    public function resetOptions(): bool;
+
     /**
-     * List of available options
      * @return string[]
      */
     public function getOptions(): array;
 
     /**
-     * @return bool
-     */
-    public function resetOptions(): bool;
-
-    /**
-     * @return array
+     * @return string[]
      */
     public function getOptionsWithEmptyValue(): array;
 
@@ -41,15 +37,7 @@ interface OptionsInterface
      */
     public function getOptionsWithEmptyValueInverse(): array;
 
-    /**
-     * @param mixed $key
-     * @return bool
-     */
-    public function hasKey($key): bool;
+    public function hasKey(mixed $key): bool;
 
-    /**
-     * @param mixed $key
-     * @return string|null
-     */
-    public function getValueFromKey($key): ?string;
+    public function getValueFromKey(mixed $key): ?string;
 }

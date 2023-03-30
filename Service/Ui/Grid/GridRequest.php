@@ -35,82 +35,21 @@ class GridRequest
     public const KEY_FILTERS      = 'fl';
     public const KEY_QUICK_SEARCH = 'qs';
 
-    /**
-     * @var SymfonyRequest
-     */
-    private $request;
+    private SymfonyRequest $request;
+    private RouterInterface $router;
+    private GridDefinition $definition;
+    private string $sessionPrefixGridKey = '';
+    private ?int $pageLength = null;
+    private int $pageCurrent = 1;
+    private ?string $sortColumn = null;
+    private ?string $sortOrder = null;
+    private array $filters = [];
+    private array $quickSearch = [];
+    private ?int $gridConfigId = null;
+    private string $routeName = '';
+    private array $routeParameters = [];
+    private ?GridConfigEntity $gridConfig = null;
 
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var GridDefinition
-     */
-    private $definition;
-
-    /**
-     * @var string
-     */
-    private $sessionPrefixGridKey;
-
-    /**
-     * @var int|null
-     */
-    private $pageLength = null;
-
-    /**
-     * @var int
-     */
-    private $pageCurrent = 1;
-
-    /**
-     * @var string|null
-     */
-    private $sortColumn = null;
-
-    /**
-     * @var string|null
-     */
-    private $sortOrder = null;
-
-    /**
-     * @var array
-     */
-    private $filters = [];
-
-    /**
-     * @var array
-     */
-    private $quickSearch = [];
-
-    /**
-     * @var int|null
-     */
-    private $gridConfigId = null;
-
-    /**
-     * @var string
-     */
-    private $routeName;
-
-    /**
-     * @var array
-     */
-    private $routeParameters;
-
-    /**
-     * @var GridConfigEntity|null
-     */
-    private $gridConfig;
-
-    /**
-     * Request constructor.
-     * @param SymfonyRequest $request
-     * @param RouterInterface $router
-     * @param GridDefinition $definition
-     */
     public function __construct(
         SymfonyRequest $request,
         RouterInterface $router,
@@ -121,11 +60,6 @@ class GridRequest
         $this->router = $router;
     }
 
-    /**
-     * @param string $routeName
-     * @param array $routeParameters
-     * @return void
-     */
     public function setRoute(string $routeName, array $routeParameters): void
     {
         $this->routeName = $routeName;
@@ -140,9 +74,6 @@ class GridRequest
         );
     }
 
-    /**
-     * @return void
-     */
     public function prepare(): void
     {
         $this->preparePager();
@@ -151,50 +82,30 @@ class GridRequest
         $this->prepareQuickSearch();
     }
 
-    /**
-     * @param string $key
-     * @return string
-     */
     private function getSessionKey(string $key): string
     {
         return $this->sessionPrefixGridKey . '.' . $key;
     }
 
-    /**
-     * @param string $key
-     * @param mixed $default
-     * @return mixed
-     */
-    public function getSessionValue(string $key, $default)
+    public function getSessionValue(string $key, mixed $default): mixed
     {
         return $this->request->getSession()->get($this->getSessionKey($key), $default);
     }
 
-    /**
-     * @param string $key
-     * @param mixed $value
-     * @return GridRequest
-     */
-    private function setSessionValue(string $key, $value): self
+    private function setSessionValue(string $key, mixed $value): self
     {
         $this->request->getSession()->set($this->getSessionKey($key), $value);
 
         return $this;
     }
 
-    /**
-     * @param string $key
-     * @return GridRequest
-     */
     private function removeSessionValue(string $key): self
     {
         $this->request->getSession()->remove($this->getSessionKey($key));
 
         return $this;
     }
-    /**
-     * @return void
-     */
+
     private function preparePager(): void
     {
         $this->pageCurrent = 1;
@@ -220,9 +131,6 @@ class GridRequest
         }
     }
 
-    /**
-     * @return void
-     */
     private function prepareSort(): void
     {
         $this->sortColumn = ($this->gridConfig ? ($this->gridConfig->getConfigSortColumn() ?? '') : '');
@@ -253,9 +161,6 @@ class GridRequest
         $this->setSessionValue('sort_order', $this->sortOrder);
     }
 
-    /**
-     * @return array|null
-     */
     public function getConfigParams(): ?array
     {
         $params = (array) $this->request->get(self::KEY_CONFIG, []);
@@ -273,18 +178,11 @@ class GridRequest
         return $params;
     }
 
-    /**
-     * @return int|null
-     */
     public function getGridConfigId(): ?int
     {
         return $this->gridConfigId;
     }
 
-    /**
-     * @param int $gridConfigId
-     * @return void
-     */
     public function updateCurrentConfigId(int $gridConfigId): void
     {
         $this->gridConfigId = $gridConfigId;
@@ -298,18 +196,11 @@ class GridRequest
         ;
     }
 
-    /**
-     * @param GridConfigEntity|null $gridConfig
-     * @return void
-     */
     public function setCurrentConfig(?GridConfigEntity $gridConfig): void
     {
         $this->gridConfig = $gridConfig;
     }
 
-    /**
-     * @return void
-     */
     private function prepareFilters(): void
     {
         $this->filters = ($this->gridConfig ? $this->gridConfig->getConfigFilters() : []);
@@ -346,9 +237,6 @@ class GridRequest
         $this->setSessionValue('filters', $this->filters);
     }
 
-    /**
-     * @return void
-     */
     private function prepareQuickSearch(): void
     {
         $this->quickSearch = [];
@@ -379,11 +267,7 @@ class GridRequest
         }
     }
 
-    /**
-     * @param mixed $value
-     * @return array
-     */
-    private function validateRangeFilter($value): array
+    private function validateRangeFilter(mixed $value): array
     {
         if (!is_array($value)) {
             return [];
@@ -423,26 +307,16 @@ class GridRequest
         return $value;
     }
 
-    /**
-     * @return int|null
-     */
     public function getPageLength(): ?int
     {
         return $this->pageLength;
     }
 
-    /**
-     * @return int
-     */
     public function getPageCurrent(): int
     {
         return $this->pageCurrent;
     }
 
-    /**
-     * @param int $pageCurrent
-     * @return GridRequest
-     */
     public function forcePageCurrent(int $pageCurrent): self
     {
         if ($this->definition->getPager()) {
@@ -457,17 +331,11 @@ class GridRequest
         return $this;
     }
 
-    /**
-     * @return null|string
-     */
     public function getSortColumn(): ?string
     {
         return $this->sortColumn;
     }
 
-    /**
-     * @return null|string
-     */
     public function getSortOrder(): ?string
     {
         return $this->sortOrder;
@@ -481,11 +349,6 @@ class GridRequest
         return $this->filters;
     }
 
-    /**
-     * @param string $key
-     * @param string|null $subKey
-     * @return string
-     */
     public function getFilter(string $key, string $subKey = null): string
     {
         if (!array_key_exists($key, $this->filters)) {
@@ -507,9 +370,7 @@ class GridRequest
         return $this->filters[$key][$subKey];
     }
 
-    /**
-     * @return string|null
-     */
+
     public function getQuickSearchField(): ?string
     {
         if (!array_key_exists('field', $this->quickSearch)) {
@@ -519,9 +380,6 @@ class GridRequest
         return $this->quickSearch['field'];
     }
 
-    /**
-     * @return string|null
-     */
     public function getQuickSearchValue(): ?string
     {
         if (!array_key_exists('value', $this->quickSearch)) {
@@ -531,9 +389,6 @@ class GridRequest
         return $this->quickSearch['value'];
     }
 
-    /**
-     * @return array
-     */
     public function getCurrentParams(): array
     {
         return [
@@ -553,10 +408,6 @@ class GridRequest
         return $this->getCurrentUrl($params + [self::KEY_PAGE_CURRENT => 1, self::KEY_FILTERS => []]);
     }
 
-    /**
-     * @param array $params
-     * @return string
-     */
     public function getCurrentUrl(array $params): string
     {
         $requestParams = $this->getCurrentParams();
@@ -566,9 +417,6 @@ class GridRequest
         return $this->router->generate($this->routeName, $params);
     }
 
-    /**
-     * @return SymfonyRequest
-     */
     public function getSymfonyRequest(): SymfonyRequest
     {
         return $this->request;
