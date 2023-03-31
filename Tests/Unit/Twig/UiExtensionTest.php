@@ -2,6 +2,7 @@
 namespace Spipu\UiBundle\Tests\Unit\Twig;
 
 use PHPUnit\Framework\TestCase;
+use Spipu\CoreBundle\Tests\SymfonyMock;
 use Spipu\UiBundle\Entity\Menu\Item;
 use Spipu\UiBundle\Service\Menu\Manager as MenuManager;
 use Spipu\UiBundle\Service\Ui\UiManagerInterface;
@@ -27,7 +28,7 @@ class UiExtensionTest extends TestCase
             );
 
         /** @var MenuManager $menuManagerMock */
-        $extension = new UiExtension($menuManagerMock);
+        $extension = new UiExtension($menuManagerMock, SymfonyMock::getTranslator($this));
 
         return $extension;
     }
@@ -43,6 +44,7 @@ class UiExtensionTest extends TestCase
         $allowedNames = [
             'renderManager',
             'getMenu',
+            'getTranslations',
         ];
 
         $extension = $this->getExtension();
