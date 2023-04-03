@@ -25,7 +25,6 @@ use Spipu\UiBundle\Service\Ui\Grid\GridRequest;
 use Spipu\UiBundle\Service\Ui\Definition\GridDefinitionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Spipu\UiBundle\Entity\Grid\Grid as GridDefinition;
 use Spipu\UiBundle\Entity\Grid\Action as GridAction;
@@ -122,6 +121,11 @@ class GridManager implements GridManagerInterface
      * @var array|null
      */
     private $gridConfigDefinition;
+
+    /**
+     * @var bool
+     */
+    private $refreshNeeded = false;
 
     /**
      * GridManager constructor.
@@ -258,10 +262,7 @@ class GridManager implements GridManagerInterface
             $this->addFlash('danger', $e->getMessage());
         }
 
-        $redirect = new RedirectResponse($this->request->getDefaultUrl());
-        $redirect->sendHeaders();
-        $redirect->sendContent();
-        exit;
+        $this->refreshNeeded = true;
     }
 
     /**
@@ -660,5 +661,13 @@ class GridManager implements GridManagerInterface
     private function addFlash(string $type, string $message): void
     {
         $this->request->getSymfonyRequest()->getSession()->getFlashBag()->add($type, $message);
+    }
+
+    /**
+     * @return bool
+     */
+    public function needRefresh(): bool
+    {
+        return $this->refreshNeeded;
     }
 }
