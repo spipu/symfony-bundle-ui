@@ -46,10 +46,8 @@ class GridIdentifier implements GridIdentifierInterface
      */
     private function getRoute(): string
     {
-        try {
-            return (string) $this->requestStack->getCurrentRequest()->attributes->get('_route');
-        } catch (Exception $e) {
-            return 'no_route';
-        }
+        $currentRequest = $this->requestStack->getCurrentRequest();
+
+        return $currentRequest ? (string) $currentRequest->attributes->get('_route', 'no_route') : 'no_route';
     }
 }

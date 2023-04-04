@@ -237,7 +237,7 @@ class Doctrine extends AbstractDataProvider
      * @param mixed $originalValue
      * @return mixed
      */
-    protected function applyMappingValue(string $fieldCode, $originalValue)
+    public function applyMappingValue(string $fieldCode, $originalValue)
     {
         if (!array_key_exists($fieldCode, $this->mappingValues)) {
             return $originalValue;

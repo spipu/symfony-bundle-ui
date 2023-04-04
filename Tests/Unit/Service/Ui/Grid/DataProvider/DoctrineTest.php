@@ -1,6 +1,7 @@
 <?php
 namespace Spipu\UiBundle\Tests\Unit\Service\Ui\Grid\DataProvider;
 
+use Spipu\CoreBundle\Tests\SymfonyMock;
 use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Service\Ui\Grid\DataProvider\Doctrine;
 use Spipu\UiBundle\Service\Ui\Grid\GridRequest;
@@ -59,20 +60,19 @@ class DoctrineTest extends AbstractTest
         $clonedService->validate();
     }
 
-
     public function testValidateOk()
     {
-        $containerMock = $this->getContainerMock();
         $requestMock   = $this->createMock(GridRequest::class);
         $definition    = SpipuUiMock::getGridDefinitionMock();
 
         $filters = ['foo' => 'bar'];
         $requestMock
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('getFilters')
             ->willreturn($filters);
 
-        $service =  new Doctrine($containerMock->get('doctrine.orm.default_entity_manager'));
+        $entityManager = SymfonyMock::getEntityManager($this);
+        $service =  new Doctrine($entityManager);
         $service->setGridDefinition($definition->getDefinition());
         $service->setGridRequest($requestMock);
         $this->assertTrue($service->validate());
@@ -84,5 +84,13 @@ class DoctrineTest extends AbstractTest
         $newFilters = ['new' => true];
         $service->forceFilters($newFilters);
         $this->assertSame($newFilters, $service->getFilters());
+
+        $service->resetDataProvider();
+        $this->assertSame($filters, $service->getFilters());
+
+        $service->addMappingValue('foo', 'bar', ['bar1', 'bar2']);
+        $this->assertSame('value1', $service->applyMappingValue('field', 'value1'));
+        $this->assertSame('value2', $service->applyMappingValue('foo', 'value2'));
+        $this->assertSame(['bar1', 'bar2'], $service->applyMappingValue('foo', 'bar'));
     }
 }
