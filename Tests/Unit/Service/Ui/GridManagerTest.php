@@ -670,7 +670,7 @@ class GridManagerTest extends AbstractTest
         $manager = $factory->create($definition);
         $manager->setRoute('test', ['t' => 1]);
 
-        $this->assertTrue($manager->validate());
+        $this->assertFalse($manager->validate());
 
         return $manager;
     }

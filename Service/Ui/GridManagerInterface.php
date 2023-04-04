@@ -28,9 +28,4 @@ interface GridManagerInterface extends UiManagerInterface
      * @return DataProviderInterface
      */
     public function getDataProvider(): DataProviderInterface;
-
-    /**
-     * @return bool
-     */
-    public function needRefresh(): bool;
 }

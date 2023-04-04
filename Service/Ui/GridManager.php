@@ -292,7 +292,7 @@ class GridManager implements GridManagerInterface
         $this->prepareRequest();
         $this->loadPage();
 
-        return true;
+        return $this->refreshNeeded;
     }
 
     /**
@@ -322,9 +322,16 @@ class GridManager implements GridManagerInterface
     /**
      * @return string
      * @throws TwigError
+     * @throws GridException
      */
     public function display(): string
     {
+        if ($this->refreshNeeded) {
+            throw new GridException(
+                'This grid need a refresh, but the controller does not manage it after validation'
+            );
+        }
+
         return $this->twig->render(
             $this->getDefinition()->getTemplateAll(),
             [
@@ -661,13 +668,5 @@ class GridManager implements GridManagerInterface
     private function addFlash(string $type, string $message): void
     {
         $this->request->getSymfonyRequest()->getSession()->getFlashBag()->add($type, $message);
-    }
-
-    /**
-     * @return bool
-     */
-    public function needRefresh(): bool
-    {
-        return $this->refreshNeeded;
     }
 }
