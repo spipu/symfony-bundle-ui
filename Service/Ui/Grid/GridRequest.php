@@ -265,9 +265,6 @@ class GridRequest
             $this->updateCurrentConfigId((int) $params['id']);
         }
         $this->gridConfigId = (int) $this->gridConfigId;
-        if ($this->gridConfigId < 0) {
-            $this->gridConfigId = null;
-        }
 
         if (empty($params) || !array_key_exists('action', $params) || !is_string($params['action'])) {
             return null;
@@ -559,14 +556,6 @@ class GridRequest
         $params = array_merge($this->routeParameters, $requestParams, $params);
 
         return $this->router->generate($this->routeName, $params);
-    }
-
-    /**
-     * @return string
-     */
-    public function getDefaultUrl(): string
-    {
-        return $this->router->generate($this->routeName, $this->routeParameters);
     }
 
     /**

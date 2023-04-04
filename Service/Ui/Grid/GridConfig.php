@@ -271,16 +271,17 @@ class GridConfig
      * @param Grid $grid
      * @param array $params
      * @return GridConfigEntity|null
+     * @throws UiException
      */
     private function makeActionCreate(Grid $grid, array $params): ?GridConfigEntity
     {
         if (!array_key_exists('name', $params) || !is_string($params['name'])) {
-            return null;
+            throw new UiException('Name is missing');
         }
 
         $name = trim(strip_tags($params['name']));
         if ($name === '') {
-            return null;
+            throw new UiException('Name is invalid');
         }
 
         return $this->createUserConfig($grid, $name);
@@ -289,29 +290,38 @@ class GridConfig
     /**
      * @param Grid $grid
      * @param array $params
-     * @return GridConfigEntity|null
+     * @return GridConfigEntity
+     * @throws UiException
      */
-    private function makeActionSelect(Grid $grid, array $params): ?GridConfigEntity
+    private function makeActionSelect(Grid $grid, array $params): GridConfigEntity
     {
         if (!array_key_exists('id', $params) || !is_numeric($params['id'])) {
-            return null;
+            throw new UiException('Id is invalid');
         }
 
-        return $this->getUserConfig($grid, (int) $params['id']);
+        $config = $this->getUserConfig($grid, (int) $params['id']);
+        if ($config === null) {
+            throw new UiException('Id is unknown');
+        }
+
+        return $config;
     }
 
     /**
      * @param Grid $grid
      * @param array $params
      * @return GridConfigEntity|null
+     * @throws UiException
      */
     private function makeActionDelete(Grid $grid, array $params): ?GridConfigEntity
     {
         $gridConfig = $this->makeActionSelect($grid, $params);
-        if ($gridConfig && !$gridConfig->isDefault()) {
-            $this->entityManager->remove($gridConfig);
-            $this->entityManager->flush();
+        if ($gridConfig->isDefault()) {
+            throw new UiException('You can not delete the default display');
         }
+
+        $this->entityManager->remove($gridConfig);
+        $this->entityManager->flush();
 
         return $this->getDefaultUserConfig($grid);
     }
@@ -325,9 +335,6 @@ class GridConfig
     private function makeActionUpdate(Grid $grid, array $params): ?GridConfigEntity
     {
         $gridConfig = $this->makeActionSelect($grid, $params);
-        if (!$gridConfig) {
-            throw new UiException('bad data');
-        }
 
         $config = [
             'columns' => $this->prepareUpdateColumns($params, $grid),
@@ -338,7 +345,6 @@ class GridConfig
         $gridConfig->setConfig($config);
 
         $this->entityManager->flush();
-
 
         return $gridConfig;
     }
