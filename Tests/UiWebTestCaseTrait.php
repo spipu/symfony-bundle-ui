@@ -51,13 +51,38 @@ trait UiWebTestCaseTrait
         return $crawler;
     }
 
-    /**
-     * @param Crawler $crawler
-     * @return array
-     */
-    protected function getGridConfigDisplayList(Crawler $crawler): array
+    protected function getGridProperties(Crawler $crawler, string $gridCode): array
     {
-        $configOptions = $crawler->filter('select[data-grid-role=config-select] option');
+        return [
+            'count' => $this->getGridPropertiesCount($crawler, $gridCode),
+            'display' => $this->getGridPropertiesDisplayList($crawler, $gridCode),
+        ];
+    }
+
+    protected function getGridPropertiesCount(Crawler $crawler, string $gridCode): array
+    {
+        $countLabel = trim($crawler->filter("span[data-grid-code=${gridCode}][data-grid-role=total-rows]")->text());
+
+        $countNb = null;
+        if ($countLabel === 'No item found') {
+            $countNb = 0;
+        }
+        if ($countLabel === '1 item found') {
+            $countNb = 1;
+        }
+        if (preg_match('/^([0-9]+) items found*/', $countLabel, $match)) {
+            $countNb = (int) $match[1];
+        }
+
+        return [
+            'label' => $countLabel,
+            'nb'    => $countNb,
+        ];
+    }
+
+    protected function getGridPropertiesDisplayList(Crawler $crawler, string $gridCode): array
+    {
+        $configOptions = $crawler->filter("select[data-grid-code=${gridCode}][data-grid-role=config-select] option");
         $options = [];
         $configOptions->each(function (Crawler $configOption) use (&$options) {
             $options[strtolower(trim($configOption->text()))] = [
@@ -74,8 +99,7 @@ trait UiWebTestCaseTrait
         Crawler $crawler,
         string $field,
         string $value
-    ): Crawler
-    {
+    ): Crawler {
         $buttonSelector = 'button:contains("Search")';
 
         $this->assertGreaterThan(0, $crawler->filter($buttonSelector)->count());
@@ -92,8 +116,7 @@ trait UiWebTestCaseTrait
         KernelBrowser $client,
         Crawler $crawler,
         array $filters
-    ): Crawler
-    {
+    ): Crawler {
         $buttonSelector = 'button:contains("Advanced Search")';
 
         $this->assertGreaterThan(0, $crawler->filter($buttonSelector)->count());
@@ -106,55 +129,11 @@ trait UiWebTestCaseTrait
         return $crawler;
     }
 
-    protected function submitGridConfigWithWrongValues(
+    protected function submitFormWithSpecificValues(
         KernelBrowser $client,
         Form $form,
-        array $values,
-        string $errorMessage,
-        string $totalLabel,
-        ?array $expectedDisplayList = null
+        array $values
     ): Crawler {
-        $this->submitFormWithSpecificValues($client, $form, $values);
-
-        $this->assertTrue($client->getResponse()->isRedirect());
-        $crawler = $client->followRedirect();
-
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertCrawlerHasAlert($crawler, $errorMessage);
-        $this->assertSame($totalLabel, $crawler->filter('span[data-grid-role=total-rows]')->text());
-
-        if ($expectedDisplayList !== null) {
-            $this->assertSame($expectedDisplayList, $this->getGridConfigDisplayList($crawler));
-        }
-
-        return $crawler;
-    }
-
-    protected function submitGridConfigWithGoodValues(
-        KernelBrowser $client,
-        Form $form,
-        array $values,
-        string $totalLabel,
-        ?array $expectedDisplayList = null
-    ): Crawler {
-        $this->submitFormWithSpecificValues($client, $form, $values);
-
-        $this->assertTrue($client->getResponse()->isRedirect());
-        $crawler = $client->followRedirect();
-
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertCrawlerHasNoAlert($crawler);
-        $this->assertSame($totalLabel, $crawler->filter('span[data-grid-role=total-rows]')->text());
-
-        if ($expectedDisplayList !== null) {
-            $this->assertSame($expectedDisplayList, $this->getGridConfigDisplayList($crawler));
-        }
-
-        return $crawler;
-    }
-
-    protected function submitFormWithSpecificValues(KernelBrowser $client, Form $form, array $values): Crawler
-    {
         $method = $form->getMethod();
 
         if (!\in_array($method, ['POST', 'PUT', 'DELETE', 'PATCH'])) {
@@ -191,6 +170,13 @@ trait UiWebTestCaseTrait
             $phpValues = array_replace_recursive([], ...$tempValues);
         }
 
-        return $client->request($method, $uri, $phpValues);
+        $client->request($method, $uri, $phpValues);
+
+        $this->assertTrue($client->getResponse()->isRedirect());
+        $crawler = $client->followRedirect();
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        return $crawler;
     }
 }
