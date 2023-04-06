@@ -69,6 +69,43 @@ trait UiWebTestCaseTrait
         return $options;
     }
 
+    protected function submitGridQuickSearch(
+        KernelBrowser $client,
+        Crawler $crawler,
+        string $field,
+        string $value
+    ): Crawler
+    {
+        $buttonSelector = 'button:contains("Search")';
+
+        $this->assertGreaterThan(0, $crawler->filter($buttonSelector)->count());
+
+        $crawler = $client->submit($crawler->selectButton('Search')->form(), ['qs[field]' => $field, 'qs[value]' => $value]);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertGreaterThan(0, $crawler->filter($buttonSelector)->count());
+
+        return $crawler;
+    }
+
+    protected function submitGridFilter(
+        KernelBrowser $client,
+        Crawler $crawler,
+        array $filters
+    ): Crawler
+    {
+        $buttonSelector = 'button:contains("Advanced Search")';
+
+        $this->assertGreaterThan(0, $crawler->filter($buttonSelector)->count());
+
+        $crawler = $client->submit($crawler->selectButton('Advanced Search')->form(), $filters);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertGreaterThan(0, $crawler->filter($buttonSelector)->count());
+
+        return $crawler;
+    }
+
     protected function submitGridConfigWithWrongValues(
         KernelBrowser $client,
         Form $form,
