@@ -366,6 +366,15 @@ class GridManager implements GridManagerInterface
     }
 
     /**
+     * @param array $params
+     * @return string
+     */
+    public function getCurrentResetUrl(array $params = []): string
+    {
+        return $this->request->getCurrentResetUrl($params);
+    }
+
+    /**
      * @param string $column
      * @param string $order
      * @return string

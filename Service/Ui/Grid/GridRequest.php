@@ -544,6 +544,14 @@ class GridRequest
             self::KEY_FILTERS      => $this->filters,
         ];
     }
+    /**
+     * @param array $params
+     * @return string
+     */
+    public function getCurrentResetUrl(array $params): string
+    {
+        return $this->getCurrentUrl($params + [self::KEY_PAGE_CURRENT => 1, self::KEY_FILTERS => []]);
+    }
 
     /**
      * @param array $params

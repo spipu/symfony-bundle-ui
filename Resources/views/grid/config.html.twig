@@ -8,7 +8,7 @@
                     {{ 'spipu.ui.grid.config_create.title'|trans({'%name': currentConfig.name}) }}
                 </div>
                 <div class="card-body">
-                    <form method="get" action="{{ manager.currentUrl }}" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-create">
+                    <form method="get" action="{{ manager.currentResetUrl }}" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-create">
                         <input name="cf[action]" type="hidden" value="create" />
                         <div class="row mb-2">
                             <div class="col-12 col-md-4">
@@ -38,7 +38,7 @@
                     {{ 'spipu.ui.grid.config.title'|trans({'%name': currentConfig.name}) }}
                 </div>
                 <div class="card-body">
-                    <form method="get" action="{{ manager.currentUrl }}" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-form">
+                    <form method="get" action="{{ manager.currentResetUrl }}" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-form">
                         <input name="cf[action]" type="hidden" value="update" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-form-action" />
                         <input name="cf[id]" type="hidden" value="{{ currentConfig.id }}"/>
                         <div class="row">

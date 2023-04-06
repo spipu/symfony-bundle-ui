@@ -7,7 +7,7 @@
                 <b>{{ 'spipu.ui.grid.filter.title'|trans }}</b>
             </div>
             <div class="card-body">
-                <form method="get" onsubmit="return true;" class="form-inline" action="{{ manager.currentUrl }}" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-form">
+                <form method="get" action="{{ manager.currentResetUrl }}" onsubmit="return true;" class="form-inline" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-form">
                     <input type="hidden" name="qs[field]" value="" />
                     <div class="col-12">
                         <div class="row mb-2">
