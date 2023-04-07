@@ -1,4 +1,4 @@
-<tr class="{{ manager.definition.option('tr-css-class', '') }}" data-grid-row-id="{{ attribute(row, manager.definition.dataProviderPrimaryKey) }}">
+<tr data-grid-code="{{ manager.definition.code }}" data-grid-role="row" data-grid-row-id="{{ attribute(row, manager.definition.dataProviderPrimaryKey) }}" class="{{ manager.definition.option('tr-css-class', '') }}">
 {% if manager.definition.massActions|length > 0 %}
     <td data-grid-role="checkbox"><input type="checkbox" value="{{ attribute(row, manager.definition.dataProviderPrimaryKey) }}" data-grid-code="{{ manager.definition.code }}" data-grid-role="checkbox" /></td>
 {% endif %}
@@ -7,7 +7,7 @@
 
 {% endfor %}
 {% if manager.definition.rowActions|length > 0 %}
-    <td data-grid-role="row-actions" class="text-right">{% apply spaceless %}
+    <td data-grid-code="{{ manager.definition.code }}" data-grid-role="row-actions" class="text-right">{% apply spaceless %}
         {%  include manager.definition.templateActions with {
             'manager': manager,
             'actions': manager.definition.rowActions,

@@ -53,10 +53,14 @@ trait UiWebTestCaseTrait
 
     protected function getGridProperties(Crawler $crawler, string $gridCode): array
     {
-        return [
-            'count' => $this->getGridPropertiesCount($crawler, $gridCode),
+        $properties = [
+            'count'   => $this->getGridPropertiesCount($crawler, $gridCode),
             'display' => $this->getGridPropertiesDisplayList($crawler, $gridCode),
+            'columns' => $this->getGridPropertiesColumns($crawler, $gridCode),
+            'rows'    => $this->getGridPropertiesRows($crawler, $gridCode),
         ];
+
+        return $properties;
     }
 
     protected function getGridPropertiesCount(Crawler $crawler, string $gridCode): array
@@ -92,6 +96,49 @@ trait UiWebTestCaseTrait
         });
         ksort($options);
         return $options;
+    }
+
+    protected function getGridPropertiesColumns(Crawler $crawler, string $gridCode): array
+    {
+        $nodes = $crawler->filter("th[data-grid-code=${gridCode}][data-grid-role=header-column]");
+
+        $columns = [];
+        $nodes->each(function (Crawler $node) use (&$columns) {
+            $cssClass = $node->attr('class');
+
+            $sort = null;
+            if ($cssClass && strpos($cssClass, 'sorting_asc') !== false) {
+                $sort = 'asc';
+            }
+            if ($cssClass && strpos($cssClass, 'sorting_desc') !== false) {
+                $sort = 'desc';
+            }
+
+            $columns[$node->attr('data-grid-field-name')] = [
+                'label'    => trim($node->text()),
+                'sortable' => ($cssClass && (strpos($cssClass, 'sorting') !== false)),
+                'sort'     => $sort,
+            ];
+        });
+
+        return $columns;
+    }
+
+    protected function getGridPropertiesRows(Crawler $crawler, string $gridCode): array
+    {
+        $rowNodes = $crawler->filter("tr[data-grid-code=${gridCode}][data-grid-role=row]");
+
+        $rows = [];
+        $rowNodes->each(function (Crawler $rowNode) use (&$rows) {
+            $row = [];
+            $rowNode->filter("td[data-grid-field-name]")->each(function (Crawler $colNode) use (&$row) {
+                $row[$colNode->attr('data-grid-field-name')] = trim($colNode->text());
+            });
+
+            $rows[$rowNode->attr('data-grid-row-id')] = $row;
+        });
+
+        return $rows;
     }
 
     protected function submitGridQuickSearch(
