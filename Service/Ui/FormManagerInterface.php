@@ -19,26 +19,11 @@ use Symfony\Component\Form\FormInterface;
 
 interface FormManagerInterface extends UiManagerInterface
 {
-    /**
-     * @param EntityInterface $resource
-     * @return FormManagerInterface
-     */
     public function setResource(EntityInterface $resource): FormManagerInterface;
 
-    /**
-     * @param string $submitLabel
-     * @param string $submitIcon
-     * @return FormManagerInterface
-     */
     public function setSubmitButton(string $submitLabel, string $submitIcon = 'edit'): FormManagerInterface;
 
-    /**
-     * @return FormInterface
-     */
     public function getForm(): FormInterface;
 
-    /**
-     * @return Form
-     */
     public function getDefinition(): Form;
 }

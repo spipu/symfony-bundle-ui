@@ -20,42 +20,17 @@ class FieldSet implements PositionInterface
 {
     use PositionTrait;
 
-    /**
-     * @var string
-     */
-    private $code;
-
-    /**
-     * @var string
-     */
-    private $name;
+    private string $code;
+    private string $name;
+    private bool $isHiddenInView = false;
+    private bool $isHiddenInForm = false;
+    private string $cssClass = 'col-12';
 
     /**
      * @var Field[]
      */
-    private $fields = [];
+    private array $fields = [];
 
-    /**
-     * @var bool
-     */
-    private $isHiddenInView = false;
-
-    /**
-     * @var bool
-     */
-    private $isHiddenInForm = false;
-
-    /**
-     * @var string
-     */
-    private $cssClass = 'col-12';
-
-    /**
-     * Fieldset constructor.
-     * @param string $code
-     * @param string $name
-     * @param int $position
-     */
     public function __construct(string $code, string $name, int $position)
     {
         $this->code = $code;
@@ -64,25 +39,16 @@ class FieldSet implements PositionInterface
         $this->setPosition($position);
     }
 
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return $this->code;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return bool
-     */
     public function isHiddenInView(): bool
     {
         return $this->isHiddenInView;
@@ -100,9 +66,6 @@ class FieldSet implements PositionInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isHiddenInForm(): bool
     {
         return $this->isHiddenInForm;
@@ -120,18 +83,11 @@ class FieldSet implements PositionInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getCssClass(): string
     {
         return $this->cssClass;
     }
 
-    /**
-     * @param string $cssClass
-     * @return self
-     */
     public function setCssClass(string $cssClass): self
     {
         $this->cssClass = $cssClass;
@@ -139,10 +95,6 @@ class FieldSet implements PositionInterface
         return $this;
     }
 
-    /**
-     * @param Field $field
-     * @return self
-     */
     public function addField(Field $field): self
     {
         $this->fields[$field->getCode()] = $field;
@@ -150,10 +102,6 @@ class FieldSet implements PositionInterface
         return $this;
     }
 
-    /**
-     * @param string $key
-     * @return FieldSet
-     */
     public function removeField(string $key): self
     {
         if (array_key_exists($key, $this->fields)) {
@@ -184,10 +132,6 @@ class FieldSet implements PositionInterface
         return $this->fields[$key];
     }
 
-    /**
-     * @param string $name
-     * @return $this
-     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -195,11 +139,6 @@ class FieldSet implements PositionInterface
         return $this;
     }
 
-    /**
-     * Sort the fields
-     *
-     * @return void
-     */
     public function prepareSort(): void
     {
         uasort(

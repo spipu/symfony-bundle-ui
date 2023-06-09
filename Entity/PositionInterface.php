@@ -15,14 +15,7 @@ namespace Spipu\UiBundle\Entity;
 
 interface PositionInterface
 {
-    /**
-     * @param int $position
-     * @return void
-     */
     public function setPosition(int $position): void;
 
-    /**
-     * @return int
-     */
     public function getPosition(): int;
 }

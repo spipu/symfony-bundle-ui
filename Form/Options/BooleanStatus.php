@@ -18,10 +18,6 @@ class BooleanStatus extends AbstractOptions
     public const VALUE_TRUE = 1;
     public const VALUE_FALSE = 0;
 
-    /**
-     * Build the list of the available options
-     * @return array
-     */
     protected function buildOptions(): array
     {
         return [

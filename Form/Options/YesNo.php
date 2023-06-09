@@ -18,10 +18,6 @@ class YesNo extends AbstractOptions
     public const VALUE_YES = 1;
     public const VALUE_NO = 0;
 
-    /**
-     * Build the list of the available options
-     * @return array
-     */
     protected function buildOptions(): array
     {
         return [

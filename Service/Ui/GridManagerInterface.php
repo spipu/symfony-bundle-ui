@@ -17,15 +17,7 @@ use Spipu\UiBundle\Service\Ui\Grid\DataProvider\DataProviderInterface;
 
 interface GridManagerInterface extends UiManagerInterface
 {
-    /**
-     * @param string $name
-     * @param array $parameters
-     * @return GridManagerInterface
-     */
     public function setRoute(string $name, array $parameters = []): GridManagerInterface;
 
-    /**
-     * @return DataProviderInterface
-     */
     public function getDataProvider(): DataProviderInterface;
 }

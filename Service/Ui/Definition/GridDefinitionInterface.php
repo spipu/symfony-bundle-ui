@@ -17,8 +17,5 @@ use Spipu\UiBundle\Entity\Grid\Grid as GridDefinition;
 
 interface GridDefinitionInterface
 {
-    /**
-     * @return GridDefinition
-     */
     public function getDefinition(): GridDefinition;
 }

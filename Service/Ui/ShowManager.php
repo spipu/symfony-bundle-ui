@@ -21,41 +21,15 @@ use Spipu\UiBundle\Exception\FormException;
 use Spipu\UiBundle\Service\Ui\Definition\EntityDefinitionInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Twig\Environment as Twig;
-use Twig\Error\Error as TwigError;
 
 class ShowManager implements ShowManagerInterface
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private EventDispatcherInterface $eventDispatcher;
+    private Twig $twig;
+    private EntityDefinitionInterface $definition;
+    private Form $formDefinition;
+    private ?EntityInterface $resource = null;
 
-    /**
-     * @var Twig
-     */
-    private $twig;
-
-    /**
-     * @var EntityDefinitionInterface
-     */
-    private $definition;
-
-    /**
-     * @var Form
-     */
-    private $formDefinition;
-
-    /**
-     * @var EntityInterface
-     */
-    private $resource;
-
-    /**
-     * Manager constructor.
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param Twig $twig
-     * @param EntityDefinitionInterface $definition
-     */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         Twig $twig,
@@ -66,10 +40,6 @@ class ShowManager implements ShowManagerInterface
         $this->definition = $definition;
     }
 
-    /**
-     * @param EntityInterface $resource
-     * @return ShowManagerInterface
-     */
     public function setResource(EntityInterface $resource): ShowManagerInterface
     {
         $this->resource = $resource;
@@ -77,10 +47,6 @@ class ShowManager implements ShowManagerInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     * @throws FormException
-     */
     public function validate(): bool
     {
         if (!$this->resource) {
@@ -97,18 +63,11 @@ class ShowManager implements ShowManagerInterface
         return true;
     }
 
-    /**
-     * @return EntityInterface
-     */
     public function getResource(): EntityInterface
     {
         return $this->resource;
     }
 
-    /**
-     * @return string
-     * @throws TwigError
-     */
     public function display(): string
     {
         return $this->twig->render(
@@ -127,9 +86,6 @@ class ShowManager implements ShowManagerInterface
         return $this->formDefinition->getFieldSets();
     }
 
-    /**
-     * @return Form
-     */
     public function getDefinition(): Form
     {
         return $this->formDefinition;

@@ -20,29 +20,11 @@ use DateTimeInterface;
  */
 interface TimestampableInterface
 {
-     /**
-     * Set the created at value on create
-     * @return void
-     */
     public function setCreatedAtValue(): void;
 
-    /**
-     * Set the updated at value on update
-     * @return void
-     */
     public function setUpdatedAtValue(): void;
 
-    /**
-     * Get - Created At
-     *
-     * @return DateTimeInterface|null
-     */
     public function getCreatedAt(): ?DateTimeInterface;
 
-    /**
-     * Get - Updated At
-     *
-     * @return DateTimeInterface|null
-     */
     public function getUpdatedAt(): ?DateTimeInterface;
 }

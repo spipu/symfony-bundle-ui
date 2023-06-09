@@ -77,46 +77,21 @@ class SpipuUiMock extends TestCase
 
 class ResourceMock implements EntityInterface
 {
-    /**
-     * @var string
-     */
-    private $fieldAA = '';
+    private string $fieldAA = '';
+    private string $fieldAB = '';
+    private string $fieldBA = '';
+    private string $fieldBB = '';
 
-    /**
-     * @var string
-     */
-    private $fieldAB = '';
-
-    /**
-     * @var string
-     */
-    private $fieldBA = '';
-
-    /**
-     * @var string
-     */
-    private $fieldBB = '';
-
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return null;
     }
 
-    /**
-     * @return string
-     */
     public function getFieldAA(): string
     {
         return $this->fieldAA;
     }
 
-    /**
-     * @param string $fieldAA
-     * @return self
-     */
     public function setFieldAA(string $fieldAA): self
     {
         $this->fieldAA = $fieldAA;
@@ -124,18 +99,11 @@ class ResourceMock implements EntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getFieldAB(): string
     {
         return $this->fieldAB;
     }
 
-    /**
-     * @param string $fieldAB
-     * @return self
-     */
     public function setFieldAB(string $fieldAB): self
     {
         $this->fieldAB = $fieldAB;
@@ -143,18 +111,11 @@ class ResourceMock implements EntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getFieldBA(): string
     {
         return $this->fieldBA;
     }
 
-    /**
-     * @param string $fieldBA
-     * @return self
-     */
     public function setFieldBA(string $fieldBA): self
     {
         $this->fieldBA = $fieldBA;
@@ -162,18 +123,11 @@ class ResourceMock implements EntityInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getFieldBB(): string
     {
         return $this->fieldBB;
     }
 
-    /**
-     * @param string $fieldBB
-     * @return self
-     */
     public function setFieldBB(string $fieldBB): self
     {
         $this->fieldBB = $fieldBB;
@@ -184,15 +138,8 @@ class ResourceMock implements EntityInterface
 
 class GridDefinitionMock implements GridDefinitionInterface
 {
-    /**
-     * @var Grid\Grid
-     */
-    private $definition;
+    private ?Grid\Grid $definition = null;
 
-    /**
-     * @return Grid\Grid
-     * @throws \Spipu\UiBundle\Exception\GridException
-     */
     public function getDefinition(): Grid\Grid
     {
         if ($this->definition) {
@@ -234,15 +181,8 @@ class GridDefinitionMock implements GridDefinitionInterface
 
 class EntityDefinitionMock implements EntityDefinitionInterface
 {
-    /**
-     * @var Form\Form
-     */
-    private $definition;
+    private ?Form\Form $definition = null;
 
-    /**
-     * @return Form\Form
-     * @throws FormException
-     */
     public function getDefinition(): Form\Form
     {
         if ($this->definition) {
@@ -294,12 +234,6 @@ class EntityDefinitionMock implements EntityDefinitionInterface
         return $this->definition;
     }
 
-    /**
-     * @param FormInterface $form
-     * @param EntityInterface|null $resource
-     * @return void
-     * @throws FormException
-     */
     public function setSpecificFields(FormInterface $form, EntityInterface $resource = null): void
     {
         if ($resource !== null) {
@@ -316,22 +250,15 @@ class DataProviderMock extends AbstractDataProvider
     /**
      * @var ResourceMock[]
      */
-    private $entities;
+    private ?array $entities = null;
 
     /**
      * @var ResourceMock[]
      */
-    private $found;
+    private ?array $found = null;
 
-    /**
-     * @var int
-     */
-    private $nbEntities = 100;
+    private int $nbEntities = 100;
 
-    /**
-     * @param int $nbEntities
-     * @return self
-     */
     public function setNbEntities(int $nbEntities): self
     {
         $this->nbEntities = $nbEntities;
@@ -364,9 +291,6 @@ class DataProviderMock extends AbstractDataProvider
         $this->found = $this->entities;
     }
 
-    /**
-     * @return int
-     */
     public function getNbTotalRows(): int
     {
         if ($this->found === null) {
@@ -397,10 +321,6 @@ class OptionIntegerMock extends AbstractOptions
     public const VALUE_YES = 1;
     public const VALUE_NO = 0;
 
-    /**
-     * Build the list of the available options
-     * @return array
-     */
     protected function buildOptions(): array
     {
         return [
@@ -415,10 +335,6 @@ class OptionStringMock extends AbstractOptions
     public const VALUE_YES = 'yes';
     public const VALUE_NO = 'no';
 
-    /**
-     * Build the list of the available options
-     * @return array
-     */
     protected function buildOptions(): array
     {
         return [

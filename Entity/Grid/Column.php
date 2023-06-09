@@ -22,48 +22,14 @@ class Column implements PositionInterface
     use PositionTrait;
     use OptionsTrait;
 
-    /**
-     * @var string
-     */
-    private $code;
+    private string $code;
+    private string $name;
+    private string $entityField;
+    private ColumnType $type;
+    private ColumnFilter $filter;
+    private bool $sortable = false;
+    private bool $displayed = true;
 
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $entityField;
-
-    /**
-     * @var ColumnType
-     */
-    private $type;
-
-    /**
-     * @var ColumnFilter
-     */
-    private $filter;
-
-    /**
-     * @var bool
-     */
-    private $sortable = false;
-
-    /**
-     * @var bool
-     */
-    private $displayed = true;
-
-    /**
-     * Column constructor.
-     * @param string $code
-     * @param string $name
-     * @param string $entityField
-     * @param int $position
-     */
     public function __construct(
         string $code,
         string $name,
@@ -80,42 +46,26 @@ class Column implements PositionInterface
         $this->useSortable(false);
     }
 
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return $this->code;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
     public function getEntityField(): string
     {
         return $this->entityField;
     }
 
-    /**
-     * @return ColumnType
-     */
     public function getType(): ColumnType
     {
         return $this->type;
     }
 
-    /**
-     * @param ColumnType $type
-     * @return self
-     */
     public function setType(ColumnType $type): self
     {
         $this->type = $type;
@@ -123,18 +73,11 @@ class Column implements PositionInterface
         return $this;
     }
 
-    /**
-     * @return ColumnFilter
-     */
     public function getFilter(): ColumnFilter
     {
         return $this->filter;
     }
 
-    /**
-     * @param ColumnFilter $filter
-     * @return self
-     */
     public function setFilter(ColumnFilter $filter): self
     {
         $this->filter = $filter;
@@ -143,9 +86,6 @@ class Column implements PositionInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isSortable(): bool
     {
         return $this->sortable;
@@ -163,10 +103,6 @@ class Column implements PositionInterface
         return $this;
     }
 
-    /**
-     * @param string $name
-     * @return self
-     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -174,10 +110,6 @@ class Column implements PositionInterface
         return $this;
     }
 
-    /**
-     * @param string $entityField
-     * @return self
-     */
     public function setEntityField(string $entityField): self
     {
         $this->entityField = $entityField;
@@ -185,10 +117,6 @@ class Column implements PositionInterface
         return $this;
     }
 
-    /**
-     * @param bool $displayed
-     * @return Column
-     */
     public function setDisplayed(bool $displayed): self
     {
         $this->displayed = $displayed;
@@ -196,9 +124,6 @@ class Column implements PositionInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isDisplayed(): bool
     {
         return $this->displayed;

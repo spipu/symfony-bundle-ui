@@ -26,44 +26,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class GridConfig
 {
-    /**
-     * @var Security
-     */
-    private $security;
+    private Security $security;
+    private GridConfigRepository $gridConfigRepository;
+    private TranslatorInterface $translator;
+    private GridIdentifierInterface $gridIdentifier;
+    private UserIdentifierInterface $userIdentifier;
+    private EntityManagerInterface $entityManager;
 
-    /**
-     * @var GridConfigRepository
-     */
-    private $gridConfigRepository;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var GridIdentifierInterface
-     */
-    private $gridIdentifier;
-
-    /**
-     * @var UserIdentifierInterface
-     */
-    private $userIdentifier;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @param Security $security
-     * @param GridConfigRepository $gridConfigRepository
-     * @param TranslatorInterface $translator
-     * @param GridIdentifierInterface $gridIdentifier
-     * @param UserIdentifierInterface $userIdentifier
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(
         Security $security,
         GridConfigRepository $gridConfigRepository,
@@ -105,11 +74,6 @@ class GridConfig
         return $configs;
     }
 
-    /**
-     * @param Grid $grid
-     * @param int $gridConfigId
-     * @return GridConfigEntity|null
-     */
     public function getUserConfig(Grid $grid, int $gridConfigId): ?GridConfigEntity
     {
         $gridIdentifier = $this->getGridIdentifier($grid);
@@ -122,10 +86,6 @@ class GridConfig
         );
     }
 
-    /**
-     * @param Grid $grid
-     * @return GridConfigEntity
-     */
     public function getDefaultUserConfig(Grid $grid): GridConfigEntity
     {
         $gridIdentifier = $this->getGridIdentifier($grid);
@@ -144,11 +104,6 @@ class GridConfig
         return $gridConfig;
     }
 
-    /**
-     * @param Grid $grid
-     * @param string $name
-     * @return GridConfigEntity
-     */
     public function createUserConfig(Grid $grid, string $name): GridConfigEntity
     {
         $gridIdentifier = $this->getGridIdentifier($grid);
@@ -185,29 +140,17 @@ class GridConfig
         return $gridConfig;
     }
 
-    /**
-     * @param Grid $grid
-     * @return string
-     */
     private function getGridIdentifier(Grid $grid): string
     {
         return $this->gridIdentifier->getIdentifier($grid);
     }
 
-    /**
-     * @return string
-     */
     private function getUserIdentifier(): string
     {
         $user = $this->security->getUser();
         return $this->userIdentifier->getIdentifier($user);
     }
 
-    /**
-     * @param Grid $grid
-     * @param int|null $currentConfigId
-     * @return array
-     */
     public function getPersonalizeDefinition(Grid $grid, ?int $currentConfigId): array
     {
         $definition = [
@@ -238,13 +181,6 @@ class GridConfig
         return $definition;
     }
 
-    /**
-     * @param Grid $grid
-     * @param string $action
-     * @param array $params
-     * @return GridConfigEntity|null
-     * @throws UiException
-     */
     public function makeAction(Grid $grid, string $action, array $params): ?GridConfigEntity
     {
         $action = strip_tags($action);
@@ -267,12 +203,6 @@ class GridConfig
         }
     }
 
-    /**
-     * @param Grid $grid
-     * @param array $params
-     * @return GridConfigEntity|null
-     * @throws UiException
-     */
     private function makeActionCreate(Grid $grid, array $params): ?GridConfigEntity
     {
         if (!array_key_exists('name', $params) || !is_string($params['name'])) {
@@ -287,12 +217,6 @@ class GridConfig
         return $this->createUserConfig($grid, $name);
     }
 
-    /**
-     * @param Grid $grid
-     * @param array $params
-     * @return GridConfigEntity
-     * @throws UiException
-     */
     private function makeActionSelect(Grid $grid, array $params): GridConfigEntity
     {
         if (!array_key_exists('id', $params) || !is_numeric($params['id'])) {
@@ -307,12 +231,6 @@ class GridConfig
         return $config;
     }
 
-    /**
-     * @param Grid $grid
-     * @param array $params
-     * @return GridConfigEntity|null
-     * @throws UiException
-     */
     private function makeActionDelete(Grid $grid, array $params): ?GridConfigEntity
     {
         $gridConfig = $this->makeActionSelect($grid, $params);
@@ -326,12 +244,6 @@ class GridConfig
         return $this->getDefaultUserConfig($grid);
     }
 
-    /**
-     * @param Grid $grid
-     * @param array $params
-     * @return GridConfigEntity|null
-     * @throws UiException
-     */
     private function makeActionUpdate(Grid $grid, array $params): ?GridConfigEntity
     {
         $gridConfig = $this->makeActionSelect($grid, $params);
@@ -349,12 +261,6 @@ class GridConfig
         return $gridConfig;
     }
 
-    /**
-     * @param array $params
-     * @param Grid $grid
-     * @return array
-     * @throws UiException
-     */
     protected function prepareUpdateColumns(array $params, Grid $grid): array
     {
         if (
@@ -385,12 +291,6 @@ class GridConfig
         return $displayedColumns;
     }
 
-    /**
-     * @param array $params
-     * @param Grid $grid
-     * @return array
-     * @throws UiException
-     */
     protected function prepareUpdateSort(array $params, Grid $grid): array
     {
         if (!array_key_exists('sort', $params)) {
@@ -423,12 +323,6 @@ class GridConfig
         ];
     }
 
-    /**
-     * @param array $params
-     * @param Grid $grid
-     * @return array
-     * @throws UiException
-     */
     protected function prepareUpdateFilters(array $params, Grid $grid): array
     {
         if (!array_key_exists('filters', $params)) {

@@ -16,38 +16,22 @@ namespace Spipu\UiBundle\Event;
 use Spipu\UiBundle\Entity\Grid\Grid;
 use Symfony\Contracts\EventDispatcher\Event;
 
-/**
- * Grid Event
- */
 abstract class AbstractGridEvent extends Event
 {
     public const PREFIX_NAME = '';
 
-    /**
-     * @var Grid
-     */
-    private $gridDefinition;
+    private Grid $gridDefinition;
 
-    /**
-     * GridEvent constructor.
-     * @param Grid $gridDefinition
-     */
     public function __construct(Grid $gridDefinition)
     {
         $this->gridDefinition = $gridDefinition;
     }
 
-    /**
-     * @return string
-     */
     public function getEventCode(): string
     {
         return static::PREFIX_NAME . $this->gridDefinition->getCode();
     }
 
-    /**
-     * @return Grid
-     */
     public function getGridDefinition(): Grid
     {
         return $this->gridDefinition;

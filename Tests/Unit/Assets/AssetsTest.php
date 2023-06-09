@@ -7,11 +7,10 @@ use Spipu\UiBundle\Assets\Bootstrap;
 use Spipu\UiBundle\Assets\FontAwesome;
 use Spipu\UiBundle\Assets\Jquery;
 use Spipu\UiBundle\Assets\Popper;
-use Spipu\UiBundle\Tests\SpipuUiMock;
 
 class AssetsTest extends TestCase
 {
-    private $availableTypes = [AssetInterface::TYPE_URL, AssetInterface::TYPE_VENDOR, AssetInterface::TYPE_URL_ZIP];
+    private array $availableTypes = [AssetInterface::TYPE_URL, AssetInterface::TYPE_VENDOR, AssetInterface::TYPE_URL_ZIP];
 
     public function testBootstrap()
     {

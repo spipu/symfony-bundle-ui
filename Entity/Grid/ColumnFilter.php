@@ -15,30 +15,11 @@ namespace Spipu\UiBundle\Entity\Grid;
 
 class ColumnFilter
 {
-    /**
-     * @var bool
-     */
-    private $filterable;
-
-    /**
-     * @var bool
-     */
-    private $quickSearch;
-
-    /**
-     * @var bool
-     */
-    private $range;
-
-    /**
-     * @var bool
-     */
-    private $exactValue;
-
-    /**
-     * @var string|null
-     */
-    private $templateFilter;
+    private bool $filterable;
+    private bool $quickSearch;
+    private bool $range;
+    private bool $exactValue;
+    private ?string $templateFilter = null;
 
     /**
      * Pager constructor.
@@ -56,10 +37,6 @@ class ColumnFilter
         $this->exactValue = false;
     }
 
-    /**
-     * @param ColumnType $columnType
-     * @return bool
-     */
     public function linkToColumnType(ColumnType $columnType): bool
     {
         if ($this->templateFilter !== null) {
@@ -70,25 +47,16 @@ class ColumnFilter
         return true;
     }
 
-    /**
-     * @return bool
-     */
     public function isFilterable(): bool
     {
         return $this->filterable;
     }
 
-    /**
-     * @return bool
-     */
     public function isQuickSearch(): bool
     {
         return $this->quickSearch;
     }
 
-    /**
-     * @return bool
-     */
     public function isRange(): bool
     {
         return $this->range;
@@ -106,9 +74,6 @@ class ColumnFilter
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isExactValue(): bool
     {
         return $this->exactValue;
@@ -126,19 +91,11 @@ class ColumnFilter
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTemplateFilter(): string
     {
         return $this->templateFilter;
     }
 
-    /**
-     * @param string $templateFilter
-     *
-     * @return self
-     */
     public function setTemplateFilter(string $templateFilter): self
     {
         $this->templateFilter = $templateFilter;
@@ -146,10 +103,6 @@ class ColumnFilter
         return $this;
     }
 
-    /**
-     * @param bool $filterable
-     * @return self
-     */
     public function useFilterable(bool $filterable): self
     {
         $this->filterable = $filterable;
@@ -157,10 +110,6 @@ class ColumnFilter
         return $this;
     }
 
-    /**
-     * @param bool $quickSearch
-     * @return self
-     */
     public function useQuickSearch(bool $quickSearch): self
     {
         $this->quickSearch = $quickSearch;

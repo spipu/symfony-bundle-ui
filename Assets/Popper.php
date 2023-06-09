@@ -21,25 +21,16 @@ use Spipu\CoreBundle\Assets\AssetInterface;
  */
 class Popper implements AssetInterface
 {
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return 'popper';
     }
 
-    /**
-     * @return string
-     */
     public function getSourceType(): string
     {
         return self::TYPE_URL;
     }
 
-    /**
-     * @return string
-     */
     public function getSource(): string
     {
         return 'https://unpkg.com/popper.js/dist/umd/';

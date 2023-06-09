@@ -18,10 +18,6 @@ class ActiveStatus extends AbstractOptions
     public const VALUE_ACTIVE = 1;
     public const VALUE_INACTIVE = 0;
 
-    /**
-     * Build the list of the available options
-     * @return array
-     */
     protected function buildOptions(): array
     {
         return [

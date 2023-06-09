@@ -15,8 +15,5 @@ namespace Spipu\UiBundle\Entity;
 
 interface EntityInterface
 {
-    /**
-     * @return int|null
-     */
     public function getId(): ?int;
 }

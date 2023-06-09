@@ -17,10 +17,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserIdentifier implements UserIdentifierInterface
 {
-    /**
-     * @param UserInterface|null $user
-     * @return string
-     */
     public function getIdentifier(?UserInterface $user): string
     {
         if (method_exists($user, 'getId') && !empty($user->getId())) {

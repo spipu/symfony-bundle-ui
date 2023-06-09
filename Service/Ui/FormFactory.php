@@ -23,45 +23,13 @@ use Twig\Environment as Twig;
 
 class FormFactory
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    private ContainerInterface $container;
+    private EventDispatcherInterface $eventDispatcher;
+    private EntityManagerInterface $entityManager;
+    private FormFactoryInterface $formFactory;
+    private TranslatorInterface $translator;
+    private Twig $twig;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var Twig
-     */
-    private $twig;
-
-    /**
-     * GridFactory constructor.
-     * @param ContainerInterface $container
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param EntityManagerInterface $entityManager
-     * @param FormFactoryInterface $formFactory
-     * @param TranslatorInterface $translator
-     * @param Twig $twig
-     */
     public function __construct(
         ContainerInterface $container,
         EventDispatcherInterface $eventDispatcher,
@@ -78,10 +46,6 @@ class FormFactory
         $this->twig = $twig;
     }
 
-    /**
-     * @param EntityDefinitionInterface $formDefinition
-     * @return FormManagerInterface
-     */
     public function create(EntityDefinitionInterface $formDefinition): FormManagerInterface
     {
         return new FormManager(

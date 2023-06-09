@@ -15,30 +15,18 @@ namespace Spipu\UiBundle\Assets;
 
 use Spipu\CoreBundle\Assets\AssetInterface;
 
-/**
- * All the assets
- */
 class Bootstrap implements AssetInterface
 {
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return 'bootstrap';
     }
 
-    /**
-     * @return string
-     */
     public function getSourceType(): string
     {
         return self::TYPE_VENDOR;
     }
 
-    /**
-     * @return string
-     */
     public function getSource(): string
     {
         return 'twbs/bootstrap';

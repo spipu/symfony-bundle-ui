@@ -13,18 +13,9 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Service\Ui;
 
-use Spipu\UiBundle\Exception\UiException;
-
 interface UiManagerInterface
 {
-    /**
-     * @return bool
-     * @throws UiException
-     */
     public function validate(): bool;
 
-    /**
-     * @return string
-     */
     public function display(): string;
 }

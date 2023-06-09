@@ -17,60 +17,33 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * You must add the following comment on all the entities:
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\HasLifecycleCallbacks()]
 trait TimestampableTrait
 {
-    /**
-     * @var DateTime
-     * @ORM\Column(type="datetime", nullable=false)
-     */
-    protected $createdAt;
+    #[ORM\Column(type: "datetime", nullable: false)]
+    protected ?DateTimeInterface $createdAt = null;
 
-    /**
-     * @var DateTime
-     * @ORM\Column(type="datetime", nullable=false)
-     */
-    protected $updatedAt;
+    #[ORM\Column(type: "datetime", nullable: false)]
+    protected ?DateTimeInterface $updatedAt = null;
 
-    /**
-     * Set the created at value on create
-     * @ORM\PrePersist()
-     * @return void
-     */
+    #[ORM\PrePersist()]
     public function setCreatedAtValue(): void
     {
         $this->createdAt = new DateTime();
     }
 
-    /**
-     * Set the updated at value on update
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     * @return void
-     */
+    #[ORM\PrePersist()]
+    #[ORM\PreUpdate()]
     public function setUpdatedAtValue(): void
     {
         $this->updatedAt = new DateTime();
     }
 
-    /**
-     * Get - Created At
-     *
-     * @return DateTimeInterface|null
-     */
     public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    /**
-     * Get - Updated At
-     *
-     * @return DateTimeInterface|null
-     */
     public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updatedAt;

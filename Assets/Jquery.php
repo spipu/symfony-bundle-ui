@@ -21,39 +21,23 @@ use Spipu\CoreBundle\Assets\AssetInterface;
  */
 class Jquery implements AssetInterface
 {
-    /**
-     * @var string
-     */
-    private $version;
+    private string $version;
 
-    /**
-     * Jquery constructor.
-     * @param string $version
-     */
     public function __construct(string $version = '3.7.0')
     {
         $this->version = $version;
     }
 
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return 'jquery';
     }
 
-    /**
-     * @return string
-     */
     public function getSourceType(): string
     {
         return self::TYPE_URL;
     }
 
-    /**
-     * @return string
-     */
     public function getSource(): string
     {
         return 'https://code.jquery.com/';

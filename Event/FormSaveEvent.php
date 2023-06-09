@@ -17,29 +17,13 @@ use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Entity\Form\Form;
 use Symfony\Component\Form\FormInterface;
 
-/**
- * Form Event
- */
 class FormSaveEvent extends AbstractFormEvent
 {
     public const PREFIX_NAME = 'spipu.ui.form.save.';
 
-    /**
-     * @var FormInterface
-     */
-    private $form;
+    private FormInterface $form;
+    private ?EntityInterface $resource;
 
-    /**
-     * @var EntityInterface|null
-     */
-    private $resource;
-
-    /**
-     * FormSaveEvent constructor.
-     * @param Form $formDefinition
-     * @param FormInterface $form
-     * @param EntityInterface|null $resource
-     */
     public function __construct(
         Form $formDefinition,
         FormInterface $form,
@@ -50,17 +34,11 @@ class FormSaveEvent extends AbstractFormEvent
         $this->resource = $resource;
     }
 
-    /**
-     * @return FormInterface
-     */
     public function getForm(): FormInterface
     {
         return $this->form;
     }
 
-    /**
-     * @return EntityInterface|null
-     */
     public function getResource(): ?EntityInterface
     {
         return $this->resource;

@@ -17,9 +17,5 @@ use Spipu\UiBundle\Entity\EntityInterface;
 
 interface ShowManagerInterface extends UiManagerInterface
 {
-    /**
-     * @param EntityInterface $resource
-     * @return ShowManagerInterface
-     */
     public function setResource(EntityInterface $resource): ShowManagerInterface;
 }

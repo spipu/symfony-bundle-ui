@@ -19,21 +19,10 @@ use Spipu\UiBundle\Entity\Grid\Grid as GridDefinition;
 
 interface DataProviderInterface
 {
-    /**
-     * @param GridRequest $request
-     * @return void
-     */
     public function setGridRequest(GridRequest $request): void;
 
-    /**
-     * @param GridDefinition $definition
-     * @return void
-     */
     public function setGridDefinition(GridDefinition $definition): void;
 
-    /**
-     * @return int
-     */
     public function getNbTotalRows(): int;
 
     /**

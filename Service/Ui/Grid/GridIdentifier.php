@@ -13,37 +13,23 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Service\Ui\Grid;
 
-use Exception;
 use Spipu\UiBundle\Entity\Grid\Grid;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class GridIdentifier implements GridIdentifierInterface
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private RequestStack $requestStack;
 
-    /**
-     * @param RequestStack $requestStack
-     */
     public function __construct(RequestStack $requestStack)
     {
         $this->requestStack = $requestStack;
     }
 
-    /**
-     * @param Grid $grid
-     * @return string
-     */
     public function getIdentifier(Grid $grid): string
     {
         return $this->getRoute() . '/' . $grid->getCode();
     }
 
-    /**
-     * @return string
-     */
     private function getRoute(): string
     {
         $currentRequest = $this->requestStack->getCurrentRequest();
