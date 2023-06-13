@@ -25,9 +25,6 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class GridConfigRepository extends ServiceEntityRepository
 {
-    /**
-     * @param ManagerRegistry $registry
-     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, GridConfig::class);
@@ -51,12 +48,6 @@ class GridConfigRepository extends ServiceEntityRepository
         );
     }
 
-    /**
-     * @param string $gridIdentifier
-     * @param string $userIdentifier
-     * @param int $gridConfigId
-     * @return GridConfig|null
-     */
     public function getUserConfigById(string $gridIdentifier, string $userIdentifier, int $gridConfigId): ?GridConfig
     {
         return $this->findOneBy(
@@ -68,12 +59,6 @@ class GridConfigRepository extends ServiceEntityRepository
         );
     }
 
-    /**
-     * @param string $gridIdentifier
-     * @param string $userIdentifier
-     * @param string $name
-     * @return GridConfig|null
-     */
     public function getUserConfigByName(string $gridIdentifier, string $userIdentifier, string $name): ?GridConfig
     {
         return $this->findOneBy(
@@ -85,9 +70,6 @@ class GridConfigRepository extends ServiceEntityRepository
         );
     }
 
-    /**
-     * @return void
-     */
     public function resetDefaults(): void
     {
         $this

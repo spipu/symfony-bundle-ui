@@ -26,42 +26,17 @@ class ColumnType
     public const TYPE_DATETIME = 'datetime';
     public const TYPE_COLOR    = 'color';
 
-    /**
-     * @var string
-     */
-    private $type;
+    private string $type;
+    private string $templateField;
+    private ?OptionsInterface $options = null;
+    private bool $translate = false;
 
-    /**
-     * @var string
-     */
-    private $templateField;
-
-    /**
-     * @var OptionsInterface|null
-     */
-    private $options = null;
-
-    /**
-     * @var bool
-     */
-    private $translate = false;
-
-    /**
-     * Type constructor.
-     * @param string $type
-     * @throws GridException
-     */
     public function __construct(
         string $type = self::TYPE_TEXT
     ) {
         $this->setType($type);
     }
 
-    /**
-     * @param string $type
-     * @return void
-     * @throws GridException
-     */
     private function validateType(string $type): void
     {
         $allowedTypes = [
@@ -79,18 +54,11 @@ class ColumnType
         }
     }
 
-    /**
-     * @return OptionsInterface|null
-     */
     public function getOptions(): ?OptionsInterface
     {
         return $this->options;
     }
 
-    /**
-     * @param OptionsInterface $options
-     * @return self
-     */
     public function setOptions(OptionsInterface $options): self
     {
         $this->options = $options;
@@ -98,18 +66,11 @@ class ColumnType
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isTranslate(): bool
     {
         return $this->translate;
     }
 
-    /**
-     * @param bool $translate
-     * @return self
-     */
     public function setTranslate(bool $translate): self
     {
         $this->translate = $translate;
@@ -117,19 +78,11 @@ class ColumnType
         return $this;
     }
 
-
-    /**
-     * @return string
-     */
     public function getTemplateField(): string
     {
         return $this->templateField;
     }
 
-    /**
-     * @param string $templateField
-     * @return self
-     */
     public function setTemplateField(string $templateField): self
     {
         $this->templateField = $templateField;
@@ -137,19 +90,11 @@ class ColumnType
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     * @return self
-     * @throws GridException
-     */
     public function setType(string $type): self
     {
         $this->validateType($type);

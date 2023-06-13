@@ -23,11 +23,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class GenericType extends AbstractType
 {
     /**
-     * @var Form
-     */
-    private $form;
-
-    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      * @return void
@@ -35,9 +30,9 @@ class GenericType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $this->form = $options['form_definition'];
+        $form = $options['form_definition'];
 
-        foreach ($this->form->getFieldSets() as $fieldSet) {
+        foreach ($form->getFieldSets() as $fieldSet) {
             if ($fieldSet->isHiddenInForm()) {
                 continue;
             }
@@ -50,11 +45,6 @@ class GenericType extends AbstractType
         }
     }
 
-    /**
-     * @param FormBuilderInterface $builder
-     * @param Field $field
-     * @return void
-     */
     private function prepareField(FormBuilderInterface $builder, Field $field): void
     {
         $opts = $field->getOptions();
@@ -69,10 +59,6 @@ class GenericType extends AbstractType
         $builder->add($field->getCode(), $field->getType(), $opts);
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     * @return void
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefined('form_definition');

@@ -30,83 +30,25 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment as Twig;
-use Twig\Error\Error as TwigError;
 
 /**
  * @SuppressWarnings(PMD.CouplingBetweenObjects)
  */
 class FormManager implements FormManagerInterface
 {
-    /**
-     * @var SymfonyRequest
-     */
-    private $symfonyRequest;
+    private SymfonyRequest $symfonyRequest;
+    private EventDispatcherInterface $eventDispatcher;
+    private EntityManagerInterface $entityManager;
+    private FormFactoryInterface $formFactory;
+    private TranslatorInterface $translator;
+    private Twig $twig;
+    private EntityDefinitionInterface $definition;
+    private ?Form $formDefinition = null;
+    private ?EntityInterface $resource = null;
+    private ?FormInterface $form = null;
+    private string $submitLabel = 'spipu.ui.action.submit';
+    private string $submitIcon = 'edit';
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var Twig
-     */
-    private $twig;
-
-    /**
-     * @var EntityDefinitionInterface
-     */
-    private $definition;
-
-    /**
-     * @var Form
-     */
-    private $formDefinition;
-
-    /**
-     * @var EntityInterface
-     */
-    private $resource;
-
-    /**
-     * @var FormInterface
-     */
-    private $form;
-
-    /**
-     * @var string
-     */
-    private $submitLabel = 'spipu.ui.action.submit';
-
-    /**
-     * @var string
-     */
-    private $submitIcon = 'edit';
-
-    /**
-     * Manager constructor.
-     * @param SymfonyRequest $symfonyRequest
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param EntityManagerInterface $entityManager
-     * @param FormFactoryInterface $formFactory
-     * @param TranslatorInterface $translator
-     * @param Twig $twig
-     * @param EntityDefinitionInterface $definition
-     */
     public function __construct(
         SymfonyRequest $symfonyRequest,
         EventDispatcherInterface $eventDispatcher,
@@ -173,10 +115,6 @@ class FormManager implements FormManagerInterface
         return false;
     }
 
-    /**
-     * @return void
-     * @throws FormException
-     */
     private function prepareForm(): void
     {
         $this->formDefinition = $this->definition->getDefinition();
@@ -203,10 +141,7 @@ class FormManager implements FormManagerInterface
         );
     }
 
-    /**
-     * @return array|EntityInterface|null
-     */
-    private function getFormData()
+    private function getFormData(): EntityInterface|array|null
     {
         $data = $this->resource;
 
@@ -219,9 +154,6 @@ class FormManager implements FormManagerInterface
         return $data;
     }
 
-    /**
-     * @return array
-     */
     private function getFieldValues(): array
     {
         $values = [];
@@ -237,51 +169,26 @@ class FormManager implements FormManagerInterface
         return $values;
     }
 
-    /**
-     * @param string $type
-     * @param string $message
-     * @param array $params
-     * @return void
-     */
     private function addFlashTrans(string $type, string $message, array $params = []): void
     {
         $this->addFlash($type, $this->trans($message, $params));
     }
 
-    /**
-     * Adds a flash message to the current session for type.
-     *
-     * @param string $type
-     * @param string $message
-     * @return void
-     */
     private function addFlash(string $type, string $message): void
     {
         $this->symfonyRequest->getSession()->getFlashBag()->add($type, $message);
     }
 
-    /**
-     * @param string $message
-     * @param array $params
-     * @return string
-     */
     private function trans(string $message, array $params = []): string
     {
         return $this->translator->trans($message, $params);
     }
 
-    /**
-     * @return EntityInterface
-     */
-    public function getResource(): EntityInterface
+    public function getResource(): ?EntityInterface
     {
         return $this->resource;
     }
 
-    /**
-     * @return string
-     * @throws TwigError
-     */
     public function display(): string
     {
         return $this->twig->render(
@@ -292,35 +199,21 @@ class FormManager implements FormManagerInterface
         );
     }
 
-    /**
-     * @return FormView
-     */
     public function getFormView(): FormView
     {
         return $this->form->createView();
     }
 
-    /**
-     * @return string
-     */
     public function getSubmitLabel(): string
     {
         return $this->submitLabel;
     }
 
-    /**
-     * @return string
-     */
     public function getSubmitIcon(): string
     {
         return $this->submitIcon;
     }
 
-    /**
-     * @param string $submitLabel
-     * @param string $submitIcon
-     * @return FormManagerInterface
-     */
     public function setSubmitButton(string $submitLabel, string $submitIcon = 'edit'): FormManagerInterface
     {
         $this->submitLabel = $submitLabel;
@@ -337,17 +230,11 @@ class FormManager implements FormManagerInterface
         return $this->formDefinition->getFieldSets();
     }
 
-    /**
-     * @return FormInterface
-     */
     public function getForm(): FormInterface
     {
         return $this->form;
     }
 
-    /**
-     * @return Form
-     */
     public function getDefinition(): Form
     {
         return $this->formDefinition;

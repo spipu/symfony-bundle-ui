@@ -18,26 +18,10 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class Manager
 {
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $authorizationChecker;
+    private AuthorizationCheckerInterface $authorizationChecker;
+    private DefinitionInterface $menuDefinition;
+    private ?Item $mainMenuItem = null;
 
-    /**
-     * @var DefinitionInterface
-     */
-    private $menuDefinition;
-
-    /**
-     * @var Item
-     */
-    private $mainMenuItem;
-
-    /**
-     * MenuManager constructor.
-     * @param AuthorizationCheckerInterface $authorizationChecker
-     * @param DefinitionInterface $menuDefinition
-     */
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
         DefinitionInterface $menuDefinition
@@ -46,10 +30,6 @@ class Manager
         $this->authorizationChecker = $authorizationChecker;
     }
 
-    /**
-     * @param string $currentItemCode
-     * @return Item
-     */
     public function buildMenu(string $currentItemCode = ''): Item
     {
         if (!$this->mainMenuItem) {
@@ -60,11 +40,6 @@ class Manager
         return $this->mainMenuItem;
     }
 
-    /**
-     * @param Item $menuItem
-     * @param string $currentItemCode
-     * @return void
-     */
     private function validateItem(Item $menuItem, string $currentItemCode): void
     {
         $menuItem->setActive(
@@ -91,13 +66,6 @@ class Manager
         }
     }
 
-    /**
-     * Checks if the attributes are granted against the current authentication token and optionally supplied subject.
-     *
-     * @param bool|null $connected
-     * @param string|null $role
-     * @return bool
-     */
     private function isAllowed(?bool $connected, ?string $role): bool
     {
         if ($connected === null) {

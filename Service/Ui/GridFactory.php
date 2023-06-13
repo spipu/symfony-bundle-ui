@@ -25,51 +25,14 @@ use Twig\Environment as Twig;
 
 class GridFactory
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    private ContainerInterface $container;
+    private RequestStack $requestStack;
+    private AuthorizationCheckerInterface $authorizationChecker;
+    private RouterInterface $router;
+    private EventDispatcherInterface $eventDispatcher;
+    private Twig $twig;
+    private GridConfig $gridConfig;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $authorizationChecker;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var Twig
-     */
-    private $twig;
-
-    /**
-     * @var GridConfig
-     */
-    private $gridConfig;
-
-    /**
-     * GridFactory constructor.
-     * @param ContainerInterface $container
-     * @param RequestStack $requestStack
-     * @param AuthorizationCheckerInterface $authorizationChecker
-     * @param RouterInterface $router
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param Twig $twig
-     * @param GridConfig $gridConfig
-     */
     public function __construct(
         ContainerInterface $container,
         RequestStack $requestStack,
@@ -88,11 +51,6 @@ class GridFactory
         $this->gridConfig = $gridConfig;
     }
 
-    /**
-     * @param GridDefinitionInterface $gridDefinition
-     * @return GridManagerInterface
-     * @throws GridException
-     */
     public function create(GridDefinitionInterface $gridDefinition): GridManagerInterface
     {
         return new GridManager(

@@ -20,45 +20,14 @@ class Action implements PositionInterface
 {
     use PositionTrait;
 
-    /**
-     * @var string
-     */
-    private $code;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $routeName;
-
-    /**
-     * @var array
-     */
-    private $routeParams;
-
-    /**
-     * @var string|null
-     */
-    private $cssClass = null;
-
-    /**
-     * @var string|null
-     */
-    private $icon = null;
-
-    /**
-     * @var array
-     */
-    private $conditions = [];
-
-    /**
-     * @var string|null
-     */
-    private $neededRole = null;
+    private string $code;
+    private string $name;
+    private string $routeName;
+    private array $routeParams;
+    private ?string $cssClass = null;
+    private ?string $icon = null;
+    private array $conditions = [];
+    private ?string $neededRole = null;
 
     /**
      * @var callable|null
@@ -88,50 +57,31 @@ class Action implements PositionInterface
         $this->setPosition($position);
     }
 
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return $this->code;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
     public function getRouteName(): string
     {
         return $this->routeName;
     }
 
-    /**
-     * @return array
-     */
     public function getRouteParams(): array
     {
         return $this->routeParams;
     }
 
-    /**
-     * @return null|string
-     */
     public function getCssClass(): ?string
     {
         return $this->cssClass;
     }
 
-    /**
-     * @param null|string $cssClass
-     * @return self
-     */
     public function setCssClass(?string $cssClass): self
     {
         $this->cssClass = $cssClass;
@@ -139,18 +89,11 @@ class Action implements PositionInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getConditions(): array
     {
         return $this->conditions;
     }
 
-    /**
-     * @param array $conditions
-     * @return self
-     */
     public function setConditions(array $conditions): self
     {
         $this->conditions = $conditions;
@@ -158,18 +101,11 @@ class Action implements PositionInterface
         return $this;
     }
 
-    /**
-     * @return null|string
-     */
     public function getNeededRole(): ?string
     {
         return $this->neededRole;
     }
 
-    /**
-     * @param null|string $neededRole
-     * @return self
-     */
     public function setNeededRole(?string $neededRole): self
     {
         $this->neededRole = $neededRole;
@@ -177,18 +113,11 @@ class Action implements PositionInterface
         return $this;
     }
 
-    /**
-     * @return null|string
-     */
     public function getIcon(): ?string
     {
         return $this->icon;
     }
 
-    /**
-     * @param null|string $icon
-     * @return self
-     */
     public function setIcon(?string $icon): self
     {
         $this->icon = $icon;
@@ -196,18 +125,11 @@ class Action implements PositionInterface
         return $this;
     }
 
-    /**
-     * @return callable|null
-     */
     public function getBuildCallback(): ?callable
     {
         return $this->buildCallback;
     }
 
-    /**
-     * @param callable|null $buildCallback
-     * @return self
-     */
     public function setBuildCallback(?callable $buildCallback): self
     {
         $this->buildCallback = $buildCallback;

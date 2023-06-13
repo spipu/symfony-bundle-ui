@@ -15,25 +15,14 @@ namespace Spipu\UiBundle\Entity;
 
 trait OptionsTrait
 {
-    /**
-     * @var array
-     */
-    private $options = [];
+    private array $options = [];
 
-    /**
-     * @return array
-     */
     public function getOptions(): array
     {
         return $this->options;
     }
 
-    /**
-     * @param string $key
-     * @param mixed $default
-     * @return mixed|null
-     */
-    public function getOption(string $key, $default = null)
+    public function getOption(string $key, mixed $default = null): mixed
     {
         if (!array_key_exists($key, $this->options)) {
             return $default;
@@ -42,10 +31,6 @@ trait OptionsTrait
         return $this->options[$key];
     }
 
-    /**
-     * @param array $options
-     * @return self
-     */
     public function setOptions(array $options): self
     {
         $this->options = $options;
@@ -53,13 +38,7 @@ trait OptionsTrait
         return $this;
     }
 
-    /**
-     * MUST RETURN VOID
-     * @param string $key
-     * @param mixed $value
-     * @return void
-     */
-    public function addOption(string $key, $value): void
+    public function addOption(string $key, mixed $value): void
     {
         $this->options[$key] = $value;
     }

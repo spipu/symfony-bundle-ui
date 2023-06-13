@@ -19,21 +19,9 @@ use Twig\Environment as Twig;
 
 class ShowFactory
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private EventDispatcherInterface $eventDispatcher;
+    private Twig $twig;
 
-    /**
-     * @var Twig
-     */
-    private $twig;
-
-    /**
-     * GridFactory constructor.
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param Twig $twig
-     */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         Twig $twig
@@ -42,10 +30,6 @@ class ShowFactory
         $this->twig = $twig;
     }
 
-    /**
-     * @param EntityDefinitionInterface $formDefinition
-     * @return ShowManagerInterface
-     */
     public function create(EntityDefinitionInterface $formDefinition): ShowManagerInterface
     {
         return new ShowManager(

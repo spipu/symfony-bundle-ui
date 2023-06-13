@@ -20,15 +20,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ResetGridConfigCommand extends Command
 {
-    /**
-     * @var GridConfigRepository
-     */
-    private $gridConfigRepository;
+    private GridConfigRepository $gridConfigRepository;
 
-    /**
-     * @param GridConfigRepository $gridConfigRepository
-     * @param null|string $name
-     */
     public function __construct(
         GridConfigRepository $gridConfigRepository,
         ?string $name = null
@@ -37,11 +30,6 @@ class ResetGridConfigCommand extends Command
         $this->gridConfigRepository = $gridConfigRepository;
     }
 
-    /**
-     * Configure the command
-     *
-     * @return void
-     */
     protected function configure(): void
     {
         $this

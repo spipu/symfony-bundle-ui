@@ -22,21 +22,9 @@ use Twig\TwigFunction;
 
 class UiExtension extends AbstractExtension
 {
-    /**
-     * @var MenuManager
-     */
-    private $menuManager;
+    private MenuManager $menuManager;
+    private TranslatorInterface $translator;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * MainController constructor.
-     * @param MenuManager $menuManager
-     * @param TranslatorInterface $translator
-     */
     public function __construct(
         MenuManager $menuManager,
         TranslatorInterface $translator
@@ -57,28 +45,16 @@ class UiExtension extends AbstractExtension
         ];
     }
 
-    /**
-     * @param UiManagerInterface $manager
-     * @return void
-     */
     public function renderManager(UiManagerInterface $manager): void
     {
         echo $manager->display();
     }
 
-    /**
-     * @param string $currentItem
-     * @return MenuItem
-     */
     public function getMenu(string $currentItem): MenuItem
     {
         return $this->menuManager->buildMenu($currentItem);
     }
 
-    /**
-     * @param array $codes
-     * @return array
-     */
     public function getTranslations(array $codes): array
     {
         $values = [];

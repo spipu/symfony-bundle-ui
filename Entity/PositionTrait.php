@@ -17,24 +17,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait PositionTrait
 {
-    /**
-     * @var int
-     * @ORM\Column(type="integer", nullable=false)
-     */
-    private $position = 0;
+    #[ORM\Column(nullable: false)]
+    private int $position = 0;
 
-    /**
-     * @param int $position
-     * @return void
-     */
     public function setPosition(int $position): void
     {
         $this->position = $position;
     }
 
-    /**
-     * @return int
-     */
     public function getPosition(): int
     {
         return $this->position;

@@ -17,9 +17,5 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 interface UserIdentifierInterface
 {
-    /**
-     * @param UserInterface|null $user
-     * @return string
-     */
     public function getIdentifier(?UserInterface $user): string;
 }

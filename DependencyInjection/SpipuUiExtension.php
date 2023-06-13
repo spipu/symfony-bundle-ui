@@ -41,7 +41,7 @@ final class SpipuUiExtension extends Extension implements PrependExtensionInterf
      * @return void
      * @SuppressWarnings(PMD.StaticAccess)
      */
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         $container->prependExtensionConfig('twig', ['form_themes' => ['@SpipuUi/form_layout.html.twig']]);
     }

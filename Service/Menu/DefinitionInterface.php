@@ -17,8 +17,5 @@ use Spipu\UiBundle\Entity\Menu\Item;
 
 interface DefinitionInterface
 {
-    /**
-     * @return Item
-     */
     public function getDefinition(): Item;
 }

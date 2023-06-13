@@ -18,12 +18,8 @@ class Pager
     /**
      * @var int[]
      */
-    private $lengths;
-
-    /**
-     * @var int
-     */
-    private $defaultLength;
+    private array $lengths;
+    private int $defaultLength;
 
     /**
      * Pager constructor.
@@ -46,9 +42,6 @@ class Pager
         return $this->lengths;
     }
 
-    /**
-     * @return int
-     */
     public function getDefaultLength(): int
     {
         return $this->defaultLength;
@@ -81,10 +74,6 @@ class Pager
         return $this;
     }
 
-    /**
-     * @param int $defaultLength
-     * @return self
-     */
     public function setDefaultLength(int $defaultLength): self
     {
         if (!in_array($defaultLength, $this->lengths)) {

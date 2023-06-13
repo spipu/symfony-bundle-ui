@@ -19,15 +19,7 @@ use Symfony\Component\Form\FormInterface;
 
 interface EntityDefinitionInterface
 {
-    /**
-     * @return Form
-     */
     public function getDefinition(): Form;
 
-    /**
-     * @param FormInterface $form
-     * @param EntityInterface|null $resource
-     * @return void
-     */
     public function setSpecificFields(FormInterface $form, EntityInterface $resource = null): void;
 }

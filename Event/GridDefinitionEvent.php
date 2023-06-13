@@ -13,9 +13,6 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Event;
 
-/**
- * Grid Event
- */
 class GridDefinitionEvent extends AbstractGridEvent
 {
     public const PREFIX_NAME = 'spipu.ui.grid.definition.';

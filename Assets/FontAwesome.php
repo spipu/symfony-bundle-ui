@@ -21,39 +21,23 @@ use Spipu\CoreBundle\Assets\AssetInterface;
  */
 class FontAwesome implements AssetInterface
 {
-    /**
-     * @var string
-     */
-    private $version;
+    private string $version;
 
-    /**
-     * Jquery constructor.
-     * @param string $version
-     */
     public function __construct(string $version = '5.15.4')
     {
         $this->version = $version;
     }
 
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return 'fontawesome';
     }
 
-    /**
-     * @return string
-     */
     public function getSourceType(): string
     {
         return self::TYPE_URL_ZIP;
     }
 
-    /**
-     * @return string
-     */
     public function getSource(): string
     {
         return 'https://use.fontawesome.com/releases/v' . $this->version

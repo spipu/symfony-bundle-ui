@@ -17,9 +17,5 @@ use Spipu\UiBundle\Entity\Grid\Grid;
 
 interface GridIdentifierInterface
 {
-    /**
-     * @param Grid $grid
-     * @return string
-     */
     public function getIdentifier(Grid $grid): string;
 }

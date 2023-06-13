@@ -13,9 +13,6 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Event;
 
-/**
- * Form Event
- */
 class FormDefinitionEvent extends AbstractFormEvent
 {
     public const PREFIX_NAME = 'spipu.ui.form.definition.';

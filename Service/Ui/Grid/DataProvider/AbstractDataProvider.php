@@ -19,70 +19,37 @@ use Spipu\UiBundle\Entity\Grid\Grid as GridDefinition;
 
 abstract class AbstractDataProvider implements DataProviderInterface
 {
-    /**
-     * @var GridRequest
-     */
-    protected $request;
+    protected ?GridRequest $request = null;
+    protected ?GridDefinition $definition = null;
+    private ?array $filters = null;
 
-    /**
-     * @var GridDefinition
-     */
-    protected $definition;
-
-    /**
-     * @var array|null
-     */
-    private $filters = null;
-
-    /**
-     * need by Spipu Ui
-     *
-     * @return void
-     */
     public function __clone()
     {
         $this->request = null;
         $this->definition = null;
+        $this->filters = null;
     }
 
-    /**
-     * @param GridRequest $request
-     * @return void
-     */
     public function setGridRequest(GridRequest $request): void
     {
         $this->request = $request;
     }
 
-    /**
-     * @param GridDefinition $definition
-     * @return void
-     */
     public function setGridDefinition(GridDefinition $definition): void
     {
         $this->definition = $definition;
     }
 
-    /**
-     * @return GridRequest|null
-     */
     public function getRequest(): ?GridRequest
     {
         return $this->request;
     }
 
-    /**
-     * @return GridDefinition|null
-     */
     public function getDefinition(): ?GridDefinition
     {
         return $this->definition;
     }
 
-    /**
-     * @return bool
-     * @throws GridException
-     */
     public function validate(): bool
     {
         if ($this->definition === null) {
@@ -96,27 +63,16 @@ abstract class AbstractDataProvider implements DataProviderInterface
         return true;
     }
 
-    /**
-     * @return void
-     */
     public function resetDataProvider(): void
     {
         $this->filters = null;
     }
 
-    /**
-     * @param array $filters
-     * @return void
-     */
     public function forceFilters(array $filters): void
     {
         $this->filters = $filters;
     }
 
-    /**
-     * @return array
-     * @throws GridException
-     */
     public function getFilters(): array
     {
         $this->validate();

@@ -32,7 +32,6 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Throwable;
 use Twig\Environment as Twig;
-use Twig\Error\Error as TwigError;
 
 /**
  * @SuppressWarnings(PMD.ExcessiveClassComplexity)
@@ -42,103 +41,24 @@ use Twig\Error\Error as TwigError;
  */
 class GridManager implements GridManagerInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    private ContainerInterface $container;
+    private GridRequest $request;
+    private AuthorizationCheckerInterface $authorizationChecker;
+    private RouterInterface $router;
+    private EventDispatcherInterface $eventDispatcher;
+    private Twig $twig;
+    private GridConfig $gridConfig;
+    private GridDefinition $definition;
+    private DataProviderInterface $dataProvider;
+    private ?GridConfigEntity $currentGridConfig;
+    private ?string $routeName = null;
+    private ?array $routeParameters = null;
+    private ?array $gridConfigDefinition = null;
+    private int $nbPages = 1;
+    private int $nbTotalRows = 0;
+    private array $rows = [];
+    private bool $refreshNeeded = false;
 
-    /**
-     * @var GridRequest
-     */
-    private $request;
-
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $authorizationChecker;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var Twig
-     */
-    private $twig;
-
-    /**
-     * @var GridConfig
-     */
-    private $gridConfig;
-
-    /**
-     * @var GridDefinition
-     */
-    private $definition;
-
-    /**
-     * @var string
-     */
-    private $routeName;
-
-    /**
-     * @var array
-     */
-    private $routeParameters;
-
-    /**
-     * @var int
-     */
-    private $nbPages = 1;
-
-    /**
-     * @var int
-     */
-    private $nbTotalRows = 0;
-
-    /**
-     * @var object[]
-     */
-    private $rows;
-
-    /**
-     * @var DataProviderInterface
-     */
-    private $dataProvider;
-
-    /**
-     * @var GridConfigEntity|null
-     */
-    private $currentGridConfig;
-
-    /**
-     * @var array|null
-     */
-    private $gridConfigDefinition;
-
-    /**
-     * @var bool
-     */
-    private $refreshNeeded = false;
-
-    /**
-     * GridManager constructor.
-     * @param ContainerInterface $container
-     * @param SymfonyRequest $symfonyRequest
-     * @param AuthorizationCheckerInterface $authorizationChecker
-     * @param RouterInterface $router
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param Twig $twig
-     * @param GridConfig $gridConfig
-     * @param GridDefinitionInterface $gridDefinition
-     * @throws GridException
-     */
     public function __construct(
         ContainerInterface $container,
         SymfonyRequest $symfonyRequest,
@@ -164,11 +84,6 @@ class GridManager implements GridManagerInterface
         $this->gridConfig = $gridConfig;
     }
 
-    /**
-     * @param SymfonyRequest $symfonyRequest
-     * @param RouterInterface $router
-     * @return GridRequest
-     */
     private function initGridRequest(
         SymfonyRequest $symfonyRequest,
         RouterInterface $router
@@ -176,10 +91,6 @@ class GridManager implements GridManagerInterface
         return new GridRequest($symfonyRequest, $router, $this->definition);
     }
 
-    /**
-     * @return DataProviderInterface
-     * @throws GridException
-     */
     private function initDataProvider(): DataProviderInterface
     {
         $dataProvider = clone $this->container->get($this->definition->getDataProviderServiceName());
@@ -193,19 +104,11 @@ class GridManager implements GridManagerInterface
         return $dataProvider;
     }
 
-    /**
-     * @return DataProviderInterface
-     */
     public function getDataProvider(): DataProviderInterface
     {
         return $this->dataProvider;
     }
 
-    /**
-     * @param string $name
-     * @param array $parameters
-     * @return GridManagerInterface
-     */
     public function setRoute(string $name, array $parameters = []): GridManagerInterface
     {
         $this->routeName = $name;
@@ -214,10 +117,6 @@ class GridManager implements GridManagerInterface
         return $this;
     }
 
-    /**
-     * @return void
-     * @throws GridException
-     */
     public function prepareRequest(): void
     {
         if (!$this->routeName) {
@@ -235,10 +134,6 @@ class GridManager implements GridManagerInterface
         $this->request->prepare();
     }
 
-    /**
-     * @return void
-     * @SuppressWarnings(PMD.ExitExpression)
-     */
     private function prepareConfig(): void
     {
         if (!$this->definition->isPersonalize()) {
@@ -265,9 +160,6 @@ class GridManager implements GridManagerInterface
         $this->refreshNeeded = true;
     }
 
-    /**
-     * @return void
-     */
     public function loadPage(): void
     {
         $this->nbPages = 1;
@@ -283,10 +175,6 @@ class GridManager implements GridManagerInterface
         $this->rows = $this->dataProvider->getPageRows();
     }
 
-    /**
-     * @return bool
-     * @throws GridException
-     */
     public function validate(): bool
     {
         $this->prepareRequest();
@@ -295,35 +183,21 @@ class GridManager implements GridManagerInterface
         return $this->refreshNeeded;
     }
 
-    /**
-     * @return int
-     */
     public function getNbTotalRows(): int
     {
         return $this->nbTotalRows;
     }
 
-    /**
-     * @return int
-     */
     public function getNbPages(): int
     {
         return $this->nbPages;
     }
 
-    /**
-     * @return GridRequest
-     */
     public function getRequest(): GridRequest
     {
         return $this->request;
     }
 
-    /**
-     * @return string
-     * @throws TwigError
-     * @throws GridException
-     */
     public function display(): string
     {
         if ($this->refreshNeeded) {
@@ -340,9 +214,6 @@ class GridManager implements GridManagerInterface
         );
     }
 
-    /**
-     * @return GridDefinition
-     */
     public function getDefinition(): GridDefinition
     {
         return $this->definition;
@@ -356,29 +227,16 @@ class GridManager implements GridManagerInterface
         return $this->rows;
     }
 
-    /**
-     * @param array $params
-     * @return string
-     */
     public function getCurrentUrl(array $params = []): string
     {
         return $this->request->getCurrentUrl($params);
     }
 
-    /**
-     * @param array $params
-     * @return string
-     */
     public function getCurrentResetUrl(array $params = []): string
     {
         return $this->request->getCurrentResetUrl($params);
     }
 
-    /**
-     * @param string $column
-     * @param string $order
-     * @return string
-     */
     public function getSortUrl(string $column, string $order): string
     {
         return $this->getCurrentUrl(
@@ -389,10 +247,6 @@ class GridManager implements GridManagerInterface
         );
     }
 
-    /**
-     * @param int $pageLength
-     * @return string
-     */
     public function getPageLengthUrl(int $pageLength): string
     {
         return $this->getCurrentUrl(
@@ -403,12 +257,6 @@ class GridManager implements GridManagerInterface
         );
     }
 
-    /**
-     * @param GridAction $action
-     * @param EntityInterface|null $object
-     * @return bool
-     * @throws GridException
-     */
     public function isGrantedAction(GridAction $action, EntityInterface $object = null): bool
     {
         if ($action->getNeededRole() && !$this->authorizationChecker->isGranted($action->getNeededRole())) {
@@ -431,13 +279,6 @@ class GridManager implements GridManagerInterface
         return true;
     }
 
-    /**
-     * @param EntityInterface $object
-     * @param string $field
-     * @param array $condition
-     * @return bool
-     * @throws GridException
-     */
     private function isGrantedCondition(EntityInterface $object, string $field, array $condition): bool
     {
         $value = $this->getValue($object, $field);
@@ -489,16 +330,10 @@ class GridManager implements GridManagerInterface
         return $granted;
     }
 
-    /**
-     * @param EntityInterface $object
-     * @param string $field
-     * @return mixed
-     * @throws GridException
-     */
-    public function getValue(EntityInterface $object, string $field)
+    public function getValue(EntityInterface $object, string $field): mixed
     {
         $subMethod = null;
-        if (strpos($field, '.') !== false) {
+        if (str_contains($field, '.')) {
             [$subMethod, $field] = explode('.', $field, 2);
             $subMethod = 'get' . ucfirst($subMethod);
         }
@@ -543,10 +378,6 @@ class GridManager implements GridManagerInterface
         return $this->definition->getQuickSearchColumns();
     }
 
-    /**
-     * @param int $maxPages
-     * @return array
-     */
     public function getInfoPages(int $maxPages = 4): array
     {
         if ($this->definition->getPager() === null) {
@@ -559,7 +390,7 @@ class GridManager implements GridManagerInterface
         $pagePrevious = ($this->request->getPageCurrent() > 1 ? $this->request->getPageCurrent() - 1 : 1);
         $pageNext     = ($this->request->getPageCurrent() < $pageMax ? $this->request->getPageCurrent() + 1 : $pageMax);
 
-        $pages = array();
+        $pages = [];
         $pages[] = $this->getInfoPage($pagePrevious, '«', $pageMin == $pageCur);
         $pages[] = $this->getInfoPage($pageMin);
 
@@ -603,12 +434,6 @@ class GridManager implements GridManagerInterface
         );
     }
 
-    /**
-     * @param GridAction $action
-     * @param array $actionParams
-     * @param EntityInterface|null $row
-     * @return string
-     */
     public function buildActionUrl(Action $action, array $actionParams, ?EntityInterface $row): string
     {
         if ($action->getBuildCallback()) {
@@ -626,25 +451,16 @@ class GridManager implements GridManagerInterface
         return $this->router->generate($action->getRouteName(), array_merge($action->getRouteParams(), $actionParams));
     }
 
-    /**
-     * @return array
-     */
     public function getPersonalizeDefinition(): array
     {
         return $this->gridConfigDefinition;
     }
 
-    /**
-     * @return GridConfigEntity|null
-     */
     public function getCurrentGridConfig(): ?GridConfigEntity
     {
         return $this->currentGridConfig;
     }
 
-    /**
-     * @return void
-     */
     private function loadCurrentGridConfig(): void
     {
         $this->currentGridConfig = null;
@@ -667,13 +483,6 @@ class GridManager implements GridManagerInterface
         }
     }
 
-    /**
-     * Adds a flash message to the current session for type.
-     *
-     * @param string $type
-     * @param string $message
-     * @return void
-     */
     private function addFlash(string $type, string $message): void
     {
         $this->request->getSymfonyRequest()->getSession()->getFlashBag()->add($type, $message);

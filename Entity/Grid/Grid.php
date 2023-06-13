@@ -27,75 +27,44 @@ class Grid
 {
     use OptionsTrait;
 
-    /**
-     * @var string
-     */
-    private $code;
-
-    /**
-     * @var string|null
-     */
-    private $entityName;
-
-    /**
-     * @var string
-     */
-    private $dataProviderPrimaryKey = 'id';
-
-    /**
-     * @var string
-     */
-    private $requestPrimaryKey = 'id';
-
-    /**
-     * @var string
-     */
-    private $dataProviderServiceName = 'Spipu\UiBundle\Service\Ui\Grid\DataProvider\Doctrine';
-
-    /**
-     * @var Pager|null
-     */
-    private $pager = null;
-
-    /**
-     * @var string|null
-     */
-    private $defaultSortColumn = null;
-
-    /**
-     * @var string|null
-     */
-    private $defaultSortOrder = null;
+    private string $code;
+    private ?string $entityName;
+    private string $dataProviderPrimaryKey = 'id';
+    private string $requestPrimaryKey = 'id';
+    private string $dataProviderServiceName = 'Spipu\UiBundle\Service\Ui\Grid\DataProvider\Doctrine';
+    private ?Pager $pager = null;
+    private ?string $defaultSortColumn = null;
+    private ?string $defaultSortOrder = null;
 
     /**
      * @var Column[]
      */
-    private $columns = [];
+    private array $columns = [];
 
     /**
      * @var Action[]
      */
-    private $rowActions = [];
+    private array $rowActions = [];
 
     /**
      * @var Action[]
      */
-    private $massActions = [];
+    private array $massActions = [];
 
     /**
      * @var Action[]
      */
-    private $globalActions = [];
+    private array $globalActions = [];
 
     /**
      * @var bool
      */
-    private $personalize = false;
+    private bool $personalize = false;
 
     /**
      * @var string[]
      */
-    private $templates = [
+    private array $templates = [
         'all'     => '@SpipuUi/grid/all.html.twig',
         'header'  => '@SpipuUi/grid/header.html.twig',
         'filters' => '@SpipuUi/grid/filters.html.twig',
@@ -106,11 +75,6 @@ class Grid
         'actions' => '@SpipuUi/grid/actions.html.twig',
     ];
 
-    /**
-     * Grid constructor.
-     * @param string $code
-     * @param string|null $entityName
-     */
     public function __construct(
         string $code,
         string $entityName = null
@@ -119,11 +83,6 @@ class Grid
         $this->entityName = $entityName;
     }
 
-    /**
-     * @param string $dataProviderPrimaryKey
-     * @param string $requestPrimaryKey
-     * @return Grid
-     */
     public function setPrimaryKey(string $dataProviderPrimaryKey = 'id', string $requestPrimaryKey = 'id'): self
     {
         $this->dataProviderPrimaryKey = $dataProviderPrimaryKey;
@@ -132,34 +91,21 @@ class Grid
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return $this->code;
     }
 
-    /**
-     * @return string|null
-     */
     public function getEntityName(): ?string
     {
         return $this->entityName;
     }
 
-    /**
-     * @return Pager|null
-     */
     public function getPager(): ?Pager
     {
         return $this->pager;
     }
 
-    /**
-     * @param Pager|null $pager
-     * @return self
-     */
     public function setPager(?Pager $pager): self
     {
         $this->pager = $pager;
@@ -167,12 +113,6 @@ class Grid
         return $this;
     }
 
-    /**
-     * @param string $column
-     * @param string $order
-     * @return Grid
-     * @throws GridException
-     */
     public function setDefaultSort(string $column, string $order = 'asc'): self
     {
         if (!array_key_exists($column, $this->columns)) {
@@ -189,10 +129,6 @@ class Grid
         return $this;
     }
 
-    /**
-     * @param Column $column
-     * @return Grid
-     */
     public function addColumn(Column $column): self
     {
         $this->columns[$column->getCode()] = $column;
@@ -208,10 +144,6 @@ class Grid
         return $this->columns;
     }
 
-    /**
-     * @param string $key
-     * @return null|Column
-     */
     public function getColumn(string $key): ?Column
     {
         if (!array_key_exists($key, $this->columns)) {
@@ -221,10 +153,6 @@ class Grid
         return $this->columns[$key];
     }
 
-    /**
-     * @param string $key
-     * @return Grid
-     */
     public function removeColumn(string $key): self
     {
         if (array_key_exists($key, $this->columns)) {
@@ -234,10 +162,6 @@ class Grid
         return $this;
     }
 
-    /**
-     * @param Action $action
-     * @return Grid
-     */
     public function addRowAction(Action $action): self
     {
         $this->rowActions[$action->getCode()] = $action;
@@ -245,10 +169,6 @@ class Grid
         return $this;
     }
 
-    /**
-     * @param string $key
-     * @return Grid
-     */
     public function removeRowAction(string $key): self
     {
         if (array_key_exists($key, $this->rowActions)) {
@@ -258,10 +178,6 @@ class Grid
         return $this;
     }
 
-    /**
-     * @param string $key
-     * @return null|Action
-     */
     public function getRowAction(string $key): ?Action
     {
         if (!array_key_exists($key, $this->rowActions)) {
@@ -279,10 +195,6 @@ class Grid
         return $this->rowActions;
     }
 
-    /**
-     * @param Action $action
-     * @return Grid
-     */
     public function addMassAction(Action $action): self
     {
         $this->massActions[$action->getCode()] = $action;
@@ -290,10 +202,6 @@ class Grid
         return $this;
     }
 
-    /**
-     * @param string $key
-     * @return Grid
-     */
     public function removeMassAction(string $key): self
     {
         if (array_key_exists($key, $this->massActions)) {
@@ -303,10 +211,6 @@ class Grid
         return $this;
     }
 
-    /**
-     * @param string $key
-     * @return null|Action
-     */
     public function getMassAction(string $key): ?Action
     {
         if (!array_key_exists($key, $this->massActions)) {
@@ -324,10 +228,6 @@ class Grid
         return $this->massActions;
     }
 
-    /**
-     * @param Action $action
-     * @return Grid
-     */
     public function addGlobalAction(Action $action): self
     {
         $this->globalActions[$action->getCode()] = $action;
@@ -335,10 +235,6 @@ class Grid
         return $this;
     }
 
-    /**
-     * @param string $key
-     * @return Grid
-     */
     public function removeGlobalAction(string $key): self
     {
         if (array_key_exists($key, $this->globalActions)) {
@@ -348,10 +244,6 @@ class Grid
         return $this;
     }
 
-    /**
-     * @param string $key
-     * @return null|Action
-     */
     public function getGlobalAction(string $key): ?Action
     {
         if (!array_key_exists($key, $this->globalActions)) {
@@ -369,18 +261,11 @@ class Grid
         return $this->globalActions;
     }
 
-    /**
-     * @return string
-     */
     public function getTemplateAll(): string
     {
         return $this->templates['all'];
     }
 
-    /**
-     * @param string $templateAll
-     * @return self
-     */
     public function setTemplateAll(string $templateAll): self
     {
         $this->templates['all'] = $templateAll;
@@ -388,18 +273,11 @@ class Grid
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTemplateHeader(): string
     {
         return $this->templates['header'];
     }
 
-    /**
-     * @param string $templateFilters
-     * @return self
-     */
     public function setTemplateHeader(string $templateFilters): self
     {
         $this->templates['header'] = $templateFilters;
@@ -407,18 +285,11 @@ class Grid
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTemplateFilters(): string
     {
         return $this->templates['filters'];
     }
 
-    /**
-     * @param string $templateFilters
-     * @return self
-     */
     public function setTemplateFilters(string $templateFilters): self
     {
         $this->templates['filters'] = $templateFilters;
@@ -426,18 +297,11 @@ class Grid
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTemplateConfig(): string
     {
         return $this->templates['config'];
     }
 
-    /**
-     * @param string $templateConfig
-     * @return self
-     */
     public function setTemplateConfig(string $templateConfig): self
     {
         $this->templates['config'] = $templateConfig;
@@ -445,18 +309,11 @@ class Grid
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTemplatePager(): string
     {
         return $this->templates['pager'];
     }
 
-    /**
-     * @param string $templatePager
-     * @return self
-     */
     public function setTemplatePager(string $templatePager): self
     {
         $this->templates['pager'] = $templatePager;
@@ -464,18 +321,11 @@ class Grid
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTemplateRow(): string
     {
         return $this->templates['row'];
     }
 
-    /**
-     * @param string $templateRow
-     * @return self
-     */
     public function setTemplateRow(string $templateRow): self
     {
         $this->templates['row'] = $templateRow;
@@ -483,18 +333,11 @@ class Grid
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTemplatePage(): string
     {
         return $this->templates['page'];
     }
 
-    /**
-     * @param string $templatePage
-     * @return self
-     */
     public function setTemplatePage(string $templatePage): self
     {
         $this->templates['page'] = $templatePage;
@@ -502,34 +345,21 @@ class Grid
         return $this;
     }
 
-    /**
-     * @return null|string
-     */
     public function getDefaultSortColumn(): ?string
     {
         return $this->defaultSortColumn;
     }
 
-    /**
-     * @return null|string
-     */
     public function getDefaultSortOrder(): ?string
     {
         return $this->defaultSortOrder;
     }
 
-    /**
-     * @return string
-     */
     public function getTemplateActions(): string
     {
         return $this->templates['actions'];
     }
 
-    /**
-     * @param string $templateActions
-     * @return self
-     */
     public function setTemplateActions(string $templateActions): self
     {
         $this->templates['actions'] = $templateActions;
@@ -537,18 +367,11 @@ class Grid
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDataProviderServiceName(): string
     {
         return $this->dataProviderServiceName;
     }
 
-    /**
-     * @param string $dataProviderServiceName
-     * @return $this
-     */
     public function setDataProviderServiceName(string $dataProviderServiceName): self
     {
         $this->dataProviderServiceName = $dataProviderServiceName;
@@ -556,26 +379,16 @@ class Grid
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDataProviderPrimaryKey(): string
     {
         return $this->dataProviderPrimaryKey;
     }
 
-    /**
-     * @return string
-     */
     public function getRequestPrimaryKey(): string
     {
         return $this->requestPrimaryKey;
     }
 
-    /**
-     * @param string|null $entityName
-     * @return self
-     */
     public function setEntityName(?string $entityName): self
     {
         $this->entityName = $entityName;
@@ -594,19 +407,11 @@ class Grid
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isPersonalize(): bool
     {
         return $this->personalize;
     }
 
-    /**
-     * Sort the columns and the actions
-     *
-     * @return void
-     */
     public function prepareSort(): void
     {
         uasort(

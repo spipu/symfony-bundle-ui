@@ -23,34 +23,16 @@ use Spipu\UiBundle\Exception\GridException;
 
 class Doctrine extends AbstractDataProvider
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
+    protected array $conditions = [];
+    protected array $mappingValues = [];
 
-    /**
-     * @var array
-     */
-    protected $conditions = [];
-
-    /**
-     * @var array
-     */
-    protected $mappingValues = [];
-
-    /**
-     * Doctrine constructor.
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(
         EntityManagerInterface $entityManager
     ) {
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @return void
-     */
     public function resetDataProvider(): void
     {
         parent::resetDataProvider();
@@ -59,22 +41,12 @@ class Doctrine extends AbstractDataProvider
         $this->mappingValues = [];
     }
 
-    /**
-     * @param mixed $condition
-     * @return void
-     */
-    public function addCondition($condition): void
+    public function addCondition(mixed $condition): void
     {
         $this->conditions[] = $condition;
     }
 
-    /**
-     * @param string $fieldCode
-     * @param mixed $originalValue
-     * @param mixed $newValue
-     * @return void
-     */
-    public function addMappingValue(string $fieldCode, $originalValue, $newValue): void
+    public function addMappingValue(string $fieldCode, mixed $originalValue, mixed $newValue): void
     {
         if (!array_key_exists($fieldCode, $this->mappingValues)) {
             $this->mappingValues[$fieldCode] = [];
@@ -82,10 +54,6 @@ class Doctrine extends AbstractDataProvider
         $this->mappingValues[$fieldCode][$originalValue] = $newValue;
     }
 
-    /**
-     * @return QueryBuilder
-     * @throws GridException
-     */
     public function prepareQueryBuilder(): QueryBuilder
     {
         $this->validate();
@@ -123,18 +91,11 @@ class Doctrine extends AbstractDataProvider
         return $queryBuilder;
     }
 
-    /**
-     * @param QueryBuilder $queryBuilder
-     * @param Andx $where
-     * @param string $code
-     * @param mixed $value
-     * @return array
-     */
     protected function prepareQueryBuilderFilter(
         QueryBuilder $queryBuilder,
         Andx $where,
         string $code,
-        $value
+        mixed $value
     ): array {
         $parameters = [];
 
@@ -170,18 +131,11 @@ class Doctrine extends AbstractDataProvider
         return $parameters;
     }
 
-    /**
-     * @param QueryBuilder $queryBuilder
-     * @param Andx $where
-     * @param string $code
-     * @param mixed $value
-     * @return array
-     */
     protected function prepareQueryBuilderQuickSearch(
         QueryBuilder $queryBuilder,
         Andx $where,
         string $code,
-        $value
+        mixed $value
     ): array {
         $parameters = [];
 
@@ -194,10 +148,6 @@ class Doctrine extends AbstractDataProvider
         return $parameters;
     }
 
-    /**
-     * @return int
-     * @throws GridException
-     */
     public function getNbTotalRows(): int
     {
         $queryBuilder = $this->prepareQueryBuilder();
@@ -208,7 +158,6 @@ class Doctrine extends AbstractDataProvider
 
     /**
      * @return EntityInterface[]
-     * @throws GridException
      */
     public function getPageRows(): array
     {
@@ -232,12 +181,7 @@ class Doctrine extends AbstractDataProvider
         return $queryBuilder->getQuery()->execute();
     }
 
-    /**
-     * @param string $fieldCode
-     * @param mixed $originalValue
-     * @return mixed
-     */
-    public function applyMappingValue(string $fieldCode, $originalValue)
+    public function applyMappingValue(string $fieldCode, mixed $originalValue): mixed
     {
         if (!array_key_exists($fieldCode, $this->mappingValues)) {
             return $originalValue;
@@ -250,15 +194,10 @@ class Doctrine extends AbstractDataProvider
         return $this->mappingValues[$fieldCode][$originalValue];
     }
 
-    /**
-     * @param Column $column
-     *
-     * @return string
-     */
     protected function getFieldFromColumn(Column $column): string
     {
         $prefix = '';
-        if (strpos($column->getEntityField(), '.') === false) {
+        if (!str_contains($column->getEntityField(), '.')) {
             $prefix = 'main.';
         }
 

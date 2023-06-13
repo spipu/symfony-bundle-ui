@@ -22,15 +22,8 @@ use Twig\TwigFilter;
 
 class OptionsExtension extends AbstractExtension
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    private ContainerInterface $container;
 
-    /**
-     * OptionsExtension constructor.
-     * @param ContainerInterface $container
-     */
     public function __construct(
         ContainerInterface $container
     ) {
@@ -48,12 +41,7 @@ class OptionsExtension extends AbstractExtension
         ];
     }
 
-    /**
-     * @param mixed $value
-     * @param OptionsInterface $options
-     * @return mixed
-     */
-    public function getLabelFromOption($value, OptionsInterface $options)
+    public function getLabelFromOption(mixed $value, OptionsInterface $options): string
     {
         $values = $options->getOptions();
 
@@ -69,16 +57,10 @@ class OptionsExtension extends AbstractExtension
             $value = $values[$value];
         }
 
-        return $value;
+        return (string) $value;
     }
 
-    /**
-     * @param mixed $value
-     * @param string $optionsClassName
-     * @return mixed
-     * @throws TwigError
-     */
-    public function getLabelFromOptionName($value, string $optionsClassName)
+    public function getLabelFromOptionName(mixed $value, string $optionsClassName): string
     {
         /** @var OptionsInterface $options */
         $options = $this->container->get($optionsClassName);

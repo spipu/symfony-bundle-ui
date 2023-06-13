@@ -15,74 +15,43 @@ namespace Spipu\UiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Spipu\UiBundle\Repository\GridConfigRepository")
- * @ORM\HasLifecycleCallbacks()
- * @ORM\Table(
- *     name="spipu_ui_grid_config",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="UNIQ_GRID_CONFIG", columns={"grid_identifier", "user_identifier", "name"})
- *     }
- * )
- */
+#[ORM\Entity(repositoryClass: 'Spipu\UiBundle\Repository\GridConfigRepository')]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\Table(name: "spipu_ui_grid_config")]
+#[ORM\UniqueConstraint(name: "UNIQ_GRID_CONFIG", columns: ["grid_identifier", "user_identifier", "name"])]
 class GridConfig
 {
     use TimestampableTrait;
 
     public const DEFAULT_NAME = 'default';
 
-    /**
-     * @var int|null
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=255)
-     */
-    private $gridIdentifier;
+    #[ORM\Column(length: 255)]
+    private ?string $gridIdentifier = null;
 
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=255)
-     */
-    private $userIdentifier;
+    #[ORM\Column(length: 255)]
+    private ?string $userIdentifier = null;
 
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=64)
-     */
-    private $name;
+    #[ORM\Column(length: 64)]
+    private ?string $name = null;
 
-    /**
-     * @var array
-     * @ORM\Column(type="json")
-     */
-    private $config = [];
+    #[ORM\Column(type: "json")]
+    private array $config = [];
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getGridIdentifier(): string
     {
         return $this->gridIdentifier;
     }
 
-    /**
-     * @param string $gridIdentifier
-     * @return $this
-     */
     public function setGridIdentifier(string $gridIdentifier): self
     {
         $this->gridIdentifier = $gridIdentifier;
@@ -90,18 +59,11 @@ class GridConfig
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getUserIdentifier(): string
     {
         return $this->userIdentifier;
     }
 
-    /**
-     * @param string $userIdentifier
-     * @return $this
-     */
     public function setUserIdentifier(string $userIdentifier): self
     {
         $this->userIdentifier = $userIdentifier;
@@ -109,18 +71,11 @@ class GridConfig
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     * @return $this
-     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -128,10 +83,6 @@ class GridConfig
         return $this;
     }
 
-    /**
-     * @param int $length
-     * @return string
-     */
     public function getCutName(int $length): string
     {
         if (strlen($this->name) < $length - 3) {
@@ -141,9 +92,6 @@ class GridConfig
         return substr($this->name, 0, $length - 3) . '...';
     }
 
-    /**
-     * @return array
-     */
     public function getConfig(): array
     {
         return $this->config;
@@ -161,10 +109,6 @@ class GridConfig
         return $this->config['columns'];
     }
 
-    /**
-     * @param string $key
-     * @return string
-     */
     public function getConfigFilter(string $key): string
     {
         $values = $this->getConfigFilters();
@@ -184,9 +128,6 @@ class GridConfig
         return (string) $value;
     }
 
-    /**
-     * @return array
-     */
     public function getConfigFilters(): array
     {
         if (!array_key_exists('filters', $this->config)) {
@@ -196,9 +137,6 @@ class GridConfig
         return $this->config['filters'];
     }
 
-    /**
-     * @return string|null
-     */
     public function getConfigSortColumn(): ?string
     {
         $sortConfig = $this->getConfigSort();
@@ -209,9 +147,6 @@ class GridConfig
         return $sortConfig['column'];
     }
 
-    /**
-     * @return string|null
-     */
     public function getConfigSortOrder(): ?string
     {
         $sortConfig = $this->getConfigSort();
@@ -222,9 +157,6 @@ class GridConfig
         return $sortConfig['order'];
     }
 
-    /**
-     * @return array
-     */
     public function getConfigSort(): array
     {
         if (!array_key_exists('sort', $this->config)) {
@@ -236,10 +168,7 @@ class GridConfig
 
         return $this->config['sort'];
     }
-    /**
-     * @param array $config
-     * @return $this
-     */
+
     public function setConfig(array $config): self
     {
         $this->config = $config;
@@ -247,9 +176,6 @@ class GridConfig
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isDefault(): bool
     {
         return $this->name === self::DEFAULT_NAME;

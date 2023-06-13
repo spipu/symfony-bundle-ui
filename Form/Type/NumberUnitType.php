@@ -20,24 +20,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NumberUnitType extends NumberType
 {
-    /**
-     * @param FormView $view
-     * @param FormInterface $form
-     * @param array $options
-     * @return void
-     */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
 
         $view->vars['unit'] = $options['unit'];
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     * @return void
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
@@ -45,10 +35,7 @@ class NumberUnitType extends NumberType
         $resolver->setAllowedTypes('unit', ['string']);
     }
 
-    /**
-     * @return string
-     */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'numberunit';
     }

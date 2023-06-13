@@ -15,26 +15,10 @@ namespace Spipu\UiBundle\Entity\Form;
 
 class FieldConstraint
 {
-    /**
-     * @var string
-     */
-    private $code;
+    private string $code;
+    private string $fieldCode;
+    private string $fieldValue;
 
-    /**
-     * @var string
-     */
-    private $fieldCode;
-
-    /**
-     * @var string
-     */
-    private $fieldValue;
-
-    /**
-     * @param string $code
-     * @param string $fieldCode
-     * @param string $fieldValue
-     */
     public function __construct(string $code, string $fieldCode, string $fieldValue)
     {
         $this->code = $code;
@@ -42,25 +26,16 @@ class FieldConstraint
         $this->fieldValue = $fieldValue;
     }
 
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return $this->code;
     }
 
-    /**
-     * @return string
-     */
     public function getFieldCode(): string
     {
         return $this->fieldCode;
     }
 
-    /**
-     * @return string
-     */
     public function getFieldValue(): string
     {
         return $this->fieldValue;

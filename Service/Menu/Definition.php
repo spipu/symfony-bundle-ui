@@ -20,10 +20,7 @@ use Spipu\UiBundle\Entity\Menu\Item;
  */
 class Definition implements DefinitionInterface
 {
-    /**
-     * @var Item
-     */
-    private $mainItem;
+    private ?Item $mainItem = null;
 
     /**
      * @return void
@@ -33,9 +30,6 @@ class Definition implements DefinitionInterface
         $this->mainItem = new Item('Main');
     }
 
-    /**
-     * @return Item
-     */
     public function getDefinition(): Item
     {
         if (!$this->mainItem) {

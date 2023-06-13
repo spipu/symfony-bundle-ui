@@ -149,14 +149,8 @@ class ManagerTest extends TestCase
 
 class MenuDefinition implements DefinitionInterface
 {
-    /**
-     * @var Item
-     */
-    private $mainItem;
+    private ?Item $mainItem = null;
 
-    /**
-     * @return Item
-     */
     public function getDefinition(): Item
     {
         $this->mainItem = new Item('Test', 'test', 'app_test');

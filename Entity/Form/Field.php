@@ -22,64 +22,24 @@ class Field implements PositionInterface
 {
     use PositionTrait;
 
-    /**
-     * @var string
-     */
-    private $code;
-
-    /**
-     * @var string
-     */
-    private $type;
-
-    /**
-     * @var bool
-     */
-    private $isList = false;
-
-    /**
-     * @var bool
-     */
-    private $isHiddenInView = false;
-
-    /**
-     * @var bool
-     */
-    private $isHiddenInForm = false;
-
-    /**
-     * @var array
-     */
-    private $options;
-
-    /**
-     * @var mixed
-     */
-    private $value;
-
-    /**
-     * @var string
-     */
-    private $templateView;
+    private string $code;
+    private string $type;
+    private bool $isList = false;
+    private bool $isHiddenInView = false;
+    private bool $isHiddenInForm = false;
+    private array $options = [];
+    private mixed $value = null;
+    private string $templateView = '';
 
     /**
      * @var FieldConstraint[]
      */
-    private $constraints = [];
+    private array $constraints = [];
 
-    /**
-     * Fieldset constructor.
-     * @param string $code
-     * @param string $type
-     * @param int $position
-     * @param array $options
-     * @throws FormException
-     */
     public function __construct(string $code, string $type, int $position, array $options)
     {
         $this->code = $code;
         $this->type = $type;
-        $this->options = [];
         $this->setPosition($position);
         $this->setTemplateView($this->getTemplateFromTypeClassname($type));
 
@@ -88,10 +48,6 @@ class Field implements PositionInterface
         }
     }
 
-    /**
-     * @param string $type
-     * @return string
-     */
     private function getTemplateFromTypeClassname(string $type): string
     {
         $type = str_replace('\\', '/', $type);
@@ -132,29 +88,17 @@ class Field implements PositionInterface
         return $template;
     }
 
-    /**
-     * @return string
-     */
     public function getCode(): string
     {
         return $this->code;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $key
-     * @param mixed $value
-     * @return self
-     * @throws FormException
-     */
-    public function addOption(string $key, $value): self
+    public function addOption(string $key, mixed $value): self
     {
         if ($key === 'choices') {
             if (!is_object($value) || !($value instanceof OptionsInterface)) {
@@ -167,19 +111,12 @@ class Field implements PositionInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getOptions(): array
     {
         return $this->options;
     }
 
-    /**
-     * @param string $code
-     * @return mixed
-     */
-    public function getOption(string $code)
+    public function getOption(string $code): mixed
     {
         if (!array_key_exists($code, $this->options)) {
             return null;
@@ -188,17 +125,11 @@ class Field implements PositionInterface
         return $this->options[$code];
     }
 
-    /**
-     * @return null|string
-     */
     public function getLabel(): ?string
     {
         return $this->getOption('label');
     }
 
-    /**
-     * @return bool
-     */
     public function isList(): bool
     {
         return $this->isList;
@@ -216,17 +147,11 @@ class Field implements PositionInterface
         return $this;
     }
 
-    /**
-     * @return OptionsInterface|null
-     */
     public function getChoices(): ?OptionsInterface
     {
         return $this->getOption('choices');
     }
 
-    /**
-     * @return bool
-     */
     public function isHiddenInView(): bool
     {
         return $this->isHiddenInView;
@@ -244,9 +169,6 @@ class Field implements PositionInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isHiddenInForm(): bool
     {
         return $this->isHiddenInForm;
@@ -264,37 +186,23 @@ class Field implements PositionInterface
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }
 
-    /**
-     * @param mixed $value
-     * @return self
-     */
-    public function setValue($value): self
+    public function setValue(mixed $value): self
     {
         $this->value = $value;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTemplateView(): string
     {
         return $this->templateView;
     }
 
-    /**
-     * @param string $templateView
-     * @return self
-     */
     public function setTemplateView(string $templateView): self
     {
         $this->templateView = $templateView;
@@ -302,10 +210,6 @@ class Field implements PositionInterface
         return $this;
     }
 
-    /**
-     * @param FieldConstraint $fieldConstraint
-     * @return $this
-     */
     public function addConstraint(FieldConstraint $fieldConstraint): self
     {
         $this->constraints[$fieldConstraint->getCode()] = $fieldConstraint;
@@ -313,10 +217,6 @@ class Field implements PositionInterface
         return $this;
     }
 
-    /**
-     * @param string $code
-     * @return ?FieldConstraint
-     */
     public function getConstraint(string $code): ?FieldConstraint
     {
         if (!array_key_exists($code, $this->constraints)) {
@@ -326,10 +226,6 @@ class Field implements PositionInterface
         return $this->constraints[$code];
     }
 
-    /**
-     * @param string $code
-     * @return $this
-     */
     public function deleteConstraint(string $code): self
     {
         if (array_key_exists($code, $this->constraints)) {
@@ -339,17 +235,11 @@ class Field implements PositionInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getConstraints(): array
     {
         return $this->constraints;
     }
 
-    /**
-     * @return $this
-     */
     public function resetConstraints(): self
     {
         $this->constraints = [];
@@ -357,9 +247,6 @@ class Field implements PositionInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getConstraintsAsArray(): array
     {
         $values = [];
