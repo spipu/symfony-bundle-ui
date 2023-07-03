@@ -311,11 +311,11 @@ class GridManager implements GridManagerInterface
                     break;
 
                 case 'in':
-                    $granted = $granted && in_array($value, $condValue);
+                    $granted = $granted && in_array($value, $condValue, true);
                     break;
 
                 case 'nin':
-                    $granted = $granted && !in_array($value, $condValue);
+                    $granted = $granted && !in_array($value, $condValue, true);
                     break;
 
                 case 'callback':

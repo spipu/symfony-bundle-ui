@@ -76,7 +76,7 @@ class Pager
 
     public function setDefaultLength(int $defaultLength): self
     {
-        if (!in_array($defaultLength, $this->lengths)) {
+        if (!in_array($defaultLength, $this->lengths, true)) {
             $defaultLength = $this->lengths[0];
         }
 

@@ -118,7 +118,7 @@ class GridRequest
             $this->pageCurrent = (int) $this->getSessionValue('page_current', $this->pageCurrent);
             $this->pageCurrent = (int) $this->request->get(self::KEY_PAGE_CURRENT, $this->pageCurrent);
 
-            if (!in_array($this->pageLength, $this->definition->getPager()->getLengths())) {
+            if (!in_array($this->pageLength, $this->definition->getPager()->getLengths(), true)) {
                 $this->pageLength = $this->definition->getPager()->getDefaultLength();
             }
 
@@ -145,7 +145,7 @@ class GridRequest
             $this->sortColumn = $this->definition->getDefaultSortColumn();
         }
 
-        if (!in_array($this->sortOrder, ['asc', 'desc'])) {
+        if (!in_array($this->sortOrder, ['asc', 'desc'], true)) {
             $this->sortOrder = $this->definition->getDefaultSortOrder();
         }
 

@@ -52,7 +52,7 @@ class UiExtensionTest extends TestCase
 
         $foundNames = [];
         foreach ($functions as $function) {
-            $this->assertTrue(in_array($function->getName(), $allowedNames));
+            $this->assertTrue(in_array($function->getName(), $allowedNames, true));
             $this->assertTrue(call_user_func_array('method_exists', $function->getCallable()));
             $foundNames[] = $function->getName();
         }

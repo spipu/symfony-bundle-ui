@@ -183,7 +183,7 @@ trait UiWebTestCaseTrait
     ): Crawler {
         $method = $form->getMethod();
 
-        if (!\in_array($method, ['POST', 'PUT', 'DELETE', 'PATCH'])) {
+        if (!\in_array($method, ['POST', 'PUT', 'DELETE', 'PATCH'], true)) {
             foreach ($form->all() as $field) {
                 $form->remove($field->getName());
             }

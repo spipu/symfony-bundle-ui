@@ -312,7 +312,7 @@ class GridConfig
 
         if (
             $grid->getColumn($column) === null
-            || !in_array($order, ['asc', 'desc'])
+            || !in_array($order, ['asc', 'desc'], true)
         ) {
             throw new UiException('bad data');
         }

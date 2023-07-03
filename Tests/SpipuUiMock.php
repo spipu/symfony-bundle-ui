@@ -77,7 +77,7 @@ class SpipuUiMock extends TestCase
 
 class ResourceMock implements EntityInterface
 {
-    private string $fieldAA = '';
+    private int $fieldAA = 0;
     private string $fieldAB = '';
     private string $fieldBA = '';
     private string $fieldBB = '';
@@ -87,12 +87,12 @@ class ResourceMock implements EntityInterface
         return null;
     }
 
-    public function getFieldAA(): string
+    public function getFieldAA(): int
     {
         return $this->fieldAA;
     }
 
-    public function setFieldAA(string $fieldAA): self
+    public function setFieldAA(int $fieldAA): self
     {
         $this->fieldAA = $fieldAA;
 
@@ -239,7 +239,7 @@ class EntityDefinitionMock implements EntityDefinitionInterface
         if ($resource !== null) {
             /** @var ResourceMock $resource */
             $resource->setFieldBB('called');
-        } elseif (in_array('error', $form->getData())) {
+        } elseif (in_array('error', $form->getData(), true)) {
             throw new FormException('mock error');
         }
     }
@@ -279,7 +279,7 @@ class DataProviderMock extends AbstractDataProvider
         $entity = new ResourceMock();
         $entity
             ->setFieldAA($key)
-            ->setFieldAB($key)
+            ->setFieldAB((string) $key)
             ->setFieldBA('Name ' . str_pad((string) $key, 6, '0', STR_PAD_LEFT))
             ->setFieldBB('Name ' . str_pad((string) $key, 6, '0', STR_PAD_LEFT));
 

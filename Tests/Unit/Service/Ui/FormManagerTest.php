@@ -172,7 +172,7 @@ class FormManagerTest extends AbstractTest
         $this->assertSame('From template', $manager->display());
 
         $this->assertSame($resource, $manager->getForm()->getData());
-        $this->assertSame('', $resource->getFieldAA());
+        $this->assertSame(0, $resource->getFieldAA());
         $this->assertSame('original', $resource->getFieldAB());
         $this->assertSame('', $resource->getFieldBA());
         $this->assertSame('', $resource->getFieldBB());
@@ -190,7 +190,7 @@ class FormManagerTest extends AbstractTest
 
         $values = [
             'generic' => [
-                'field_a_a' => 'Value a.a',
+                'field_a_a' => 42,
                 'field_b_a' => 'Value b.a',
                 'field_b_b' => 'Value b.b',
                 '_token'    => 'mock_token_value'
@@ -229,7 +229,7 @@ class FormManagerTest extends AbstractTest
 
         $this->assertSame($resource, $manager->getForm()->getData());
         $this->assertSame(null, $resource->getId());
-        $this->assertSame('Value a.a', $resource->getFieldAA());
+        $this->assertSame(42, $resource->getFieldAA());
         $this->assertSame('original', $resource->getFieldAB());
         $this->assertSame('Value b.a', $resource->getFieldBA());
         $this->assertSame('called', $resource->getFieldBB());

@@ -119,7 +119,7 @@ class Grid
             throw new GridException('Unknown default sort column');
         }
 
-        if (!in_array($order, ['asc', 'desc'])) {
+        if (!in_array($order, ['asc', 'desc'], true)) {
             throw new GridException('Invalid default sort order');
         }
 

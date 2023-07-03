@@ -26,7 +26,7 @@ class AssetsTest extends TestCase
 
         /** @var AssetInterface $asset */
         $this->assertSame($code, $asset->getCode());
-        $this->assertTrue(in_array($asset->getSourceType(), $this->availableTypes));
+        $this->assertTrue(in_array($asset->getSourceType(), $this->availableTypes, true));
 
         $source = $asset->getSource();
         $mapping = $asset->getMapping();

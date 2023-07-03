@@ -49,7 +49,7 @@ class ColumnType
             self::TYPE_COLOR,
         ];
 
-        if (!in_array($type, $allowedTypes)) {
+        if (!in_array($type, $allowedTypes, true)) {
             throw new GridException('Invalid Column Type');
         }
     }

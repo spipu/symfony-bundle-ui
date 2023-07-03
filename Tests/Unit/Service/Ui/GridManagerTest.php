@@ -572,7 +572,7 @@ class GridManagerTest extends AbstractTest
         $this->assertTrue(
             $manager->isGrantedAction(
                 $action->setConditions(
-                    ['fieldAA' => ['callback' => function ($row) { return $row->getFieldAA() === '1'; }]]
+                    ['fieldAA' => ['callback' => function ($row) { return $row->getFieldAA() === 1; }]]
                 ),
                 $row
             )
@@ -580,7 +580,7 @@ class GridManagerTest extends AbstractTest
         $this->assertFalse(
             $manager->isGrantedAction(
                 $action->setConditions(
-                    ['fieldAA' => ['callback' => function ($row) { return $row->getFieldAA() === '2'; }]]
+                    ['fieldAA' => ['callback' => function ($row) { return $row->getFieldAA() === 2; }]]
                 ),
                 $row
             )
