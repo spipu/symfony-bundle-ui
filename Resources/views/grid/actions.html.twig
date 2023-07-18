@@ -1,8 +1,8 @@
-{% if actions|length == 1 %}
-    {% set action = actions|first %}
-    {% if manager.isGrantedAction(action, row) %}
+{% if actionLimit is not defined %}{% set actionLimit=1 %}{% endif %}
+{% if actions|length <= actionLimit %}
+    {% for action in actions %}{% if manager.isGrantedAction(action, row) %}
         <a href="{{ manager.buildActionUrl(action, actionParams, row) }}" class="pt-0 pb-0 ml-1 btn btn-sm btn-outline-{{ action.cssClass }}">{% if action.icon %}<i class="fas fa-{{ action.icon }}"></i> {% endif %}{{ action.name|trans }}</a>
-    {% endif %}
+    {% endif %}{% endfor %}
 {%  else %}
     <ul class="nav">
         <li class="nav-item dropdown">
