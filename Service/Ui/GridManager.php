@@ -426,12 +426,12 @@ class GridManager implements GridManagerInterface
      */
     private function getInfoPage(int $page, string $forceName = '', bool $disabled = false): array
     {
-        return array(
+        return [
             'name'     => ($forceName !== '') ? $forceName : (string) $page,
             'url'      => $this->getCurrentUrl([GridRequest::KEY_PAGE_CURRENT => $page]),
             'active'   => (!$disabled && ($page === $this->request->getPageCurrent())),
             'disabled' => $disabled
-        );
+        ];
     }
 
     public function buildActionUrl(Action $action, array $actionParams, ?EntityInterface $row): string
