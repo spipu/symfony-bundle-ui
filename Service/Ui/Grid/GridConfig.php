@@ -18,7 +18,7 @@ use Spipu\UiBundle\Entity\Grid\Grid;
 use Spipu\UiBundle\Entity\GridConfig as GridConfigEntity;
 use Spipu\UiBundle\Exception\UiException;
 use Spipu\UiBundle\Repository\GridConfigRepository;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**

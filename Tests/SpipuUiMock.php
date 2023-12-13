@@ -286,7 +286,7 @@ class DataProviderMock extends AbstractDataProvider
         $this->entities[] = $entity;
     }
 
-    private function search()
+    private function search(): void
     {
         $this->found = $this->entities;
     }

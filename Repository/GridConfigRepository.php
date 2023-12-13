@@ -75,7 +75,7 @@ class GridConfigRepository extends ServiceEntityRepository
         $this
             ->getEntityManager()
             ->createQueryBuilder()
-            ->delete('SpipuUiBundle:GridConfig', 'c')
+            ->delete(GridConfig::class, 'c')
             ->where('c.name = :name')
             ->setParameter('name', GridConfig::DEFAULT_NAME)
             ->getQuery()->execute();

@@ -23,7 +23,7 @@ class Jquery implements AssetInterface
 {
     private string $version;
 
-    public function __construct(string $version = '3.7.0')
+    public function __construct(string $version = '3.7.1')
     {
         $this->version = $version;
     }

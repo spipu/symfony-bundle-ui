@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Spipu\UiBundle\Form;
 
 use Spipu\UiBundle\Entity\Form\Field;
-use Spipu\UiBundle\Entity\Form\Form;
 use Spipu\UiBundle\Form\Options\OptionsInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
