@@ -15,6 +15,8 @@ abstract class AbstractTest extends TestCase
         $option = $this->getOption();
         $values = $this->getValues();
 
+        $this->assertSame(OptionsInterface::TRANSLATABLE_FILE, $option->getTranslatableType());
+
         $this->assertSame($values, $option->getOptions());
         $this->assertSame(['' => ' '] + $values, $option->getOptionsWithEmptyValue());
 

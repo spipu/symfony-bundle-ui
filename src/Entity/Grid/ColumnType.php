@@ -62,6 +62,7 @@ class ColumnType
     public function setOptions(OptionsInterface $options): self
     {
         $this->options = $options;
+        $this->setTranslate($options->getTranslatableType() === OptionsInterface::TRANSLATABLE_FILE);
 
         return $this;
     }

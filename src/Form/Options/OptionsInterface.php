@@ -15,6 +15,9 @@ namespace Spipu\UiBundle\Form\Options;
 
 interface OptionsInterface
 {
+    public const TRANSLATABLE_NO = 'no';
+    public const TRANSLATABLE_FILE = 'file';
+
     public function resetOptions(): bool;
 
     /**
@@ -40,4 +43,6 @@ interface OptionsInterface
     public function hasKey(mixed $key): bool;
 
     public function getValueFromKey(mixed $key): ?string;
+
+    public function getTranslatableType(): string;
 }

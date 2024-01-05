@@ -91,4 +91,9 @@ abstract class AbstractOptions implements OptionsInterface
 
         return array_key_exists($key, $this->options) ? $this->options[$key] : null;
     }
+
+    public function getTranslatableType(): string
+    {
+        return self::TRANSLATABLE_FILE;
+    }
 }
