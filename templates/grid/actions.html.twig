@@ -1,4 +1,4 @@
-{% if actionLimit is not defined %}{% set actionLimit=1 %}{% endif %}
+{% if actionLimit is not defined %}{% set actionLimit=manager.getActionLimit() %}{% endif %}
 {% if actions|length <= actionLimit %}
     {% for action in actions %}{% if manager.isGrantedAction(action, row) %}
         <a href="{{ manager.buildActionUrl(action, actionParams, row) }}" class="pt-0 pb-0 ml-1 btn btn-sm btn-outline-{{ action.cssClass }}">{% if action.icon %}<i class="fas fa-{{ action.icon }}"></i> {% endif %}{{ action.name|trans }}</a>

@@ -35,6 +35,7 @@ class Grid
     private ?Pager $pager = null;
     private ?string $defaultSortColumn = null;
     private ?string $defaultSortOrder = null;
+    private int $actionLimit = 1;
 
     /**
      * @var Column[]
@@ -537,5 +538,16 @@ class Grid
         }
 
         return $columns;
+    }
+
+    public function setActionLimit(int $actionLimit): Grid
+    {
+        $this->actionLimit = $actionLimit;
+        return $this;
+    }
+
+    public function getActionLimit(): int
+    {
+        return $this->actionLimit;
     }
 }
