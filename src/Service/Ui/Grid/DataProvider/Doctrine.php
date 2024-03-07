@@ -84,7 +84,9 @@ class Doctrine extends AbstractDataProvider
 
         if (count($parameters) > 0 || count($this->conditions) > 0) {
             $queryBuilder->where($where);
-            $queryBuilder->setParameters($parameters);
+            foreach ($parameters as $key => $value) {
+                $queryBuilder->setParameter($key, $value);
+            }
         }
 
         return $queryBuilder;

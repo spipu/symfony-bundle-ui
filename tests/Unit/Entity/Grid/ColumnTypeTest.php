@@ -45,6 +45,6 @@ class ColumnTypeTest extends TestCase
     public function testBadType()
     {
         $this->expectException(GridException::class);
-        $entity = new Grid\ColumnType('bad-type');
+        new Grid\ColumnType('bad-type');
     }
 }

@@ -3,9 +3,6 @@ namespace Spipu\UiBundle\Tests\Unit\Entity\Form;
 
 use PHPUnit\Framework\TestCase;
 use Spipu\UiBundle\Entity\Form;
-use Spipu\UiBundle\Exception\FormException;
-use Spipu\UiBundle\Form\Options\YesNo;
-use Symfony\Component\Form\Extension\Core\Type;
 
 class FieldSetTest extends TestCase
 {

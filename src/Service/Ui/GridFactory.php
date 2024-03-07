@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Service\Ui;
 
-use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Service\Ui\Definition\GridDefinitionInterface;
 use Spipu\UiBundle\Service\Ui\Grid\GridConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;

@@ -5,6 +5,7 @@ use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Tests\SpipuUiMock;
 use Spipu\UiBundle\Twig\OptionsExtension;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\Error\Error;
 use Twig\Extension\ExtensionInterface;
@@ -21,7 +22,7 @@ class OptionsExtensionTest extends TestCase
                 $this->returnValueMap(
                     [
                         ['@GoodOption', 1, SpipuUiMock::getOptionIntegerMock()],
-                        ['@WrongOption', 1, new \stdClass()],
+                        ['@WrongOption', 1, new stdClass()],
                     ]
                 )
             );

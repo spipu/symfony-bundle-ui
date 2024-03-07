@@ -5,6 +5,7 @@ use PHPUnit\Framework\TestCase;
 use Spipu\UiBundle\Entity\Form;
 use Spipu\UiBundle\Exception\FormException;
 use Spipu\UiBundle\Form\Options\YesNo;
+use stdClass;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
@@ -121,7 +122,7 @@ class FieldTest extends TestCase
         $this->assertSame($yesNo, $entity->getChoices());
 
         $this->expectException(FormException::class);
-        $entity->addOption('choices', new \stdClass());
+        $entity->addOption('choices', new stdClass());
     }
 
     public function testEntityOptions()

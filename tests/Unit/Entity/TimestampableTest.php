@@ -1,6 +1,7 @@
 <?php
 namespace Spipu\UiBundle\Tests\Unit\Entity;
 
+use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
 use Spipu\UiBundle\Entity\TimestampableTrait;
 
@@ -13,8 +14,8 @@ class TimestampableTest extends TestCase
         $entity->setCreatedAtValue();
         $entity->setUpdatedAtValue();
 
-        $this->assertInstanceOf(\DateTimeInterface::class, $entity->getCreatedAt());
-        $this->assertInstanceOf(\DateTimeInterface::class, $entity->getUpdatedAt());
+        $this->assertInstanceOf(DateTimeInterface::class, $entity->getCreatedAt());
+        $this->assertInstanceOf(DateTimeInterface::class, $entity->getUpdatedAt());
     }
 }
 

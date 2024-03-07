@@ -24,7 +24,6 @@ class AssetsTest extends TestCase
     {
         $this->assertInstanceOf(AssetInterface::class, $asset);
 
-        /** @var AssetInterface $asset */
         $this->assertSame($code, $asset->getCode());
         $this->assertTrue(in_array($asset->getSourceType(), $this->availableTypes, true));
 

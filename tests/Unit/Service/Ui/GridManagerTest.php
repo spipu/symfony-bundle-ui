@@ -8,13 +8,13 @@ use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Service\Ui\Definition\GridDefinitionInterface;
 use Spipu\UiBundle\Service\Ui\Grid\DataProvider\DataProviderInterface;
 use Spipu\UiBundle\Service\Ui\Grid\DataProvider\Doctrine;
-use Spipu\UiBundle\Service\Ui\Grid\GridConfig;
 use Spipu\UiBundle\Service\Ui\Grid\GridRequest;
 use Spipu\UiBundle\Service\Ui\GridFactory;
 use Spipu\UiBundle\Service\Ui\GridManager;
 use Spipu\UiBundle\Service\Ui\GridManagerInterface;
 use Spipu\UiBundle\Tests\SpipuUiMock;
 use Spipu\UiBundle\Tests\Unit\Service\Ui\Grid\GridConfigTest;
+use stdClass;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -592,7 +592,7 @@ class GridManagerTest extends AbstractTest
 
     public function testManagerBadProvider()
     {
-        $container = $this->getContainerMock(['data_provider' => new \stdClass()]);
+        $container = $this->getContainerMock(['data_provider' => new stdClass()]);
         $definition = SpipuUiMock::getGridDefinitionMock();
 
         $factory = $this->getGridFactory($container);

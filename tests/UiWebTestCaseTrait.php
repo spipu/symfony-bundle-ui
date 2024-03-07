@@ -53,14 +53,12 @@ trait UiWebTestCaseTrait
 
     protected function getGridProperties(Crawler $crawler, string $gridCode): array
     {
-        $properties = [
+        return [
             'count'   => $this->getGridPropertiesCount($crawler, $gridCode),
             'display' => $this->getGridPropertiesDisplayList($crawler, $gridCode),
             'columns' => $this->getGridPropertiesColumns($crawler, $gridCode),
             'rows'    => $this->getGridPropertiesRows($crawler, $gridCode),
         ];
-
-        return $properties;
     }
 
     protected function getGridPropertiesCount(Crawler $crawler, string $gridCode): array
@@ -107,16 +105,16 @@ trait UiWebTestCaseTrait
             $cssClass = $node->attr('class');
 
             $sort = null;
-            if ($cssClass && strpos($cssClass, 'sorting_asc') !== false) {
+            if ($cssClass && str_contains($cssClass, 'sorting_asc')) {
                 $sort = 'asc';
             }
-            if ($cssClass && strpos($cssClass, 'sorting_desc') !== false) {
+            if ($cssClass && str_contains($cssClass, 'sorting_desc')) {
                 $sort = 'desc';
             }
 
             $columns[$node->attr('data-grid-field-name')] = [
                 'label'    => trim($node->text()),
-                'sortable' => ($cssClass && (strpos($cssClass, 'sorting') !== false)),
+                'sortable' => ($cssClass && (str_contains($cssClass, 'sorting'))),
                 'sort'     => $sort,
             ];
         });
@@ -183,13 +181,13 @@ trait UiWebTestCaseTrait
     ): Crawler {
         $method = $form->getMethod();
 
-        if (!\in_array($method, ['POST', 'PUT', 'DELETE', 'PATCH'], true)) {
+        if (!in_array($method, ['POST', 'PUT', 'DELETE', 'PATCH'], true)) {
             foreach ($form->all() as $field) {
                 $form->remove($field->getName());
             }
 
             $uri = $form->getUri();
-            $query = parse_url($uri, \PHP_URL_QUERY);
+            $query = parse_url($uri, PHP_URL_QUERY);
             $currentParameters = [];
             if ($query) {
                 parse_str($query, $currentParameters);
@@ -209,7 +207,7 @@ trait UiWebTestCaseTrait
                 $qs = http_build_query([$name => $value], '', '&');
                 if (!empty($qs)) {
                     parse_str($qs, $expandedValue);
-                    $varName = substr($name, 0, \strlen(key($expandedValue)));
+                    $varName = substr($name, 0, strlen(key($expandedValue)));
                     $tempValues[] = [$varName => current($expandedValue)];
                 }
             }
