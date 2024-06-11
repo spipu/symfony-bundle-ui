@@ -1,0 +1,3 @@
+<td data-grid-field-name="{{ column.code }}" class="{{ column.option('td-css-class', 'text-right') }}">
+    {{ column.option('prefix', '') }}{{ data|number_format(column.option('precision', 3), '.', ' ') }}{{ column.option('suffix', '') }}
+</td>
