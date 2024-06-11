@@ -5,16 +5,16 @@
     {% set gigabyte = megabyte * 1024 %}
     {% set terabyte = gigabyte * 1024 %}
 
-    {% if bytes < kilobyte %}
-        {{ bytes ~ ' B' }}
-    {% elseif bytes < megabyte %}
-        {{ (bytes / kilobyte)|number_format(2, '.') ~ ' KB' }}
-    {% elseif bytes < gigabyte %}
-        {{ (bytes / megabyte)|number_format(2, '.') ~ ' MB' }}
-    {% elseif bytes < terabyte %}
-        {{ (bytes / gigabyte)|number_format(2, '.') ~ ' GB' }}
+    {% if bytes < kilobyte * 1.2 %}
+        {{ bytes ~ ' o' }}
+    {% elseif bytes < megabyte * 1.2 %}
+        {{ (bytes / kilobyte)|number_format(2, '.', '') ~ ' Ko' }}
+    {% elseif bytes < gigabyte * 1.2 %}
+        {{ (bytes / megabyte)|number_format(2, '.', '') ~ ' Mo' }}
+    {% elseif bytes < terabyte * 1.2 %}
+        {{ (bytes / gigabyte)|number_format(2, '.', '') ~ ' Go' }}
     {% else %}
-        {{ (bytes / terabyte)|number_format(2, '.') ~ ' TB' }}
+        {{ (bytes / terabyte)|number_format(2, '.', '') ~ ' To' }}
     {% endif %}
 {% endapply %}
 {% endmacro %}

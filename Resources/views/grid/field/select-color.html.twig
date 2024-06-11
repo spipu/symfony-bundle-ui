@@ -1,5 +1,6 @@
+{% set colors = column.option('colors') %}
 {% set text = data|label_from_option(column.type.options) %}
 {% if column.type.translate %}{% set text = text|trans %}{% endif %}
 <td data-grid-field-name="{{ column.code }}" class="{{ column.option('td-css-class', 'text-center') }}">
-    {{ column.option('prefix', '') }}{{ text }}{{ column.option('suffix', '') }}
+    <div class="w-100 {% if colors[data] is defined %} badge badge-{{ colors[data] }} {% endif %}">{{ column.option('prefix', '') }}{{ text }}{{ column.option('suffix', '') }}</div>
 </td>
