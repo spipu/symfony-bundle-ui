@@ -3,17 +3,17 @@
     <td data-grid-role="checkbox"><input type="checkbox" value="{{ attribute(row, manager.definition.dataProviderPrimaryKey) }}" data-grid-code="{{ manager.definition.code }}" data-grid-role="checkbox" /></td>
 {% endif %}
 {% for column in manager.definition.displayedColumns(manager.currentGridConfig) %}
-    {% apply spaceless %}{% include column.type.templateField with {'manager': manager, 'row': row, 'column': column, 'data': manager.value(row, column.entityField)} %}{% endapply %}
+    {% include column.type.templateField with {'manager': manager, 'row': row, 'column': column, 'data': manager.value(row, column.entityField)} %}
 
 {% endfor %}
 {% if manager.definition.rowActions|length > 0 %}
-    <td data-grid-code="{{ manager.definition.code }}" data-grid-role="row-actions" class="text-right">{% apply spaceless %}
+    <td data-grid-code="{{ manager.definition.code }}" data-grid-role="row-actions" class="text-right">
         {%  include manager.definition.templateActions with {
             'manager': manager,
             'actions': manager.definition.rowActions,
             'actionParams': { (manager.definition.requestPrimaryKey): attribute(row, manager.definition.dataProviderPrimaryKey)},
             'row': row
         } %}
-    {% endapply %}</td>
+    </td>
 {% endif %}
 </tr>

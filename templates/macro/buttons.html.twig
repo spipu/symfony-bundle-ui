@@ -30,14 +30,7 @@
 
 {% macro delete(url, tokenId, message, id) %}
     {% if message is empty %}{% set message = 'spipu.ui.action.delete' %}{% endif %}
-
-    {% apply spaceless %}
-        <form method="post" action="{{ url }}" style="display: inline">
-            <input type="hidden" name="_method" value="DELETE">
-            <input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ tokenId) }}">
-            {{ _self.defaultButton(null, message, 'danger confirm-action', 'trash-alt', id, 'delete') }}
-        </form>
-    {% endapply %}
+    <form method="post" action="{{ url }}" style="display: inline"><input type="hidden" name="_method" value="DELETE"><input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ tokenId) }}">{{ _self.defaultButton(null, message, 'danger confirm-action', 'trash-alt', id, 'delete') }}</form>
 {% endmacro %}
 
 {% macro submitManagerForm(manager) %}
