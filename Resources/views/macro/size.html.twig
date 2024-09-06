@@ -1,10 +1,8 @@
 {% macro bytesToSize(bytes) %}
-{% apply spaceless %}
     {% set kilobyte = 1024 %}
     {% set megabyte = kilobyte * 1024 %}
     {% set gigabyte = megabyte * 1024 %}
     {% set terabyte = gigabyte * 1024 %}
-
     {% if bytes < kilobyte * 1.2 %}
         {{ bytes ~ ' o' }}
     {% elseif bytes < megabyte * 1.2 %}
@@ -16,5 +14,4 @@
     {% else %}
         {{ (bytes / terabyte)|number_format(2, '.', '') ~ ' To' }}
     {% endif %}
-{% endapply %}
 {% endmacro %}

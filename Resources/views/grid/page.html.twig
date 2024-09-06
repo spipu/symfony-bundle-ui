@@ -4,7 +4,7 @@
     <table class="{{ manager.definition.option('table-css-class', 'table table-striped table-hover table-sm') }}">
         <thead class="{{ manager.definition.option('thead-css-class', '') }}">
             <tr data-grid-code="{{ manager.definition.code }}" data-grid-role="global-actions">
-                <td colspan="{{ hasMassAction + hasRowAction + manager.definition.displayedColumns|length }}">{% apply spaceless %}
+                <td colspan="{{ hasMassAction + hasRowAction + manager.definition.displayedColumns|length }}">
                     <span data-grid-code="{{ manager.definition.code }}" data-grid-role="total-rows">{% trans count manager.nbTotalRows %}spipu.ui.grid.item.found{% endtrans %}</span>
 {% if hasMassAction %}
                     <span class="border-right ml-2 mr-2"></span>
@@ -14,13 +14,9 @@
                             <a class="nav-link dropdown-toggle p-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{ 'spipu.ui.grid.action.label'|trans }}</a>
                             <div class="dropdown-menu">
                                 {% for action in manager.definition.massActions %}{% if manager.isGrantedAction(action) %}
-                                    <span class="dropdown-item" data-grid-code="{{ manager.definition.code }}" data-grid-role="action" data-grid-href="{{ manager.buildActionUrl(action, {}, null) }}">
-                                        <div class="btn btn-sm btn-outline-{{ action.cssClass }} w-100">{%  if action.icon %}<i class="fas fa-{{ action.icon }}"></i> {% endif %}{{ action.name|trans }}</div>
-                                    </span>
+                                    <span class="dropdown-item" data-grid-code="{{ manager.definition.code }}" data-grid-role="action" data-grid-href="{{ manager.buildActionUrl(action, {}, null) }}"><div class="btn btn-sm btn-outline-{{ action.cssClass }} w-100">{%  if action.icon %}<i class="fas fa-{{ action.icon }}"></i> {% endif %}{{ action.name|trans }}</div></span>
                                 {% endif %}{% endfor %}
-                                 <span class="dropdown-item" data-grid-code="{{ manager.definition.code }}" data-grid-role="no-action">
-                                     {{ 'spipu.ui.grid.item.at_least_one'|trans }}
-                                 </span>
+                                 <span class="dropdown-item" data-grid-code="{{ manager.definition.code }}" data-grid-role="no-action">{{ 'spipu.ui.grid.item.at_least_one'|trans }}</span>
                             </div>
                         </li>
                     </ul>
@@ -35,7 +31,7 @@
                         } %}
                     </span>
 {% endif %}
-                {% endapply %}</td>
+                </td>
             </tr>
             <tr data-grid-code="{{ manager.definition.code }}" data-grid-role="header-columns">
 {% if hasMassAction %}
