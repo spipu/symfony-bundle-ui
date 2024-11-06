@@ -68,21 +68,12 @@ class UiExtension extends AbstractExtension
         return $values;
     }
 
-    /**
-     * @param mixed $variable
-     * @return bool
-     */
-    public function isClosure($variable): bool
+    public function isClosure(mixed $variable): bool
     {
         return $variable instanceof \Closure;
     }
 
-    /**
-     * @param callable $closure
-     * @param array $variables
-     * @return mixed
-     */
-    public function executeClosure(callable $closure, array $variables = [])
+    public function executeClosure(callable $closure, array $variables = []): mixed
     {
         return call_user_func_array($closure, $variables);
     }

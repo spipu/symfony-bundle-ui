@@ -335,7 +335,7 @@ class GridManager implements GridManagerInterface
         $finalObject = $object;
         $finalField = $field;
 
-        if (strpos($field, '.') !== false) {
+        if (str_contains($field, '.')) {
             [$subMethod, $finalField] = explode('.', $field, 2);
             $subMethod = 'get' . ucfirst($subMethod);
 
