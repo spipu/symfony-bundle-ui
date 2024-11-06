@@ -45,6 +45,8 @@ class UiExtensionTest extends TestCase
             'renderManager',
             'getMenu',
             'getTranslations',
+            'isClosure',
+            'executeClosure',
         ];
 
         $extension = $this->getExtension();
