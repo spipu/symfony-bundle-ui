@@ -26,6 +26,7 @@ class Doctrine extends AbstractDataProvider
     protected EntityManagerInterface $entityManager;
     protected array $conditions = [];
     protected array $mappingValues = [];
+    protected array $joins = [];
 
     public function __construct(
         EntityManagerInterface $entityManager
@@ -39,6 +40,7 @@ class Doctrine extends AbstractDataProvider
 
         $this->conditions = [];
         $this->mappingValues = [];
+        $this->joins = [];
     }
 
     public function addCondition(mixed $condition): void
@@ -54,6 +56,11 @@ class Doctrine extends AbstractDataProvider
         $this->mappingValues[$fieldCode][$originalValue] = $newValue;
     }
 
+    public function addJoin(string $columnName, string $joinType = 'inner'): void
+    {
+        $this->joins[$columnName] = $joinType;
+    }
+
     public function prepareQueryBuilder(): QueryBuilder
     {
         $this->validate();
@@ -67,6 +74,10 @@ class Doctrine extends AbstractDataProvider
         $where = $queryBuilder->expr()->andX();
         foreach ($this->conditions as $condition) {
             $where->add($condition);
+        }
+
+        foreach ($this->joins as $columnName => $joinType) {
+            $queryBuilder->join('main.' . $columnName, $columnName, $joinType);
         }
 
         $parameters = [];

@@ -42,6 +42,8 @@ class UiExtension extends AbstractExtension
             new TwigFunction('renderManager', [$this, 'renderManager']),
             new TwigFunction('getMenu', [$this, 'getMenu']),
             new TwigFunction('getTranslations', [$this, 'getTranslations']),
+            new TwigFunction('isClosure', [$this, 'isClosure']),
+            new TwigFunction('executeClosure', [$this, 'executeClosure']),
         ];
     }
 
@@ -64,5 +66,24 @@ class UiExtension extends AbstractExtension
         }
 
         return $values;
+    }
+
+    /**
+     * @param mixed $variable
+     * @return bool
+     */
+    public function isClosure($variable): bool
+    {
+        return $variable instanceof \Closure;
+    }
+
+    /**
+     * @param callable $closure
+     * @param array $variables
+     * @return mixed
+     */
+    public function executeClosure(callable $closure, array $variables = [])
+    {
+        return call_user_func_array($closure, $variables);
     }
 }
