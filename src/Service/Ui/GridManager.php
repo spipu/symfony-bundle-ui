@@ -337,32 +337,41 @@ class GridManager implements GridManagerInterface
 
     public function getValue(EntityInterface $object, string $field): mixed
     {
-        $subMethod = null;
+        $finalObject = $object;
+        $finalField = $field;
+
         if (str_contains($field, '.')) {
-            [$subMethod, $field] = explode('.', $field, 2);
+            [$subMethod, $finalField] = explode('.', $field, 2);
             $subMethod = 'get' . ucfirst($subMethod);
+
+            if (!method_exists($object, $subMethod)) {
+                throw new GridException(
+                    'Unable to find field ' . $field . ' on object ' . get_class($object)
+                );
+            }
+
+            $finalObject = $object->{$subMethod}();
+
+            if ($finalObject === null) {
+                return null;
+            }
         }
 
         $methods = [
-            'get' . ucfirst($field),
-            'is' . ucfirst($field),
-            $field,
+            'get' . ucfirst($finalField),
+            'is' . ucfirst($finalField),
+            $finalField,
         ];
 
         foreach ($methods as $method) {
-            if (
-                $subMethod !== null
-                && method_exists($object, $subMethod)
-                && method_exists($object->{$subMethod}(), $method)
-            ) {
-                return $object->{$subMethod}()->{$method}();
-            }
             if (method_exists($object, $method)) {
-                return $object->{$method}();
+                return $finalObject->{$method}();
             }
         }
 
-        throw new GridException('Unable to find the field ' . $field . ' on the object ' . get_class($object));
+        throw new GridException(
+            'Unable to find field ' . $field . ' on object ' . get_class($object)
+        );
     }
 
     /**

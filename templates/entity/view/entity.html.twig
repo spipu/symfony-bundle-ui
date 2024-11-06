@@ -1,1 +1,5 @@
-{{ attribute(data, field.options.choice_label) }}
+{% if isClosure(field.options.choice_label) %}
+    {{ executeClosure(field.options.choice_label, [data]) }}
+{% else %}
+    {{ attribute(data, field.options.choice_label) }}
+{% endif %}
