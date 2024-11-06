@@ -39,6 +39,11 @@ class Doctrine extends AbstractDataProvider
     protected $mappingValues = [];
 
     /**
+     * @var array
+     */
+    protected $joins = [];
+
+    /**
      * Doctrine constructor.
      * @param EntityManagerInterface $entityManager
      */
@@ -57,6 +62,7 @@ class Doctrine extends AbstractDataProvider
 
         $this->conditions = [];
         $this->mappingValues = [];
+        $this->joins = [];
     }
 
     /**
@@ -83,6 +89,16 @@ class Doctrine extends AbstractDataProvider
     }
 
     /**
+     * @param string $columnName
+     * @param string $joinType
+     * @return void
+     */
+    public function addJoin(string $columnName, string $joinType = 'inner'): void
+    {
+        $this->joins[$columnName] = $joinType;
+    }
+
+    /**
      * @return QueryBuilder
      * @throws GridException
      */
@@ -99,6 +115,10 @@ class Doctrine extends AbstractDataProvider
         $where = $queryBuilder->expr()->andX();
         foreach ($this->conditions as $condition) {
             $where->add($condition);
+        }
+
+        foreach ($this->joins as $columnName => $joinType) {
+            $queryBuilder->join('main.' . $columnName, $columnName, $joinType);
         }
 
         $parameters = [];
