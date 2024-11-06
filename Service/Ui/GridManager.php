@@ -497,10 +497,21 @@ class GridManager implements GridManagerInterface
      */
     public function getValue(EntityInterface $object, string $field)
     {
-        $subMethod = null;
+        $realObject = $object;
+
         if (strpos($field, '.') !== false) {
             [$subMethod, $field] = explode('.', $field, 2);
             $subMethod = 'get' . ucfirst($subMethod);
+
+            if (!method_exists($object, $subMethod)) {
+                throw new GridException('Unable to find method ' . $subMethod . ' on object ' . get_class($object));
+            }
+
+            $realObject = $object->{$subMethod}();
+
+            if ($realObject === null) {
+                return null;
+            }
         }
 
         $methods = [
@@ -510,19 +521,12 @@ class GridManager implements GridManagerInterface
         ];
 
         foreach ($methods as $method) {
-            if (
-                $subMethod !== null
-                && method_exists($object, $subMethod)
-                && method_exists($object->{$subMethod}(), $method)
-            ) {
-                return $object->{$subMethod}()->{$method}();
-            }
             if (method_exists($object, $method)) {
-                return $object->{$method}();
+                return $realObject->{$method}();
             }
         }
 
-        throw new GridException('Unable to find the field ' . $field . ' on the object ' . get_class($object));
+        throw new GridException('Unable to find field ' . $field . ' on object ' . get_class($object));
     }
 
     /**
