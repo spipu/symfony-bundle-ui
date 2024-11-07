@@ -60,6 +60,9 @@ class Doctrine extends AbstractDataProvider
         $this->joins[$columnName] = $joinType;
     }
 
+    /**
+     * @SuppressWarnings(PMD.CyclomaticComplexity)
+     */
     public function prepareQueryBuilder(): QueryBuilder
     {
         $this->validate();
