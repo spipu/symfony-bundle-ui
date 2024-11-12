@@ -364,7 +364,7 @@ class GridManager implements GridManagerInterface
         ];
 
         foreach ($methods as $method) {
-            if (method_exists($object, $method)) {
+            if (method_exists($finalObject, $method)) {
                 return $finalObject->{$method}();
             }
         }
