@@ -77,7 +77,7 @@ class Doctrine extends AbstractDataProvider
         }
 
         foreach ($this->joins as $columnName => $joinType) {
-            $queryBuilder->join('main.' . $columnName, $columnName, $joinType);
+            $queryBuilder->{"{$joinType}Join"}('main.' . $columnName, $columnName);
         }
 
         $parameters = [];
