@@ -60,6 +60,9 @@ class Doctrine extends AbstractDataProvider
         $this->joins[$columnName] = $joinType;
     }
 
+    /**
+     * @SuppressWarnings(PMD.CyclomaticComplexity)
+     */
     public function prepareQueryBuilder(): QueryBuilder
     {
         $this->validate();
@@ -70,13 +73,13 @@ class Doctrine extends AbstractDataProvider
             ->select('main')
             ->from($this->definition->getEntityName(), 'main');
 
-        foreach ($this->joins as $columnName => $joinType) {
-            $queryBuilder->join('main.' . $columnName, $columnName, $joinType);
-        }
-
         $where = $queryBuilder->expr()->andX();
         foreach ($this->conditions as $condition) {
             $where->add($condition);
+        }
+
+        foreach ($this->joins as $columnName => $joinType) {
+            $queryBuilder->join('main.' . $columnName, $columnName, $joinType);
         }
 
         $parameters = [];
