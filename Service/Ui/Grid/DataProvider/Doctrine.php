@@ -58,6 +58,10 @@ class Doctrine extends AbstractDataProvider
 
     public function addJoin(string $columnName, string $joinType = 'inner'): void
     {
+        if (!in_array($joinType, ['inner', 'left'])) {
+            throw new GridException('Unknown join type');
+        }
+
         $this->joins[$columnName] = $joinType;
     }
 
@@ -77,7 +81,7 @@ class Doctrine extends AbstractDataProvider
         }
 
         foreach ($this->joins as $columnName => $joinType) {
-            $queryBuilder->join('main.' . $columnName, $columnName, $joinType);
+            $queryBuilder->{"{$joinType}Join"}('main.' . $columnName, $columnName);
         }
 
         $parameters = [];
