@@ -19,6 +19,7 @@ use Spipu\UiBundle\Entity\Grid\Column;
 use Spipu\UiBundle\Entity\Grid\ColumnType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Spipu\UiBundle\Exception\GridException;
 
 class Doctrine extends AbstractDataProvider
 {
