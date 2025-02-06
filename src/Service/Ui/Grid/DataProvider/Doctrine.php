@@ -19,6 +19,7 @@ use Spipu\UiBundle\Entity\Grid\Column;
 use Spipu\UiBundle\Entity\Grid\ColumnType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Spipu\UiBundle\Exception\GridException;
 
 class Doctrine extends AbstractDataProvider
 {
@@ -57,6 +58,10 @@ class Doctrine extends AbstractDataProvider
 
     public function addJoin(string $columnName, string $joinType = 'inner'): void
     {
+        if (!in_array($joinType, ['inner', 'left'])) {
+            throw new GridException('Unknown join type');
+        }
+
         $this->joins[$columnName] = $joinType;
     }
 
