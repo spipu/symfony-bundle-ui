@@ -21,5 +21,5 @@ interface EntityDefinitionInterface
 {
     public function getDefinition(): Form;
 
-    public function setSpecificFields(FormInterface $form, EntityInterface $resource = null): void;
+    public function setSpecificFields(FormInterface $form, ?EntityInterface $resource = null): void;
 }
