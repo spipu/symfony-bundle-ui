@@ -29,5 +29,5 @@ interface EntityDefinitionInterface
      * @param EntityInterface|null $resource
      * @return void
      */
-    public function setSpecificFields(FormInterface $form, EntityInterface $resource = null): void;
+    public function setSpecificFields(FormInterface $form, ?EntityInterface $resource = null): void;
 }

@@ -300,7 +300,7 @@ class EntityDefinitionMock implements EntityDefinitionInterface
      * @return void
      * @throws FormException
      */
-    public function setSpecificFields(FormInterface $form, EntityInterface $resource = null): void
+    public function setSpecificFields(FormInterface $form, ?EntityInterface $resource = null): void
     {
         if ($resource !== null) {
             /** @var ResourceMock $resource */
