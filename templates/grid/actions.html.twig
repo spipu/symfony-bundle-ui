@@ -7,7 +7,7 @@
     <ul class="nav">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle p-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{ 'spipu.ui.grid.action.label'|trans }}</a>
-            <div class="dropdown-menu">
+            <div class="dropdown-menu dropdown-menu-right">
     {% for action in actions %}{% if manager.isGrantedAction(action, row) %}
                 <a href="{{ manager.buildActionUrl(action, actionParams, row) }}" class="dropdown-item">
                     <div class="btn btn-sm btn-outline-{{ action.cssClass }} w-100">{%  if action.icon %}<i class="fas fa-{{ action.icon }}"></i> {% endif %}{{ action.name|trans }}</div>
