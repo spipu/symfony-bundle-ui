@@ -22,7 +22,10 @@ spipu:
 
         grid:
             item:
-                found:          "{0} Aucun item trouvé|{1} %count% item trouvé|]1,Inf[ %count% items trouvés"
+                found:
+                    none:       "Aucun item trouvé"
+                    one:        "1 item trouvé"
+                    more:       "%count% items trouvés"
                 selected:       "sélectionné(s)"
                 at_least_one:   "Vous devez sélectionner au moins un item"
 
