@@ -5,7 +5,7 @@
         <thead class="{{ manager.definition.option('thead-css-class', '') }}">
             <tr data-grid-code="{{ manager.definition.code }}" data-grid-role="global-actions">
                 <td colspan="{{ hasMassAction + hasRowAction + manager.definition.displayedColumns(manager.currentGridConfig)|length }}">
-                    <span data-grid-code="{{ manager.definition.code }}" data-grid-role="total-rows">{% trans count manager.nbTotalRows %}spipu.ui.grid.item.found{% endtrans %}</span>
+                    <span data-grid-code="{{ manager.definition.code }}" data-grid-role="total-rows">{{ ('spipu.ui.grid.item.found.' ~ (manager.nbTotalRows == 0 ? 'none' : (manager.nbTotalRows == 1 ? 'one' : 'more'))) | trans({'%count%': manager.nbTotalRows}) }}</span>
 {% if hasMassAction %}
                     <span class="border-right ml-2 mr-2"></span>
                     <span data-grid-code="{{ manager.definition.code }}" data-grid-role="count">0</span> {{ 'spipu.ui.grid.item.selected'|trans }}
