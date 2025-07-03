@@ -1,0 +1,12 @@
+<div class="{{ fieldSet.cssClass }}" data-form-code="{{ manager.definition.code }}" data-form-role="fieldset" data-fieldset-code="{{ fieldSet.code }}">
+    <div class="card mb-3">
+        <div class="card-header"><b>{{ fieldSet.name|trans }}</b></div>
+        <div class="card-body">
+            {% for field in fieldSet.fields %}{% if not field.isHiddenInForm %}
+                <div data-form-code="{{ manager.definition.code }}" data-form-role="field" data-field-code="{{ field.code }}" data-field-constraints="{{ field.constraintsAsArray|json_encode }}">
+                    {{ form_row(attribute(form, field.code)) }}
+                </div>
+            {% endif %}{% endfor %}
+        </div>
+    </div>
+</div>
