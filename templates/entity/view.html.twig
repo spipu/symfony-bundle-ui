@@ -1,32 +1,5 @@
 <div class="row" data-form-code="{{ manager.definition.code }}" data-form-role="view">
 {% for fieldSet in manager.fieldsets %}{%  if not fieldSet.isHiddenInView %}
-    <div class="{{ fieldSet.cssClass }}" data-form-code="{{ manager.definition.code }}" data-form-role="fieldset" data-fieldset-code="{{ fieldSet.code }}">
-        <div class="card mb-3">
-            <div class="card-header font-weight-bold">{{ fieldSet.name|trans }}</div>
-            <table class="table table-striped table-hover table-sm mb-0">
-{% for field in fieldSet.fields|filter(field => not field.isHiddenInView) %}
-                <tr><th>{{ field.label|trans }}</th></tr>
-                <tr><td data-form-code="{{ manager.definition.code }}" data-form-role="field" data-field-name="{{ field.code }}">
-                    {% set data = attribute(manager.resource, field.code) %}
-                    {% if field.isList %}
-                        <ul class="mb-0">
-                            {% for value in data %}
-                                <li>{% include field.templateView with {'manager': manager, 'field': field, 'data': value} %}</li>
-                            {% else %}
-                                <li>-</li>
-                            {% endfor %}
-                        </ul>
-                    {%  else %}
-                        {% if (data is same as(null)) or (data is same as('')) %}-{% else %}
-                            {% include field.templateView with {'manager': manager, 'field': field, 'data': data} %}
-                        {% endif %}
-                    {% endif %}
-                </td></tr>
-{% else %}
-                <tr><th>No field to display</th></tr>
-{% endfor %}
-            </table>
-        </div>
-    </div>
+    {% include '@SpipuUi/entity/viewFieldset.html.twig' with {'manager': manager, 'fieldSet': fieldSet} %}
 {% endif %}{% endfor %}
 </div>
