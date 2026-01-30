@@ -34,7 +34,11 @@ class SpipuUiGrid {
     };
 
     getValue(target) {
-        return parseInt($(target).val());
+        let value = $(target).val();
+        if (value.match(/^\d+$/)) {
+            return parseInt(value);
+        }
+        return value;
     }
 
     filtersInit() {
