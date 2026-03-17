@@ -13,9 +13,11 @@
 {% endblock %}
     </head>
     <body>
+    {% block header_area %}
         <header>
             {% include '@SpipuUi/menu.html.twig' with {'currentItem': menuCurrentItem|default('')} %}
         </header>
+    {% endblock %}
 
         <main role="main" class="{% block main_class %}container{% endblock %}">
             {% block notifications_container %}{% if app.request.hasPreviousSession %}
@@ -24,19 +26,23 @@
                 {% endfor %}{% endfor %}
             {% endif %}{% endblock %}
 
-            <div class="row">
-                {% block main_title_container %}<div class="col-12"><h1>{% block main_title %}{% endblock %}</h1></div>{% endblock %}
-                <div class="col-12 pb-1 text-right">{% block main_actions %}{% endblock %}</div>
-            </div>
+            {% block title_area %}
+                <div class="row">
+                    {% block main_title_container %}<div class="col-12"><h1>{% block main_title %}{% endblock %}</h1></div>{% endblock %}
+                    <div class="col-12 pb-1 text-right">{% block main_actions %}{% endblock %}</div>
+                </div>
+            {% endblock %}
 
             {% block body %}{% endblock %}
         </main>
 
+    {% block footer_area %}
         <footer class="footer">
             <div class="container">
                 <span class="text-muted">{% block footer %}&copy; {{ "now"|date("Y") }} - Spipu{%  endblock %}</span>
             </div>
         </footer>
+    {% endblock %}
         <div id="confirmPopup"></div>
         <div id="globalAlertInfo" role="alert"></div>
 

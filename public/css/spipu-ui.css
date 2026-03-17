@@ -8,6 +8,14 @@ body > main {
   padding-bottom: 60px;
 }
 
+body > main.headerless {
+  padding-top: 15px;
+}
+
+body > main.footerless {
+  padding-bottom: 15px;
+}
+
 .footer {
   position: absolute;
   bottom: 0;
