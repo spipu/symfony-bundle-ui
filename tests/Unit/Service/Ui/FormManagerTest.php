@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Service\Ui;
 
 use PHPUnit\Framework\MockObject\MockObject;
@@ -33,7 +36,7 @@ class FormManagerTest extends AbstractTest
         );
     }
 
-    public function testManagerWithoutResource()
+    public function testManagerWithoutResource(): void
     {
         $container = $this->getContainerMock(['form.factory' => SymfonyMock::getFormFactory($this)]);
 
@@ -81,7 +84,7 @@ class FormManagerTest extends AbstractTest
         );
     }
 
-    public function testManagerWithoutResourceSubmit()
+    public function testManagerWithoutResourceSubmit(): void
     {
         $container = $this->getContainerMock(['form.factory' => SymfonyMock::getFormFactory($this)]);
 
@@ -129,7 +132,7 @@ class FormManagerTest extends AbstractTest
         $this->assertSame($values['generic']['field_b_b'], $manager->getForm()->getData()['field_b_b']);
     }
 
-    public function testManagerWithResource()
+    public function testManagerWithResource(): void
     {
         $container = $this->getContainerMock(['form.factory' => SymfonyMock::getFormFactory($this)]);
 
@@ -178,7 +181,7 @@ class FormManagerTest extends AbstractTest
         $this->assertSame('', $resource->getFieldBB());
     }
 
-    public function testManagerWithResourceSubmit()
+    public function testManagerWithResourceSubmit(): void
     {
         $container = $this->getContainerMock(['form.factory' => SymfonyMock::getFormFactory($this)]);
 
@@ -235,7 +238,7 @@ class FormManagerTest extends AbstractTest
         $this->assertSame('called', $resource->getFieldBB());
     }
 
-    public function testManagerWithResourceError()
+    public function testManagerWithResourceError(): void
     {
         $container = $this->getContainerMock(['form.factory' => SymfonyMock::getFormFactory($this)]);
 
@@ -254,7 +257,7 @@ class FormManagerTest extends AbstractTest
         $manager->validate();
     }
 
-    public function testManagerSubmitError()
+    public function testManagerSubmitError(): void
     {
         $container = $this->getContainerMock(['form.factory' => SymfonyMock::getFormFactory($this)]);
 

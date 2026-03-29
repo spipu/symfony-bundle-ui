@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Service\Menu;
 
 use PHPUnit\Framework\TestCase;
@@ -9,7 +12,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ManagerTest extends TestCase
 {
-    public function testServiceActive()
+    public function testServiceActive(): void
     {
         Item::resetAll();
 
@@ -35,7 +38,7 @@ class ManagerTest extends TestCase
         Item::resetAll();
     }
 
-    public function testServiceAllowedNotConnected()
+    public function testServiceAllowedNotConnected(): void
     {
         Item::resetAll();
 
@@ -72,7 +75,7 @@ class ManagerTest extends TestCase
         Item::resetAll();
     }
 
-    public function testServiceAllowedConnectedWithoutRole()
+    public function testServiceAllowedConnectedWithoutRole(): void
     {
         Item::resetAll();
 
@@ -109,7 +112,7 @@ class ManagerTest extends TestCase
         Item::resetAll();
     }
 
-    public function testServiceAllowedConnectedWithRole()
+    public function testServiceAllowedConnectedWithRole(): void
     {
         Item::resetAll();
 

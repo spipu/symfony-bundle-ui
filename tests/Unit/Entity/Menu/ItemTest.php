@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Entity\Menu;
 
 use PHPUnit\Framework\TestCase;
@@ -6,7 +9,7 @@ use Spipu\UiBundle\Entity\Menu\Item;
 
 class ItemTest extends TestCase
 {
-    public function testEntity()
+    public function testEntity(): void
     {
         Item::resetAll();
 

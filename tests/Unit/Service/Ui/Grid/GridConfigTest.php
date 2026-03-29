@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Service\Ui\Grid;
 
 use PHPUnit\Framework\TestCase;
@@ -71,7 +73,7 @@ class GridConfigTest extends TestCase
         );
     }
 
-    public function testService()
+    public function testService(): void
     {
         $service = self::getService($this);
 

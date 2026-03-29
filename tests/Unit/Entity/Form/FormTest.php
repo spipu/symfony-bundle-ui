@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Entity\Form;
 
 use PHPUnit\Framework\TestCase;
@@ -6,7 +9,7 @@ use Spipu\UiBundle\Entity\Form;
 
 class FormTest extends TestCase
 {
-    public function testEntity()
+    public function testEntity(): void
     {
         $entity = new Form\Form('code', 'entity_name');
         $this->assertSame('code', $entity->getCode());
@@ -35,7 +38,7 @@ class FormTest extends TestCase
         $this->assertSame('test.translation', $entity->getValidateSuccessMessage());
     }
 
-    public function testEntityFieldSets()
+    public function testEntityFieldSets(): void
     {
         $entity = new Form\Form('code');
 

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
@@ -8,7 +11,7 @@ use Symfony\Component\DependencyInjection\Extension\ConfigurableExtensionInterfa
 
 class SpipuUiBundleTest extends TestCase
 {
-    public function testBase()
+    public function testBase(): void
     {
         $builder = SymfonyMock::getContainerBuilder($this);
         $configurator = SymfonyMock::getContainerConfigurator($this);

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Assets;
 
 use PHPUnit\Framework\TestCase;
@@ -12,7 +15,7 @@ class AssetsTest extends TestCase
 {
     private array $availableTypes = [AssetInterface::TYPE_URL, AssetInterface::TYPE_VENDOR, AssetInterface::TYPE_URL_ZIP];
 
-    public function testBootstrap()
+    public function testBootstrap(): void
     {
         $this->assetTest(new Bootstrap(), 'bootstrap');
         $this->assetTest(new FontAwesome(), 'fontawesome');

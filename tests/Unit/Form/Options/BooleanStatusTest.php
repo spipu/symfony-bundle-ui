@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Form\Options;
 
 use Spipu\UiBundle\Form\Options\BooleanStatus;

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Entity\Grid;
 
 use PHPUnit\Framework\TestCase;
@@ -8,7 +11,7 @@ use Spipu\UiBundle\Form\Options\YesNo;
 
 class ColumnTypeTest extends TestCase
 {
-    public function testEntity()
+    public function testEntity(): void
     {
         $this->goodEntityType(Grid\ColumnType::TYPE_INTEGER);
         $this->goodEntityType(Grid\ColumnType::TYPE_DATE);
@@ -42,7 +45,7 @@ class ColumnTypeTest extends TestCase
         return $entity;
     }
 
-    public function testBadType()
+    public function testBadType(): void
     {
         $this->expectException(GridException::class);
         new Grid\ColumnType('bad-type');

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Entity\Grid;
 
 use PHPUnit\Framework\TestCase;
@@ -7,7 +10,7 @@ use Spipu\UiBundle\Exception\GridException;
 
 class GridTest extends TestCase
 {
-    public function testEntity()
+    public function testEntity(): void
     {
         $entity = new Grid\Grid('grid_code', 'grid_entity');
         $this->assertSame('grid_code', $entity->getCode());
@@ -35,7 +38,7 @@ class GridTest extends TestCase
         );
     }
 
-    public function testEntityTemplates()
+    public function testEntityTemplates(): void
     {
         $entity = new Grid\Grid('grid_code');
 
@@ -68,7 +71,7 @@ class GridTest extends TestCase
         $this->assertSame('test_config.html.twig', $entity->getTemplateConfig());
     }
 
-    public function testEntityPager()
+    public function testEntityPager(): void
     {
         $entity = new Grid\Grid('grid_code');
 
@@ -77,7 +80,7 @@ class GridTest extends TestCase
         $this->assertSame($pager, $entity->getPager());
     }
 
-    public function testEntityOptions()
+    public function testEntityOptions(): void
     {
         $entity = new Grid\Grid('grid_code');
 
@@ -85,7 +88,7 @@ class GridTest extends TestCase
         $this->assertSame(['a' => 1], $entity->getOptions());
     }
 
-    public function testEntitySortOk()
+    public function testEntitySortOk(): void
     {
         $entity = new Grid\Grid('grid_code');
         $entity->addColumn((new Grid\Column('id', 'id', 'id', 10)));
@@ -106,7 +109,7 @@ class GridTest extends TestCase
         $this->assertSame('asc', $entity->getDefaultSortOrder());
     }
 
-    public function testEntitySortBadOrder()
+    public function testEntitySortBadOrder(): void
     {
         $entity = new Grid\Grid('grid_code');
         $entity->addColumn((new Grid\Column('id', 'id', 'id', 10)));
@@ -115,7 +118,7 @@ class GridTest extends TestCase
         $entity->setDefaultSort('id', 'toto');
     }
 
-    public function testEntitySortBadColumn()
+    public function testEntitySortBadColumn(): void
     {
         $entity = new Grid\Grid('grid_code');
         $entity->addColumn((new Grid\Column('id', 'id', 'id', 10)));
@@ -124,7 +127,7 @@ class GridTest extends TestCase
         $entity->setDefaultSort('wrong');
     }
 
-    public function testEntityColumns()
+    public function testEntityColumns(): void
     {
         $entity = new Grid\Grid('grid_code');
 
@@ -188,17 +191,17 @@ class GridTest extends TestCase
         );
     }
 
-    public function testEntityRowActions()
+    public function testEntityRowActions(): void
     {
         $this->goodEntityAction('addRowAction', 'removeRowAction', 'getRowActions', 'getRowAction');
     }
 
-    public function testEntityMassAction()
+    public function testEntityMassAction(): void
     {
         $this->goodEntityAction('addMassAction', 'removeMassAction', 'getMassActions', 'getMassAction');
     }
 
-    public function testEntityGlobalAction()
+    public function testEntityGlobalAction(): void
     {
         $this->goodEntityAction('addGlobalAction', 'removeGlobalAction', 'getGlobalActions', 'getGlobalAction');
     }

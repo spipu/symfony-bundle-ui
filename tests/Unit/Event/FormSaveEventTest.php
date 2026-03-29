@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Event;
 
 use PHPUnit\Framework\TestCase;
@@ -9,7 +12,7 @@ use Symfony\Component\Form\FormInterface;
 
 class FormSaveEventTest extends TestCase
 {
-    public function testEvent()
+    public function testEvent(): void
     {
         $definition = new Form('test');
         $form = $this->createMock(FormInterface::class);

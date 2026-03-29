@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Twig;
 
 use Spipu\UiBundle\Entity\EntityInterface;
@@ -33,13 +36,13 @@ class OptionsExtensionTest extends TestCase
         return $extension;
     }
 
-    public function testExtension()
+    public function testExtension(): void
     {
         $extension = $this->getExtension();
         $this->assertTrue($extension instanceof ExtensionInterface);
     }
 
-    public function testFilters()
+    public function testFilters(): void
     {
         $allowedNames = [
             'label_from_option',
@@ -59,7 +62,7 @@ class OptionsExtensionTest extends TestCase
         $this->assertSame(count($allowedNames), count($foundNames));
     }
 
-    public function testLabelFromOption()
+    public function testLabelFromOption(): void
     {
         $GoodOption = SpipuUiMock::getOptionIntegerMock();
 
@@ -83,7 +86,7 @@ class OptionsExtensionTest extends TestCase
         $this->assertSame('yes', $extension->getLabelFromOption($object, $GoodOption));
     }
 
-    public function testLabelFromOptionNameOk()
+    public function testLabelFromOptionNameOk(): void
     {
         $serviceName = '@GoodOption';
 
@@ -99,7 +102,7 @@ class OptionsExtensionTest extends TestCase
         $this->assertSame('yes', $extension->getLabelFromOptionName(true, $serviceName));
     }
 
-    public function testLabelFromOptionNameKo()
+    public function testLabelFromOptionNameKo(): void
     {
         $serviceName = '@WrongOption';
 

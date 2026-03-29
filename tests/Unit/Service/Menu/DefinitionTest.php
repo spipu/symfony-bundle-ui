@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Service\Menu;
 
 use PHPUnit\Framework\TestCase;
@@ -8,7 +11,7 @@ use Spipu\UiBundle\Service\Menu\DefinitionInterface;
 
 class DefinitionTest extends TestCase
 {
-    public function testService()
+    public function testService(): void
     {
         $service = new Definition();
         $this->assertInstanceOf(DefinitionInterface::class, $service);

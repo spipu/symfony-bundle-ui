@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Entity\Form;
 
 use PHPUnit\Framework\TestCase;
@@ -6,7 +9,7 @@ use Spipu\UiBundle\Entity\Form;
 
 class FieldSetTest extends TestCase
 {
-    public function testEntity()
+    public function testEntity(): void
     {
         $entity = new Form\FieldSet('code', 'name', 10);
 
@@ -34,7 +37,7 @@ class FieldSetTest extends TestCase
         $this->assertSame('col-xs-12 col-md-6', $entity->getCssClass());
     }
     
-    public function testEntityFields()
+    public function testEntityFields(): void
     {
         $entity = new Form\FieldSet('code', 'name', 10);
         

@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Functional;
 
 use Spipu\CoreBundle\Tests\WebTestCase;
@@ -16,7 +18,7 @@ use Spipu\UiBundle\Command\ResetGridConfigCommand;
 
 class CommandsTest extends WebTestCase
 {
-    public function testResetGrid()
+    public function testResetGrid(): void
     {
         $commandTester = self::loadCommand(
             ResetGridConfigCommand::class,

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Form;
 
 use PHPUnit\Framework\TestCase;
@@ -12,7 +15,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class GenericTypeTest extends TestCase
 {
 
-    public function testForm()
+    public function testForm(): void
     {
         $form = new GenericType();
 

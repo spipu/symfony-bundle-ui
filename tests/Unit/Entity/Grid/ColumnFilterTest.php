@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Entity\Grid;
 
 use PHPUnit\Framework\TestCase;
@@ -6,7 +9,7 @@ use Spipu\UiBundle\Entity\Grid;
 
 class ColumnFilterTest extends TestCase
 {
-    public function testEntity()
+    public function testEntity(): void
     {
         $entity = new Grid\ColumnFilter(true);
         $this->assertSame(true, $entity->isFilterable());

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Entity\Form;
 
 use PHPUnit\Framework\TestCase;
@@ -6,7 +9,7 @@ use Spipu\UiBundle\Entity\Form;
 
 class FieldConstraintTest extends TestCase
 {
-    public function testEntity()
+    public function testEntity(): void
     {
         $entity = new Form\FieldConstraint('field1', 'field2', 'value');
         $this->assertSame('field1', $entity->getCode());

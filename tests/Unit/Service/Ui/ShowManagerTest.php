@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Service\Ui;
 
 use Spipu\UiBundle\Event\FormDefinitionEvent;
@@ -23,7 +26,7 @@ class ShowManagerTest extends AbstractTest
         );
     }
 
-    public function testManager()
+    public function testManager(): void
     {
         $container = $this->getContainerMock();
         $definition = SpipuUiMock::getEntityDefinitionMock();
@@ -59,7 +62,7 @@ class ShowManagerTest extends AbstractTest
         $this->assertSame('From template', $manager->display());
     }
 
-    public function testMissingResource()
+    public function testMissingResource(): void
     {
         $container = $this->getContainerMock();
         $definition = SpipuUiMock::getEntityDefinitionMock();

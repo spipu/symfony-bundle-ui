@@ -268,7 +268,6 @@ class GridRequest
         $this->quickSearch['field'] = (string) $this->quickSearch['field'];
         $this->quickSearch['value'] = trim((string) $this->quickSearch['value']);
 
-
         $column = $this->definition->getColumn($this->quickSearch['field']);
         if ($column === null || !$column->getFilter()->isQuickSearch() || $this->quickSearch['value'] === '') {
             $this->quickSearch = [];

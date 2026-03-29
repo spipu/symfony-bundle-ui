@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Form\Options;
 
 use Spipu\UiBundle\Form\Options\OptionsInterface;
@@ -10,7 +13,7 @@ abstract class AbstractTest extends TestCase
 
     abstract public function getValues(): array;
 
-    public function testValues()
+    public function testValues(): void
     {
         $option = $this->getOption();
         $values = $this->getValues();

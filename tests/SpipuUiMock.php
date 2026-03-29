@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -33,7 +35,7 @@ class SpipuUiMock extends TestCase
      * @param array $getValues
      * @return GridRequest
      */
-    public static function getGridRequest(TestCase $testCase, Grid\Grid $definition, array $getValues = [])
+    public static function getGridRequest(TestCase $testCase, Grid\Grid $definition, array $getValues = []): GridRequest
     {
         $gridRequest = new GridRequest(
             SymfonyMock::getRequestStack($testCase, $getValues)->getCurrentRequest(),
@@ -44,32 +46,32 @@ class SpipuUiMock extends TestCase
         return $gridRequest;
     }
 
-    public static function getResourceMock()
+    public static function getResourceMock(): ResourceMock
     {
         return new ResourceMock();
     }
 
-    public static function getGridDefinitionMock()
+    public static function getGridDefinitionMock(): GridDefinitionMock
     {
         return new GridDefinitionMock();
     }
 
-    public static function getEntityDefinitionMock()
+    public static function getEntityDefinitionMock(): EntityDefinitionMock
     {
         return new EntityDefinitionMock();
     }
 
-    public static function getDataProviderMock()
+    public static function getDataProviderMock(): DataProviderMock
     {
         return new DataProviderMock();
     }
 
-    public static function getOptionStringMock()
+    public static function getOptionStringMock(): OptionStringMock
     {
         return new OptionStringMock();
     }
 
-    public static function getOptionIntegerMock()
+    public static function getOptionIntegerMock(): OptionIntegerMock
     {
         return new OptionIntegerMock();
     }

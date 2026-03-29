@@ -29,7 +29,7 @@ class Form
     private string $templateView = '@SpipuUi/entity/view.html.twig';
     private string $validateSuccessMessage = 'spipu.ui.success.saved';
 
-    public function __construct(string $code, string $entityClassName = null)
+    public function __construct(string $code, ?string $entityClassName = null)
     {
         $this->code = $code;
         $this->entityClassName = $entityClassName;

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Entity\Form;
 
 use PHPUnit\Framework\TestCase;
@@ -11,7 +14,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class FieldTest extends TestCase
 {
-    public function testEntity()
+    public function testEntity(): void
     {
         $entity = new Form\Field('code', 'text', 10, []);
         $this->assertSame('code', $entity->getCode());
@@ -75,7 +78,7 @@ class FieldTest extends TestCase
         $this->assertEmpty($entity->getConstraintsAsArray());
     }
 
-    public function testEntityTemplate()
+    public function testEntityTemplate(): void
     {
         $entity = new Form\Field('code', Type\DateType::class, 10, []);
         $this->assertSame('@SpipuUi/entity/view/date.html.twig', $entity->getTemplateView());
@@ -96,7 +99,7 @@ class FieldTest extends TestCase
         $this->assertSame('view.html.twig', $entity->getTemplateView());
     }
 
-    public function testEntityLabel()
+    public function testEntityLabel(): void
     {
         $entity = new Form\Field('code', Type\TextType::class, 10, []);
         $this->assertSame(null, $entity->getLabel());
@@ -108,7 +111,7 @@ class FieldTest extends TestCase
         $this->assertSame('other', $entity->getLabel());
     }
 
-    public function testEntityChoice()
+    public function testEntityChoice(): void
     {
         $yesNo = new YesNo();
 
@@ -125,7 +128,7 @@ class FieldTest extends TestCase
         $entity->addOption('choices', new stdClass());
     }
 
-    public function testEntityOptions()
+    public function testEntityOptions(): void
     {
         $entity = new Form\Field('code', Type\TextType::class, 10, []);
         $this->assertSame([], $entity->getOptions());

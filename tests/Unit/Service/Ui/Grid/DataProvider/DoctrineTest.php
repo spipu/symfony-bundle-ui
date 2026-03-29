@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Service\Ui\Grid\DataProvider;
 
 use Spipu\CoreBundle\Tests\SymfonyMock;
@@ -10,7 +13,7 @@ use Spipu\UiBundle\Tests\Unit\Service\Ui\AbstractTest;
 
 class DoctrineTest extends AbstractTest
 {
-    public function testValidateWrongMissingAll()
+    public function testValidateWrongMissingAll(): void
     {
         $containerMock = $this->getContainerMock();
 
@@ -20,7 +23,7 @@ class DoctrineTest extends AbstractTest
         $service->validate();
     }
 
-    public function testValidateWrongMissingRequest()
+    public function testValidateWrongMissingRequest(): void
     {
         $containerMock = $this->getContainerMock();
         $definition    = SpipuUiMock::getGridDefinitionMock();
@@ -32,7 +35,7 @@ class DoctrineTest extends AbstractTest
         $service->validate();
     }
 
-    public function testValidateWrongMissingDefinition()
+    public function testValidateWrongMissingDefinition(): void
     {
         $containerMock = $this->getContainerMock();
         $requestMock   = $this->createMock(GridRequest::class);
@@ -44,7 +47,7 @@ class DoctrineTest extends AbstractTest
         $service->validate();
     }
 
-    public function testClone()
+    public function testClone(): void
     {
         $containerMock = $this->getContainerMock();
         $requestMock   = $this->createMock(GridRequest::class);
@@ -60,7 +63,7 @@ class DoctrineTest extends AbstractTest
         $clonedService->validate();
     }
 
-    public function testValidateOk()
+    public function testValidateOk(): void
     {
         $requestMock   = $this->createMock(GridRequest::class);
         $definition    = SpipuUiMock::getGridDefinitionMock();

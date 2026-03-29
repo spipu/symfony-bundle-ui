@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Service\Ui;
 
 use Spipu\UiBundle\Entity\EntityInterface;
@@ -39,7 +42,7 @@ class GridManagerTest extends AbstractTest
         );
     }
 
-    public function testManager()
+    public function testManager(): void
     {
         $dataProviderMock = SpipuUiMock::getDataProviderMock();
         $dataProviderMock->setNbEntities(100);
@@ -75,7 +78,7 @@ class GridManagerTest extends AbstractTest
         $this->assertEmpty($manager->getInfoPages());
     }
 
-    public function testManagerPager()
+    public function testManagerPager(): void
     {
         /** @var Request $request */
 
@@ -323,7 +326,7 @@ class GridManagerTest extends AbstractTest
         $this->assertSame('/test/?t=1&pc=1&pl=50', $manager->getPageLengthUrl(50));
     }
 
-    public function testManagerSort()
+    public function testManagerSort(): void
     {
         // Prepare the grid definition
         $definition = SpipuUiMock::getGridDefinitionMock();
@@ -368,7 +371,7 @@ class GridManagerTest extends AbstractTest
         $this->assertSame('/test/?t=1&pc=1&pl=10000&sc=field_b_a&so=asc', $manager->getSortUrl('field_b_a', 'asc'));
     }
 
-    public function testManagerFilter()
+    public function testManagerFilter(): void
     {
         // Prepare the grid definition
         $definition = SpipuUiMock::getGridDefinitionMock();
@@ -476,7 +479,7 @@ class GridManagerTest extends AbstractTest
         $this->assertSame($expected, $manager->getInfoFilters());
     }
 
-    public function testManagerValues()
+    public function testManagerValues(): void
     {
         // Prepare the grid definition
         $definition = SpipuUiMock::getGridDefinitionMock();
@@ -494,7 +497,7 @@ class GridManagerTest extends AbstractTest
         $manager->getValue($row, 'wrongField');
     }
 
-    public function testManagerGranted()
+    public function testManagerGranted(): void
     {
         // Prepare the grid definition
         $definition = SpipuUiMock::getGridDefinitionMock();
@@ -590,7 +593,7 @@ class GridManagerTest extends AbstractTest
         $manager->isGrantedAction($action->setConditions(['fieldAA'  => ['wrong' => 1]]), $row);
     }
 
-    public function testManagerBadProvider()
+    public function testManagerBadProvider(): void
     {
         $container = $this->getContainerMock(['data_provider' => new stdClass()]);
         $definition = SpipuUiMock::getGridDefinitionMock();
@@ -601,7 +604,7 @@ class GridManagerTest extends AbstractTest
         $factory->create($definition);
     }
 
-    public function testManagerMissingRoute()
+    public function testManagerMissingRoute(): void
     {
         $container = $this->getContainerMock(['data_provider' => SpipuUiMock::getDataProviderMock()]);
 
@@ -614,7 +617,7 @@ class GridManagerTest extends AbstractTest
         $manager->validate();
     }
 
-    public function testDataProviderDoctrine()
+    public function testDataProviderDoctrine(): void
     {
         $definition = SpipuUiMock::getGridDefinitionMock();
 

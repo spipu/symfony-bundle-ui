@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Entity;
 
 use DateTimeInterface;
@@ -7,7 +10,7 @@ use Spipu\UiBundle\Entity\TimestampableTrait;
 
 class TimestampableTest extends TestCase
 {
-    public function testEntity()
+    public function testEntity(): void
     {
         $entity = new TimestampableEntity();
 

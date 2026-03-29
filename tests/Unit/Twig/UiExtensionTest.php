@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Spipu\UiBundle\Tests\Unit\Twig;
 
 use PHPUnit\Framework\TestCase;
@@ -33,13 +36,13 @@ class UiExtensionTest extends TestCase
         return $extension;
     }
 
-    public function testExtension()
+    public function testExtension(): void
     {
         $extension = $this->getExtension();
         $this->assertTrue($extension instanceof ExtensionInterface);
     }
 
-    public function testFunctions()
+    public function testFunctions(): void
     {
         $allowedNames = [
             'renderManager',
@@ -62,7 +65,7 @@ class UiExtensionTest extends TestCase
         $this->assertSame(count($allowedNames), count($foundNames));
     }
 
-    public function testGetMenu()
+    public function testGetMenu(): void
     {
         Item::resetAll();
 
@@ -76,7 +79,7 @@ class UiExtensionTest extends TestCase
         Item::resetAll();
     }
 
-    public function testRenderManager()
+    public function testRenderManager(): void
     {
         $mockManager = $this->createMock(UiManagerInterface::class);
         $mockManager
