@@ -262,7 +262,7 @@ class GridManager implements GridManagerInterface
         return $this->definition->getActionLimit();
     }
 
-    public function isGrantedAction(GridAction $action, EntityInterface $object = null): bool
+    public function isGrantedAction(GridAction $action, ?EntityInterface $object = null): bool
     {
         if ($action->getNeededRole() && !$this->authorizationChecker->isGranted($action->getNeededRole())) {
             return false;

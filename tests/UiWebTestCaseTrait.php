@@ -65,7 +65,7 @@ trait UiWebTestCaseTrait
 
     protected function getGridPropertiesCount(Crawler $crawler, string $gridCode): array
     {
-        $countLabel = trim($crawler->filter("span[data-grid-code=${gridCode}][data-grid-role=total-rows]")->text());
+        $countLabel = trim($crawler->filter("span[data-grid-code=$gridCode][data-grid-role=total-rows]")->text());
 
         $countNb = null;
         if ($countLabel === 'No item found') {
@@ -86,7 +86,7 @@ trait UiWebTestCaseTrait
 
     protected function getGridPropertiesDisplayList(Crawler $crawler, string $gridCode): array
     {
-        $configOptions = $crawler->filter("select[data-grid-code=${gridCode}][data-grid-role=config-select] option");
+        $configOptions = $crawler->filter("select[data-grid-code=$gridCode][data-grid-role=config-select] option");
         $options = [];
         $configOptions->each(function (Crawler $configOption) use (&$options) {
             $options[strtolower(trim($configOption->text()))] = [
@@ -100,7 +100,7 @@ trait UiWebTestCaseTrait
 
     protected function getGridPropertiesColumns(Crawler $crawler, string $gridCode): array
     {
-        $nodes = $crawler->filter("th[data-grid-code=${gridCode}][data-grid-role=header-column]");
+        $nodes = $crawler->filter("th[data-grid-code=$gridCode][data-grid-role=header-column]");
 
         $columns = [];
         $nodes->each(function (Crawler $node) use (&$columns) {
@@ -126,7 +126,7 @@ trait UiWebTestCaseTrait
 
     protected function getGridPropertiesRows(Crawler $crawler, string $gridCode): array
     {
-        $rowNodes = $crawler->filter("tr[data-grid-code=${gridCode}][data-grid-role=row]");
+        $rowNodes = $crawler->filter("tr[data-grid-code=$gridCode][data-grid-role=row]");
 
         $rows = [];
         $rowNodes->each(function (Crawler $rowNode) use (&$rows) {
