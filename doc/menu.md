@@ -85,7 +85,7 @@ Pass the `code` of the currently active item to `getMenu()`. The `Manager` servi
 
 ### `Menu\Manager` access rules
 
-- `setACL(null)` — always visible (default when `setACL` is not called)
+- (not called) — always visible (default)
 - `setACL(false)` — visible only when the user is **not** authenticated
 - `setACL(true)` — visible only when authenticated
 - `setACL(true, 'ROLE_FOO')` — visible only when authenticated and granted `ROLE_FOO`
