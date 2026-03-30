@@ -27,7 +27,7 @@ class FormSaveEvent extends AbstractFormEvent
     public function __construct(
         Form $formDefinition,
         FormInterface $form,
-        EntityInterface $resource = null
+        ?EntityInterface $resource = null
     ) {
         parent::__construct($formDefinition);
         $this->form = $form;

@@ -364,7 +364,7 @@ class GridRequest
         return $this->filters;
     }
 
-    public function getFilter(string $key, string $subKey = null): string
+    public function getFilter(string $key, ?string $subKey = null): string
     {
         if (!array_key_exists($key, $this->filters)) {
             return '';

@@ -78,7 +78,7 @@ class Grid
 
     public function __construct(
         string $code,
-        string $entityName = null
+        ?string $entityName = null
     ) {
         $this->code = $code;
         $this->entityName = $entityName;
