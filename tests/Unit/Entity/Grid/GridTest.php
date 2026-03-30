@@ -206,7 +206,7 @@ class GridTest extends TestCase
         $this->goodEntityAction('addGlobalAction', 'removeGlobalAction', 'getGlobalActions', 'getGlobalAction');
     }
 
-    private function goodEntityAction(string $methodAdd, string $methodRemove, string $methodGetAll, string $methodGet)
+    private function goodEntityAction(string $methodAdd, string $methodRemove, string $methodGetAll, string $methodGet): void
     {
         $entity = new Grid\Grid('grid_code');
 

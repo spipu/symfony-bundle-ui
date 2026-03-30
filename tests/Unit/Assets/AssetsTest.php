@@ -23,7 +23,7 @@ class AssetsTest extends TestCase
         $this->assetTest(new Popper(), 'popper');
     }
 
-    private function assetTest($asset, string $code)
+    private function assetTest(AssetInterface $asset, string $code): void
     {
         $this->assertInstanceOf(AssetInterface::class, $asset);
 
