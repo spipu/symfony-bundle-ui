@@ -575,7 +575,7 @@ class GridManagerTest extends AbstractTest
         $this->assertTrue(
             $manager->isGrantedAction(
                 $action->setConditions(
-                    ['fieldAA' => ['callback' => function ($row) { return $row->getFieldAA() === 1; }]]
+                    ['fieldAA' => ['callback' => function (EntityInterface $row): bool { return $row->getFieldAA() === 1; }]]
                 ),
                 $row
             )
@@ -583,7 +583,7 @@ class GridManagerTest extends AbstractTest
         $this->assertFalse(
             $manager->isGrantedAction(
                 $action->setConditions(
-                    ['fieldAA' => ['callback' => function ($row) { return $row->getFieldAA() === 2; }]]
+                    ['fieldAA' => ['callback' => function (EntityInterface $row): bool { return $row->getFieldAA() === 2; }]]
                 ),
                 $row
             )
@@ -633,15 +633,10 @@ class GridManagerTest extends AbstractTest
         $this->assertTrue(true);
     }
 
-    /**
-     * @param GridDefinitionInterface $definition
-     * @param array $getValues
-     * @return GridManager
-     */
     private function prepareManagerReset(
         GridDefinitionInterface $definition,
         array $getValues = []
-    ) {
+    ): GridManager {
         // Prepare the data provider
         $dataProviderMock = SpipuUiMock::getDataProviderMock();
         $dataProviderMock->setNbEntities(999);
@@ -658,7 +653,7 @@ class GridManagerTest extends AbstractTest
         ContainerInterface $container,
         GridDefinitionInterface $definition,
         array $getValues = []
-    ) {
+    ): GridManager {
         /** @var Request $request */
         $request = $container->get('request_stack')->getCurrentRequest();
         $request->initialize($getValues);

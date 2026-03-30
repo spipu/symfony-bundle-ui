@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class AbstractTest extends TestCase
 {
-    protected function getContainerMock($services = []): ContainerInterface
+    protected function getContainerMock(array $services = []): ContainerInterface
     {
         $services = array_merge(
             [
