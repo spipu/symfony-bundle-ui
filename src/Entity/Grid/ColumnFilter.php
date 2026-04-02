@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Entity\Grid;
 
+use Closure;
+
 class ColumnFilter
 {
     private bool $filterable;
@@ -22,6 +24,7 @@ class ColumnFilter
     private bool $multipleValues;
     private ?string $templateFilter = null;
     private ?string $columnType = null;
+    private ?Closure $valueTransformer = null;
 
     /**
      * Pager constructor.
@@ -134,6 +137,21 @@ class ColumnFilter
     {
         $this->multipleValues = $multipleValues;
         $this->range = false;
+
+        return $this;
+    }
+
+    public function getValueTransformer(): ?Closure
+    {
+        return $this->valueTransformer;
+    }
+
+    /**
+     * Format: function(string $value): string
+     */
+    public function setValueTransformer(Closure $valueTransformer): self
+    {
+        $this->valueTransformer = $valueTransformer;
 
         return $this;
     }

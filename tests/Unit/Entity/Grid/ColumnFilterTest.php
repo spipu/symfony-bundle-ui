@@ -109,5 +109,14 @@ class ColumnFilterTest extends TestCase
         $this->assertSame('test.html.twig', $entity->getTemplateFilter());
         $entity->linkToColumnType($type);
         $this->assertSame('test.html.twig', $entity->getTemplateFilter());
+
+        // ValueTransformer - default state
+        $entity = new Grid\ColumnFilter(true);
+        $this->assertNull($entity->getValueTransformer());
+
+        // ValueTransformer - with transformer
+        $result = $entity->setValueTransformer(fn(string $v): string => strtoupper($v));
+        $this->assertSame($entity, $result);
+        $this->assertNotNull($entity->getValueTransformer());
     }
 }

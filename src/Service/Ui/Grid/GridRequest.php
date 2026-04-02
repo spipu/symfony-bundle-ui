@@ -357,7 +357,7 @@ class GridRequest
     }
 
     /**
-     * @return string[]
+     * @return array<string, string|string[]|array<string, string>>
      */
     public function getFilters(): array
     {

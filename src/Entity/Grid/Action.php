@@ -122,6 +122,9 @@ class Action implements PositionInterface
         return $this->buildCallback;
     }
 
+    /**
+     * Format: function(RouterInterface $router, Action $action, array $actionParams, ?EntityInterface $row): string
+     */
     public function setBuildCallback(?callable $buildCallback): self
     {
         $this->buildCallback = $buildCallback;

@@ -63,6 +63,32 @@ class DoctrineTest extends AbstractTest
         $clonedService->validate();
     }
 
+    public function testValueTransformer(): void
+    {
+        $definition = SpipuUiMock::getGridDefinitionMock();
+        $grid = $definition->getDefinition();
+        $requestMock = $this->createMock(GridRequest::class);
+
+        $entityManager = SymfonyMock::getEntityManager($this);
+        $service = new Doctrine($entityManager);
+        $service->setGridDefinition($grid);
+        $service->setGridRequest($requestMock);
+
+        $column = $grid->getColumn('field_b_a');
+
+        // Default: no transformer
+        $this->assertNull($column->getFilter()->getValueTransformer());
+        $this->assertSame('test', $service->applyValueTransformer($column, 'test'));
+
+        // With transformer
+        $column->getFilter()->setValueTransformer(fn(string $v): string => strtoupper($v));
+        $this->assertSame('TEST', $service->applyValueTransformer($column, 'test'));
+
+        // Replacement
+        $column->getFilter()->setValueTransformer(fn(string $v): string => strrev($v));
+        $this->assertSame('tset', $service->applyValueTransformer($column, 'test'));
+    }
+
     public function testValidateOk(): void
     {
         $requestMock   = $this->createMock(GridRequest::class);
@@ -84,9 +110,8 @@ class DoctrineTest extends AbstractTest
 
         $this->assertSame($filters, $service->getFilters());
 
-        $newFilters = ['new' => true];
-        $service->forceFilters($newFilters);
-        $this->assertSame($newFilters, $service->getFilters());
+        $service->forceFilters(['new' => true]);
+        $this->assertSame(['new' => '1'], $service->getFilters());
 
         $service->resetDataProvider();
         $this->assertSame($filters, $service->getFilters());

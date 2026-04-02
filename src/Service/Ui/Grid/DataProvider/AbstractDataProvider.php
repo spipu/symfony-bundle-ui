@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Service\Ui\Grid\DataProvider;
 
+use Spipu\UiBundle\Entity\Grid\Column;
 use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Service\Ui\Grid\GridRequest;
 use Spipu\UiBundle\Entity\Grid\Grid as GridDefinition;
@@ -70,6 +71,9 @@ abstract class AbstractDataProvider implements DataProviderInterface
 
     public function forceFilters(array $filters): void
     {
+        array_walk_recursive($filters, function (mixed &$value): void {
+            $value = (string) $value;
+        });
         $this->filters = $filters;
     }
 
@@ -82,5 +86,15 @@ abstract class AbstractDataProvider implements DataProviderInterface
         }
 
         return $this->request->getFilters();
+    }
+
+    public function applyValueTransformer(Column $column, ?string $value): ?string
+    {
+        $transformer = $column->getFilter()->getValueTransformer();
+        if ($transformer === null || $value === null) {
+            return $value;
+        }
+
+        return $transformer($value);
     }
 }

@@ -145,6 +145,7 @@ class Doctrine extends AbstractDataProvider
             return $parameters;
         }
 
+        $value = $this->applyValueTransformer($column, (string) $value);
         $where->add($queryBuilder->expr()->like($entityField, ':' . $code));
         $parameters[':' . $code] = '%' . $value . '%';
 
@@ -155,13 +156,14 @@ class Doctrine extends AbstractDataProvider
         QueryBuilder $queryBuilder,
         Andx $where,
         string $code,
-        mixed $value
+        ?string $value
     ): array {
         $parameters = [];
 
         $column = $this->definition->getColumn($code);
         $entityField = $this->getFieldFromColumn($column);
 
+        $value = $this->applyValueTransformer($column, $value);
         $where->add($queryBuilder->expr()->like($entityField, ':' . $code));
         $parameters[':' . $code] = $value . '%';
 

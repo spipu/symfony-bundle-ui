@@ -191,6 +191,7 @@ new ColumnFilter(bool $filterable = false, bool $quickSearch = false)
 | `useExactValue(bool $exactValue = true)` | Use exact-match (`=`) instead of LIKE for text columns |
 | `useMultipleValues(bool $multipleValues)` | Accept multiple values (renders `select-multiple` template) |
 | `setTemplateFilter(string $template)` | Override the filter Twig template |
+| `setValueTransformer(Closure $transformer)` | Set a closure `fn(string $value): string` to transform the filter value before query building (text/LIKE and quickSearch only) |
 
 The default filter template is derived from the linked `ColumnType`: `@SpipuUi/grid/filter/<type>.html.twig`. For `useMultipleValues(true)` the template becomes `@SpipuUi/grid/filter/<type>-multiple.html.twig`. Available filter templates: `text`, `integer`, `float`, `select`, `select-multiple`, `date`, `datetime`, `color`.
 
@@ -199,6 +200,24 @@ The filter type behavior depends on the column's `ColumnType`:
 - Columns with `useRange()` use `>=` / `<=` comparisons
 - Columns with `useExactValue()` use `=`
 - All other text-like columns default to a LIKE `%value%` search
+
+### Value Transformer
+
+`setValueTransformer()` allows transforming the user input before it is used in the query. It applies only to text/LIKE filters and quickSearch — range, select, and exactValue filters are not affected.
+
+```php
+->addColumn(
+    (new Column('email', 'user.field.email', 'email', 25))
+        ->setType(new ColumnType(ColumnType::TYPE_TEXT))
+        ->setFilter(
+            (new ColumnFilter(true, true))
+                ->setValueTransformer(fn(string $v): string => mb_strtolower($v))
+        )
+        ->useSortable()
+)
+```
+
+The transformer is applied in the `DataProvider` via `applyValueTransformer(Column $column, ?string $value): ?string`, available on `AbstractDataProvider`. Custom data providers can call this method to benefit from the transformer.
 
 ## Actions (`Action`)
 
