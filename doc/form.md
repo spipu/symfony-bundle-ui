@@ -204,6 +204,7 @@ These render an input with a unit suffix label.
 The `FormFactory` service creates a `FormManagerInterface` from your definition:
 
 ```php
+use Spipu\CoreBundle\Controller\AbstractController
 use Spipu\UiBundle\Service\Ui\FormFactory;
 
 class UserController extends AbstractController
@@ -263,6 +264,7 @@ In the Twig template, use the `renderManager` function:
 Use `ShowFactory` to display an entity without an edit form:
 
 ```php
+use Spipu\CoreBundle\Controller\AbstractController
 use Spipu\UiBundle\Service\Ui\ShowFactory;
 
 class UserController extends AbstractController
