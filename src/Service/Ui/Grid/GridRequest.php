@@ -113,10 +113,10 @@ class GridRequest
 
         if ($this->definition->getPager()) {
             $this->pageLength = (int) $this->getSessionValue('page_length', $this->pageLength);
-            $this->pageLength = (int) $this->request->get(self::KEY_PAGE_LENGTH, $this->pageLength);
+            $this->pageLength = (int) $this->request->query->get(self::KEY_PAGE_LENGTH, $this->pageLength);
 
             $this->pageCurrent = (int) $this->getSessionValue('page_current', $this->pageCurrent);
-            $this->pageCurrent = (int) $this->request->get(self::KEY_PAGE_CURRENT, $this->pageCurrent);
+            $this->pageCurrent = (int) $this->request->query->get(self::KEY_PAGE_CURRENT, $this->pageCurrent);
 
             if (!in_array($this->pageLength, $this->definition->getPager()->getLengths(), true)) {
                 $this->pageLength = $this->definition->getPager()->getDefaultLength();
@@ -135,11 +135,11 @@ class GridRequest
     {
         $this->sortColumn = ($this->gridConfig ? ($this->gridConfig->getConfigSortColumn() ?? '') : '');
         $this->sortColumn = (string) $this->getSessionValue('sort_column', $this->sortColumn);
-        $this->sortColumn = (string) $this->request->get(self::KEY_SORT_COLUMN, $this->sortColumn);
+        $this->sortColumn = (string) $this->request->query->get(self::KEY_SORT_COLUMN, $this->sortColumn);
 
         $this->sortOrder = ($this->gridConfig ? ($this->gridConfig->getConfigSortOrder() ?? '') : '');
         $this->sortOrder = (string) $this->getSessionValue('sort_order', $this->sortOrder);
-        $this->sortOrder = (string) $this->request->get(self::KEY_SORT_ORDER, $this->sortOrder);
+        $this->sortOrder = (string) $this->request->query->get(self::KEY_SORT_ORDER, $this->sortOrder);
 
         if ($this->sortColumn === '') {
             $this->sortColumn = $this->definition->getDefaultSortColumn();
@@ -163,7 +163,7 @@ class GridRequest
 
     public function getConfigParams(): ?array
     {
-        $params = (array) $this->request->get(self::KEY_CONFIG, []);
+        $params = $this->request->query->all(self::KEY_CONFIG);
 
         $this->gridConfigId = $this->getSessionValue('config_id', null);
         if (array_key_exists('id', $params) && is_numeric($params['id'])) {
@@ -205,7 +205,9 @@ class GridRequest
     {
         $this->filters = ($this->gridConfig ? $this->gridConfig->getConfigFilters() : []);
         $this->filters = $this->getSessionValue('filters', $this->filters);
-        $this->filters = (array) $this->request->get(self::KEY_FILTERS, $this->filters);
+        if ($this->request->query->has(self::KEY_FILTERS)) {
+            $this->filters = $this->request->query->all(self::KEY_FILTERS);
+        }
 
         foreach ($this->filters as $key => $value) {
             $column = $this->definition->getColumn($key);
@@ -257,7 +259,9 @@ class GridRequest
     {
         $this->quickSearch = [];
         $this->quickSearch = $this->getSessionValue('quick_search', $this->quickSearch);
-        $this->quickSearch = (array) $this->request->get(self::KEY_QUICK_SEARCH, $this->quickSearch);
+        if ($this->request->query->has(self::KEY_QUICK_SEARCH)) {
+            $this->quickSearch = $this->request->query->all(self::KEY_QUICK_SEARCH);
+        }
 
         if (!array_key_exists('field', $this->quickSearch) || !array_key_exists('value', $this->quickSearch)) {
             $this->quickSearch = [];
