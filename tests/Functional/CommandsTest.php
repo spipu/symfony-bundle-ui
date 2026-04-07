@@ -13,9 +13,13 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Functional;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Spipu\CoreBundle\Tests\WebTestCase;
 use Spipu\UiBundle\Command\ResetGridConfigCommand;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(ResetGridConfigCommand::class)]
 class CommandsTest extends WebTestCase
 {
     public function testResetGrid(): void

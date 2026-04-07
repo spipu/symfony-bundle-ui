@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Assets;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\CoreBundle\Assets\AssetInterface;
 use Spipu\UiBundle\Assets\Bootstrap;
@@ -11,6 +13,11 @@ use Spipu\UiBundle\Assets\FontAwesome;
 use Spipu\UiBundle\Assets\Jquery;
 use Spipu\UiBundle\Assets\Popper;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(Bootstrap::class)]
+#[CoversClass(FontAwesome::class)]
+#[CoversClass(Jquery::class)]
+#[CoversClass(Popper::class)]
 class AssetsTest extends TestCase
 {
     private array $availableTypes = [AssetInterface::TYPE_URL, AssetInterface::TYPE_VENDOR, AssetInterface::TYPE_URL_ZIP];

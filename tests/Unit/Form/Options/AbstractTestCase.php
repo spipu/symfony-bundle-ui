@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Form\Options;
 
+use PHPUnit\Framework\Attributes\CoversNothing;
 use Spipu\UiBundle\Form\Options\OptionsInterface;
 use PHPUnit\Framework\TestCase;
 
-abstract class AbstractTest extends TestCase
+#[CoversNothing]
+abstract class AbstractTestCase extends TestCase
 {
     abstract public function getOption(): OptionsInterface;
 

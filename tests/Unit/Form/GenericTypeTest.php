@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Form;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\UiBundle\Entity\Form;
 use Spipu\UiBundle\Form\GenericType;
 use Spipu\UiBundle\Tests\SpipuUiMock;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(GenericType::class)]
 class GenericTypeTest extends TestCase
 {
 
@@ -78,40 +82,24 @@ class GenericTypeTest extends TestCase
         ;
 
         $formBuilder = $this->createMock(FormBuilderInterface::class);
+        $matcher = $this->exactly(3);
         $formBuilder
-            ->expects($this->exactly(3))
+            ->expects($matcher)
             ->method('add')
-            ->withConsecutive(
-                [
-                    $this->equalTo('field_2_2'),
-                    $this->equalTo(Type\TextType::class),
-                    $this->equalTo(
-                        ['label' => 'Field 2.2']
+            ->willReturnCallback(function (string $child, ?string $type = null, array $fieldOptions = []) use ($matcher, $formBuilder, $options): FormBuilderInterface {
+                match ($matcher->numberOfInvocations()) {
+                    1 => $this->assertSame(['field_2_2', Type\TextType::class, ['label' => 'Field 2.2']], [$child, $type, $fieldOptions]),
+                    2 => $this->assertSame(
+                        ['field_2_3', Type\ChoiceType::class, ['label' => 'Field 2.3', 'required' => false, 'choices' => $options->getOptionsWithEmptyValueInverse()]],
+                        [$child, $type, $fieldOptions]
                     ),
-                ],
-                [
-                    $this->equalTo('field_2_3'),
-                    $this->equalTo(Type\ChoiceType::class),
-                    $this->equalTo(
-                        [
-                            'label' => 'Field 2.3',
-                            'required' => false,
-                            'choices' => $options->getOptionsWithEmptyValueInverse()
-                        ]
+                    3 => $this->assertSame(
+                        ['field_2_4', Type\ChoiceType::class, ['label' => 'Field 2.4', 'required' => true, 'choices' => $options->getOptionsInverse()]],
+                        [$child, $type, $fieldOptions]
                     ),
-                ],
-                [
-                    $this->equalTo('field_2_4'),
-                    $this->equalTo(Type\ChoiceType::class),
-                    $this->equalTo(
-                        [
-                            'label' => 'Field 2.4',
-                            'required' => true,
-                            'choices' => $options->getOptionsInverse()
-                        ]
-                    ),
-                ]
-            );
+                };
+                return $formBuilder;
+            });
 
         $form->buildForm($formBuilder, ['form_definition' => $definition]);
     }

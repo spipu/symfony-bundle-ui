@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Entity\Menu;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\UiBundle\Entity\Menu\Item;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(Item::class)]
 class ItemTest extends TestCase
 {
     public function testEntity(): void

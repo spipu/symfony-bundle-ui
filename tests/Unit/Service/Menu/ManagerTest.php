@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Service\Menu;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\UiBundle\Entity\Menu\Item;
 use Spipu\UiBundle\Service\Menu\DefinitionInterface;
 use Spipu\UiBundle\Service\Menu\Manager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(Manager::class)]
 class ManagerTest extends TestCase
 {
     public function testServiceActive(): void
@@ -46,13 +50,11 @@ class ManagerTest extends TestCase
         $authorizationChecker
             ->expects($this->atLeastOnce())
             ->method('isGranted')
-            ->will(
-                $this->returnValueMap(
+            ->willReturnMap(
                     [
                         ['IS_AUTHENTICATED_REMEMBERED', null, false],
                         ['ROLE_TEST', null, false],
                     ]
-                )
             );
 
         $definition = new MenuDefinition();
@@ -83,13 +85,11 @@ class ManagerTest extends TestCase
         $authorizationChecker
             ->expects($this->atLeastOnce())
             ->method('isGranted')
-            ->will(
-                $this->returnValueMap(
+            ->willReturnMap(
                     [
                         ['IS_AUTHENTICATED_REMEMBERED', null, true],
                         ['ROLE_TEST', null, false],
                     ]
-                )
             );
 
         $definition = new MenuDefinition();
@@ -120,13 +120,11 @@ class ManagerTest extends TestCase
         $authorizationChecker
             ->expects($this->atLeastOnce())
             ->method('isGranted')
-            ->will(
-                $this->returnValueMap(
+            ->willReturnMap(
                     [
                         ['IS_AUTHENTICATED_REMEMBERED', null, true],
                         ['ROLE_TEST', null, true],
                     ]
-                )
             );
 
         $definition = new MenuDefinition();

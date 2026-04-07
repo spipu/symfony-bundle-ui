@@ -4,24 +4,28 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Service\Ui;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Entity\Grid;
 use Spipu\UiBundle\Event\GridDefinitionEvent;
 use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Service\Ui\Definition\GridDefinitionInterface;
-use Spipu\UiBundle\Service\Ui\Grid\DataProvider\DataProviderInterface;
-use Spipu\UiBundle\Service\Ui\Grid\DataProvider\Doctrine;
-use Spipu\UiBundle\Service\Ui\Grid\GridRequest;
 use Spipu\UiBundle\Service\Ui\GridFactory;
 use Spipu\UiBundle\Service\Ui\GridManager;
 use Spipu\UiBundle\Service\Ui\GridManagerInterface;
+use Spipu\UiBundle\Service\Ui\Grid\DataProvider\DataProviderInterface;
+use Spipu\UiBundle\Service\Ui\Grid\DataProvider\Doctrine;
+use Spipu\UiBundle\Service\Ui\Grid\GridRequest;
 use Spipu\UiBundle\Tests\SpipuUiMock;
 use Spipu\UiBundle\Tests\Unit\Service\Ui\Grid\GridConfigTest;
-use stdClass;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use stdClass;
 
-class GridManagerTest extends AbstractTest
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(GridManager::class)]
+class GridManagerTest extends AbstractTestCase
 {
     /**
      * @param ContainerInterface $container

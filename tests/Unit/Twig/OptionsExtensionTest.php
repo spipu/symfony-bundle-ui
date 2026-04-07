@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Twig;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\TestCase;
 use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Tests\SpipuUiMock;
 use Spipu\UiBundle\Twig\OptionsExtension;
-use PHPUnit\Framework\TestCase;
-use stdClass;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\Error\Error;
 use Twig\Extension\ExtensionInterface;
+use stdClass;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(OptionsExtension::class)]
 class OptionsExtensionTest extends TestCase
 {
     public function getExtension(): OptionsExtension
@@ -21,13 +25,11 @@ class OptionsExtensionTest extends TestCase
         $mockContainer
             ->expects($this->any())
             ->method('get')
-            ->will(
-                $this->returnValueMap(
-                    [
-                        ['@GoodOption', 1, SpipuUiMock::getOptionIntegerMock()],
-                        ['@WrongOption', 1, new stdClass()],
-                    ]
-                )
+            ->willReturnMap(
+                [
+                    ['@GoodOption', 1, SpipuUiMock::getOptionIntegerMock()],
+                    ['@WrongOption', 1, new \stdClass()],
+                ]
             );
 
         /** @var ContainerInterface $mockContainer */

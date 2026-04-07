@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Twig;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\CoreBundle\Tests\SymfonyMock;
 use Spipu\UiBundle\Entity\Menu\Item;
@@ -12,6 +14,8 @@ use Spipu\UiBundle\Service\Ui\UiManagerInterface;
 use Spipu\UiBundle\Twig\UiExtension;
 use Twig\Extension\ExtensionInterface;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(UiExtension::class)]
 class UiExtensionTest extends TestCase
 {
     public function getExtension(): UiExtension
@@ -20,14 +24,12 @@ class UiExtensionTest extends TestCase
 
         $menuManagerMock->expects($this->any())
             ->method('buildMenu')
-            ->will(
-                $this->returnCallback(
+            ->willReturnCallback(
                     function (string $currentItemCode = '') {
                         $item = new Item($currentItemCode, $currentItemCode);
                         $item->setActive(true);
                         return $item;
                     }
-                )
             );
 
         /** @var MenuManager $menuManagerMock */
@@ -85,12 +87,10 @@ class UiExtensionTest extends TestCase
         $mockManager
             ->expects($this->once())
             ->method('display')
-            ->will(
-                $this->returnCallback(
+            ->willReturnCallback(
                     function () {
                         return 'test';
                     }
-                )
             );
 
         $extension = $this->getExtension();

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Service\Ui;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Spipu\UiBundle\Event\FormDefinitionEvent;
 use Spipu\UiBundle\Exception\FormException;
 use Spipu\UiBundle\Service\Ui\ShowFactory;
@@ -12,7 +14,9 @@ use Spipu\UiBundle\Service\Ui\ShowManagerInterface;
 use Spipu\UiBundle\Tests\SpipuUiMock;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class ShowManagerTest extends AbstractTest
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(ShowManager::class)]
+class ShowManagerTest extends AbstractTestCase
 {
     /**
      * @param ContainerInterface $container

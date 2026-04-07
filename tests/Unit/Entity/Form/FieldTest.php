@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Entity\Form;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\UiBundle\Entity\Form;
 use Spipu\UiBundle\Exception\FormException;
 use Spipu\UiBundle\Form\Options\YesNo;
-use stdClass;
-use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type;
+use stdClass;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(Form\Field::class)]
 class FieldTest extends TestCase
 {
     public function testEntity(): void

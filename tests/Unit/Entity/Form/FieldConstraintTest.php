@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Entity\Form;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\UiBundle\Entity\Form;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(Form\FieldConstraint::class)]
 class FieldConstraintTest extends TestCase
 {
     public function testEntity(): void

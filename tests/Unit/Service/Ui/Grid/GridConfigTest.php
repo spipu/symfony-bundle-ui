@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Service\Ui\Grid;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\CoreBundle\Tests\SymfonyMock;
-use Spipu\UiBundle\Entity\Grid\Grid;
 use Spipu\UiBundle\Entity\GridConfig as GridConfigEntity;
+use Spipu\UiBundle\Entity\Grid\Grid;
 use Spipu\UiBundle\Repository\GridConfigRepository;
 use Spipu\UiBundle\Service\Ui\Grid\GridConfig;
 use Spipu\UiBundle\Service\Ui\Grid\GridIdentifier;
 use Spipu\UiBundle\Service\Ui\Grid\UserIdentifier;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(GridConfig::class)]
 class GridConfigTest extends TestCase
 {
     /**
@@ -25,7 +29,7 @@ class GridConfigTest extends TestCase
         $gridConfigRepository = $testCase->createMock(GridConfigRepository::class);
 
         $gridConfigRepository
-            ->expects($testCase::any())
+            ->expects($testCase->any())
             ->method('getUserConfigById')
             ->willReturnCallback(
                 function (string $gridIdentifier, string $userIdentifier, int $gridConfigId)
@@ -39,7 +43,7 @@ class GridConfigTest extends TestCase
             );
 
         $gridConfigRepository
-            ->expects($testCase::any())
+            ->expects($testCase->any())
             ->method('getUserConfigByName')
             ->willReturnCallback(
                 function (string $gridIdentifier, string $userIdentifier, string $name)
@@ -49,7 +53,7 @@ class GridConfigTest extends TestCase
             );
 
         $gridConfigRepository
-            ->expects($testCase::any())
+            ->expects($testCase->any())
             ->method('getUserConfigs')
             ->willReturnCallback(
                 function (string $gridIdentifier, string $userIdentifier)

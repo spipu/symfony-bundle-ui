@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Service\Ui;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
+use Spipu\CoreBundle\Tests\SymfonyMock;
 use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Event\FormDefinitionEvent;
 use Spipu\UiBundle\Event\FormSaveEvent;
@@ -14,11 +17,12 @@ use Spipu\UiBundle\Service\Ui\FormManager;
 use Spipu\UiBundle\Service\Ui\FormManagerInterface;
 use Spipu\UiBundle\Tests\ResourceMock;
 use Spipu\UiBundle\Tests\SpipuUiMock;
-use Spipu\CoreBundle\Tests\SymfonyMock;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class FormManagerTest extends AbstractTest
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(FormManager::class)]
+class FormManagerTest extends AbstractTestCase
 {
     /**
      * @param ContainerInterface $container
@@ -107,13 +111,17 @@ class FormManagerTest extends AbstractTest
         $factory = $this->getFormFactory($container);
 
         $eventDispatcher = $container->get('event_dispatcher');
+        $dispatchMatcher = $this->exactly(2);
         $eventDispatcher
-            ->expects($this->exactly(2))
+            ->expects($dispatchMatcher)
             ->method('dispatch')
-            ->withConsecutive(
-                [$this->anything(), FormDefinitionEvent::PREFIX_NAME . $definition->getDefinition()->getCode()],
-                [$this->anything(), FormSaveEvent::PREFIX_NAME . $definition->getDefinition()->getCode()]
-            );
+            ->willReturnCallback(function (object $event, string $eventName) use ($dispatchMatcher, $definition): object {
+                match ($dispatchMatcher->numberOfInvocations()) {
+                    1 => $this->assertSame(FormDefinitionEvent::PREFIX_NAME . $definition->getDefinition()->getCode(), $eventName),
+                    2 => $this->assertSame(FormSaveEvent::PREFIX_NAME . $definition->getDefinition()->getCode(), $eventName),
+                };
+                return $event;
+            });
 
         $entityManager = $container->get('doctrine.orm.default_entity_manager');
         $entityManager->expects($this->never())->method('persist');
@@ -208,13 +216,17 @@ class FormManagerTest extends AbstractTest
         $factory = $this->getFormFactory($container);
 
         $eventDispatcher = $container->get('event_dispatcher');
+        $dispatchMatcher = $this->exactly(2);
         $eventDispatcher
-            ->expects($this->exactly(2))
+            ->expects($dispatchMatcher)
             ->method('dispatch')
-            ->withConsecutive(
-                [$this->anything(), FormDefinitionEvent::PREFIX_NAME . $definition->getDefinition()->getCode()],
-                [$this->anything(), FormSaveEvent::PREFIX_NAME . $definition->getDefinition()->getCode()]
-            );
+            ->willReturnCallback(function (object $event, string $eventName) use ($dispatchMatcher, $definition): object {
+                match ($dispatchMatcher->numberOfInvocations()) {
+                    1 => $this->assertSame(FormDefinitionEvent::PREFIX_NAME . $definition->getDefinition()->getCode(), $eventName),
+                    2 => $this->assertSame(FormSaveEvent::PREFIX_NAME . $definition->getDefinition()->getCode(), $eventName),
+                };
+                return $event;
+            });
 
         $entityManager = $container->get('doctrine.orm.default_entity_manager');
         $entityManager->expects($this->once())->method('persist')->with($resource);

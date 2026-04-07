@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Service\Ui;
 
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\TestCase;
 use Spipu\CoreBundle\Tests\SymfonyMock;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-abstract class AbstractTest extends TestCase
+#[CoversNothing]
+abstract class AbstractTestCase extends TestCase
 {
     protected function getContainerMock(array $services = []): ContainerInterface
     {

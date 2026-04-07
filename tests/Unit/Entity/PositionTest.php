@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Entity;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\UiBundle\Entity\PositionInterface;
 use Spipu\UiBundle\Entity\PositionTrait;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(PositionTrait::class)]
 class PositionTest extends TestCase
 {
     public function testEntity(): void

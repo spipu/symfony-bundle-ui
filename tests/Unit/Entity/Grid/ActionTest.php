@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Entity\Grid;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\UiBundle\Entity\Grid;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(Grid\Action::class)]
 class ActionTest extends TestCase
 {
     public function testEntity(): void

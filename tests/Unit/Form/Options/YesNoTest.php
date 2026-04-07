@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Form\Options;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Spipu\UiBundle\Form\Options\OptionsInterface;
 use Spipu\UiBundle\Form\Options\YesNo;
 
-class YesNoTest extends AbstractTest
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(YesNo::class)]
+class YesNoTest extends AbstractTestCase
 {
     public function getOption(): OptionsInterface
     {

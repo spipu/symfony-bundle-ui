@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Event;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Entity\Form\Form;
 use Spipu\UiBundle\Event\FormSaveEvent;
 use Symfony\Component\Form\FormInterface;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(FormSaveEvent::class)]
 class FormSaveEventTest extends TestCase
 {
     public function testEvent(): void

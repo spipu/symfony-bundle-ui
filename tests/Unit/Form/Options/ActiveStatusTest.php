@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Form\Options;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Spipu\UiBundle\Form\Options\ActiveStatus;
 use Spipu\UiBundle\Form\Options\OptionsInterface;
 
-class ActiveStatusTest extends AbstractTest
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(ActiveStatus::class)]
+class ActiveStatusTest extends AbstractTestCase
 {
     public function getOption(): OptionsInterface
     {

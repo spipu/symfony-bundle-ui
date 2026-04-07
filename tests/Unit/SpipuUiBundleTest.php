@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\CoreBundle\Tests\SymfonyMock;
 use Spipu\UiBundle\SpipuUiBundle;
 use Symfony\Component\DependencyInjection\Extension\ConfigurableExtensionInterface;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(SpipuUiBundle::class)]
 class SpipuUiBundleTest extends TestCase
 {
     public function testBase(): void

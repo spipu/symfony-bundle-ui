@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Service\Ui\Grid\DataProvider;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Spipu\CoreBundle\Tests\SymfonyMock;
 use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Service\Ui\Grid\DataProvider\Doctrine;
 use Spipu\UiBundle\Service\Ui\Grid\GridRequest;
 use Spipu\UiBundle\Tests\SpipuUiMock;
-use Spipu\UiBundle\Tests\Unit\Service\Ui\AbstractTest;
+use Spipu\UiBundle\Tests\Unit\Service\Ui\AbstractTestCase;
 
-class DoctrineTest extends AbstractTest
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(Doctrine::class)]
+class DoctrineTest extends AbstractTestCase
 {
     public function testValidateWrongMissingAll(): void
     {

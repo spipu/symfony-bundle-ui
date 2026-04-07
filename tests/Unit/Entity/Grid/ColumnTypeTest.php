@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Entity\Grid;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\UiBundle\Entity\Grid;
 use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Form\Options\YesNo;
 
+#[AllowMockObjectsWithoutExpectations]
+#[CoversClass(Grid\ColumnType::class)]
 class ColumnTypeTest extends TestCase
 {
     public function testEntity(): void
