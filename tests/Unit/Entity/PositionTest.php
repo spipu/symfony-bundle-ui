@@ -11,7 +11,6 @@ use Spipu\UiBundle\Entity\PositionInterface;
 use Spipu\UiBundle\Entity\PositionTrait;
 
 #[AllowMockObjectsWithoutExpectations]
-#[CoversClass(PositionTrait::class)]
 class PositionTest extends TestCase
 {
     public function testEntity(): void

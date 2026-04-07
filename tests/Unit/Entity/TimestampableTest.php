@@ -11,7 +11,6 @@ use PHPUnit\Framework\TestCase;
 use Spipu\UiBundle\Entity\TimestampableTrait;
 
 #[AllowMockObjectsWithoutExpectations]
-#[CoversClass(TimestampableTrait::class)]
 class TimestampableTest extends TestCase
 {
     public function testEntity(): void

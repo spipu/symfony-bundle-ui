@@ -10,7 +10,6 @@ use PHPUnit\Framework\TestCase;
 use Spipu\UiBundle\Entity\OptionsTrait;
 
 #[AllowMockObjectsWithoutExpectations]
-#[CoversClass(OptionsTrait::class)]
 class OptionsTest extends TestCase
 {
     public function testEntity(): void
