@@ -67,13 +67,13 @@ class UserGrid implements GridDefinitionInterface
             )
             ->addRowAction(
                 (new Action('edit', 'spipu.ui.action.edit', 20, 'app_user_edit'))
-                    ->setIcon('edit')
+                    ->setIcon('pen-to-square')
                     ->setCssClass('success')
                     ->setNeededRole('ROLE_ADMIN_USER_EDIT')
             )
             ->addGlobalAction(
                 (new Action('create', 'spipu.ui.action.create', 10, 'app_user_create'))
-                    ->setIcon('edit')
+                    ->setIcon('pen-to-square')
                     ->setCssClass('success')
                     ->setNeededRole('ROLE_ADMIN_USER_EDIT')
             )
