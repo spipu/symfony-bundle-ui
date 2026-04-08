@@ -63,7 +63,7 @@ class SpipuLoadingPopups {
         element.removeAttr("href");
         element.off('click');
         element.attr( "class", className);
-        element.html('<i class="fa fa-spinner"></i>');
+        element.html('<i class="fa-solid fa-spinner"></i>');
     }
 }
 

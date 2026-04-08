@@ -1,16 +1,16 @@
 {% macro defaultLink(url, message, class, icon, id, role) %}
-    <a href="{{ url }}" {% if id is not null %}id="{{ id }}"{% endif %} {% if role is not null %}data-action-role="{{ role }}"{% endif %} class="ms-2 spipu-ui-btn btn btn-outline-{{ class }}">{% if icon is not null %}<i class="fas fa-{{ icon }}"></i> {% endif %}{{ message|trans }}</a>
+    <a href="{{ url }}" {% if id is not null %}id="{{ id }}"{% endif %} {% if role is not null %}data-action-role="{{ role }}"{% endif %} class="ms-2 spipu-ui-btn btn btn-outline-{{ class }}">{% if icon is not null %}<i class="fa-solid fa-{{ icon }}"></i> {% endif %}{{ message|trans }}</a>
 {% endmacro %}
 
 {% macro defaultButton(action, message, class, icon, id, role) %}
     {% set buttonType = 'button' %}
     {% if action is empty %}{% set buttonType = 'submit' %}{% endif %}
-    <button type="{{ buttonType }}" {% if action is not null %}onclick="{{ action }}"{% endif %} {% if id is not null %}id="{{ id }}"{% endif %} {% if role is not null %}data-action-role="{{ role }}"{% endif %} class="ms-2 spipu-ui-btn btn btn-outline-{{ class }}" >{% if icon is not null %}<i class="fas fa-{{ icon }}"></i> {% endif %}{{ message|trans() }}</button>
+    <button type="{{ buttonType }}" {% if action is not null %}onclick="{{ action }}"{% endif %} {% if id is not null %}id="{{ id }}"{% endif %} {% if role is not null %}data-action-role="{{ role }}"{% endif %} class="ms-2 spipu-ui-btn btn btn-outline-{{ class }}" >{% if icon is not null %}<i class="fa-solid fa-{{ icon }}"></i> {% endif %}{{ message|trans() }}</button>
 {% endmacro %}
 
 {% macro create(url, message, id) %}
     {% if message is empty %}{% set message = 'spipu.ui.action.create' %}{% endif %}
-    {{ _self.defaultLink(url, message, 'success', 'edit', id) }}
+    {{ _self.defaultLink(url, message, 'success', 'pen-to-square', id) }}
 {% endmacro %}
 
 {% macro show(url, message, id) %}
@@ -20,17 +20,17 @@
 
 {% macro edit(url, message, id) %}
     {% if message is empty %}{% set message = 'spipu.ui.action.edit' %}{% endif %}
-    {{ _self.defaultLink(url, message, 'success', 'edit', id) }}
+    {{ _self.defaultLink(url, message, 'success', 'pen-to-square', id) }}
 {% endmacro %}
 
 {% macro back(url, message, id) %}
     {% if message is empty %}{% set message = 'spipu.ui.action.back' %}{% endif %}
-    {{ _self.defaultLink(url, message, 'secondary', 'undo-alt', id) }}
+    {{ _self.defaultLink(url, message, 'secondary', 'rotate-left', id) }}
 {% endmacro %}
 
 {% macro delete(url, tokenId, message, id) %}
     {% if message is empty %}{% set message = 'spipu.ui.action.delete' %}{% endif %}
-    <form method="post" action="{{ url }}" style="display: inline"><input type="hidden" name="_method" value="DELETE"><input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ tokenId) }}">{{ _self.defaultButton(null, message, 'danger confirm-action', 'trash-alt', id, 'delete') }}</form>
+    <form method="post" action="{{ url }}" style="display: inline"><input type="hidden" name="_method" value="DELETE"><input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ tokenId) }}">{{ _self.defaultButton(null, message, 'danger confirm-action', 'trash-can', id, 'delete') }}</form>
 {% endmacro %}
 
 {% macro submitManagerForm(manager) %}

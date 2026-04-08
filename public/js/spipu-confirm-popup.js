@@ -27,10 +27,10 @@ class SpipuConfirmPopup {
                         '</div>' +
                         '<div class="modal-footer">' +
                             '<button type="button" id="modalWindow-confirm" class="btn btn-'+ this.buttonLevel +'">' +
-                                '<i class="fa fa-'+ this.buttonIcon +' me-2"></i>'+ this.buttonLabel +
+                                '<i class="fa-solid fa-'+ this.buttonIcon +' me-2"></i>'+ this.buttonLabel +
                             '</button>' +
                             '<button type="button" id="modalWindow-cancel" class="btn btn-outline-secondary" data-bs-dismiss="modal">' +
-                                '<i class="fa fa-undo-alt me-2"></i>' + translator.trans('spipu.ui.label.cancel') +
+                                '<i class="fa-solid fa-rotate-left me-2"></i>' + translator.trans('spipu.ui.label.cancel') +
                             '</button>' +
                         '</div>' +
                     '</div>' +

@@ -1,4 +1,4 @@
 {% set divCss='badge rounded-pill text-bg-' ~ (data ? 'primary' : 'secondary') ~ ' w-100 text-start' %}
 <td data-grid-field-name="{{ column.code }}" class="{{ column.option('td-css-class', '') }}">
-    <div class="{{ divCss }}"><i class="fas fa-{{ (data ? 'check' : 'times') }} me-1"></i> {{ column.option('prefix', '') }}{{ data|label_from_option(column.type.options)|trans }}{{ column.option('suffix', '') }}</div>
+    <div class="{{ divCss }}"><i class="fa-solid fa-{{ (data ? 'check' : 'xmark') }} me-1"></i> {{ column.option('prefix', '') }}{{ data|label_from_option(column.type.options)|trans }}{{ column.option('suffix', '') }}</div>
 </td>

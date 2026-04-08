@@ -23,7 +23,7 @@ class FontAwesome implements AssetInterface
 {
     private string $version;
 
-    public function __construct(string $version = '5.15.4')
+    public function __construct(string $version = '7.2.0')
     {
         $this->version = $version;
     }

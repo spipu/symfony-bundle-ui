@@ -3,7 +3,7 @@
   <div class="container-fluid">
     <a class="navbar-brand" href="{% if mainItem.route %}{{ path(mainItem.route, mainItem.routeParams) }}{% else %}#{% endif %}">
         {% if mainItem.icon %}
-            <span class="badge text-bg-light text-{{ mainItem.iconThemeColor }}" {% if mainItem.iconTitle %}title="{{ mainItem.iconTitle }}"{% endif %}><i class="fas fa-{{ mainItem.icon }}"></i> {{ mainItem.name }}</span>
+            <span class="badge text-bg-light text-{{ mainItem.iconThemeColor }}" {% if mainItem.iconTitle %}title="{{ mainItem.iconTitle }}"{% endif %}><i class="fa-solid fa-{{ mainItem.icon }}"></i> {{ mainItem.name }}</span>
         {% else %}
             {{ mainItem.name }}
         {% endif %}
@@ -17,11 +17,11 @@
         <ul class="navbar-nav me-auto">
 {% for childItem in mainItem.childItems %}{% if childItem.isAllowed %}
             <li class="nav-item{% if childItem.childItems|length>0 %} dropdown{% endif %}">
-                <a class="nav-link{% if childItem.isActive %} active{% endif %}{% if childItem.cssClass %} {{ childItem.cssClass }}{% endif %}{% if childItem.childItems|length>0 %} dropdown-toggle{% endif %}" {% if childItem.isActive %}aria-current="page"{% endif %} href="{% if childItem.route %}{{ path(childItem.route, childItem.routeParams) }}{% else %}#{% endif %}" {% if childItem.childItems|length>0 %}id="menu-dropdown-{{ childItem.id }}" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"{% endif %}>{% if childItem.icon %}<i class="me-1 fas fa-{{ childItem.icon }}"></i> {% endif %}{{ childItem.name|trans }}</a>
+                <a class="nav-link{% if childItem.isActive %} active{% endif %}{% if childItem.cssClass %} {{ childItem.cssClass }}{% endif %}{% if childItem.childItems|length>0 %} dropdown-toggle{% endif %}" {% if childItem.isActive %}aria-current="page"{% endif %} href="{% if childItem.route %}{{ path(childItem.route, childItem.routeParams) }}{% else %}#{% endif %}" {% if childItem.childItems|length>0 %}id="menu-dropdown-{{ childItem.id }}" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"{% endif %}>{% if childItem.icon %}<i class="me-1 fa-solid fa-{{ childItem.icon }}"></i> {% endif %}{{ childItem.name|trans }}</a>
     {% if childItem.childItems|length>0 %}
                 <div class="dropdown-menu" aria-labelledby="menu-dropdown-{{ childItem.id }}">
         {% for childChildItem in childItem.childItems %}{% if childChildItem.isAllowed %}
-                    <a class="dropdown-item{% if childChildItem.cssClass %} {{ childChildItem.cssClass }}{% endif %} {% if childChildItem.isActive %}active{% endif %}" href="{% if childChildItem.route %}{{ path(childChildItem.route, childChildItem.routeParams) }}{% else %}#{% endif %}">{%  if childChildItem.icon %}<i class="me-1 fas fa-{{ childChildItem.icon }}"></i> {% endif %}{{ childChildItem.name|trans }}</a>
+                    <a class="dropdown-item{% if childChildItem.cssClass %} {{ childChildItem.cssClass }}{% endif %} {% if childChildItem.isActive %}active{% endif %}" href="{% if childChildItem.route %}{{ path(childChildItem.route, childChildItem.routeParams) }}{% else %}#{% endif %}">{%  if childChildItem.icon %}<i class="me-1 fa-solid fa-{{ childChildItem.icon }}"></i> {% endif %}{{ childChildItem.name|trans }}</a>
         {% endif %}{% endfor %}
                 </div>
     {% endif %}

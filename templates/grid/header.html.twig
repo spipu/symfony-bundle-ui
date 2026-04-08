@@ -17,7 +17,7 @@
                                 {% endfor %}
                             </select>
                             <button type="button" class="btn btn-outline-secondary border-dark" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-configure">
-                                <i class="fas fa-cog"></i> {{ 'spipu.ui.grid.config.configure'|trans }}
+                                <i class="fa-solid fa-gear"></i> {{ 'spipu.ui.grid.config.configure'|trans }}
                             </button>
                         </div>
                         <a class="form-text text-muted" role="button" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-create">
@@ -42,7 +42,7 @@
                                     </select>
                                 <input type="text" class="form-control" aria-label="quick search" name="qs[value]" value="{{ manager.request.quickSearchValue }}">
                                     <button class="btn btn-outline-secondary" type="submit">
-                                        <i class="fas fa-search"></i> {{ 'spipu.ui.grid.quick_search.search'|trans }}
+                                        <i class="fa-solid fa-magnifying-glass"></i> {{ 'spipu.ui.grid.quick_search.search'|trans }}
                                     </button>
                             </div>
                             {% if infoFilters|length %}
@@ -52,7 +52,7 @@
                             {% endif %}
                         {% elseif infoFilters|length %}
                             <a class="btn btn-outline-secondary" type="button" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-open">
-                                <i class="fas fa-search"></i> {{ 'spipu.ui.grid.filter.title'|trans }}
+                                <i class="fa-solid fa-magnifying-glass"></i> {{ 'spipu.ui.grid.filter.title'|trans }}
                             </a>
                         {% endif %}
                     </div>

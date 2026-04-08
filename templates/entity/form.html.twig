@@ -6,7 +6,7 @@
 {% endif %}{% endfor %}
         {{ form_widget(form) }}
         <div class="col-12 col-12" data-form-code="{{ manager.definition.code }}" data-form-role="submit">
-            <button class="btn-success btn col-12"><i class="fas fa-{{ manager.submitIcon }}"></i> {{ manager.submitLabel|trans() }}</button>
+            <button class="btn-success btn col-12"><i class="fa-solid fa-{{ manager.submitIcon }}"></i> {{ manager.submitLabel|trans() }}</button>
         </div>
     </div>
 {{ form_end(form) }}

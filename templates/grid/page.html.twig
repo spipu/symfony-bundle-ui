@@ -14,7 +14,7 @@
                             <a class="nav-link dropdown-toggle p-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{ 'spipu.ui.grid.action.label'|trans }}</a>
                             <div class="dropdown-menu">
                                 {% for action in manager.definition.massActions %}{% if manager.isGrantedAction(action) %}
-                                    <span class="dropdown-item" data-grid-code="{{ manager.definition.code }}" data-grid-role="action" data-grid-href="{{ manager.buildActionUrl(action, {}, null) }}"><div class="btn btn-sm btn-outline-{{ action.cssClass }} w-100">{%  if action.icon %}<i class="fas fa-{{ action.icon }}"></i> {% endif %}{{ action.name|trans }}</div></span>
+                                    <span class="dropdown-item" data-grid-code="{{ manager.definition.code }}" data-grid-role="action" data-grid-href="{{ manager.buildActionUrl(action, {}, null) }}"><div class="btn btn-sm btn-outline-{{ action.cssClass }} w-100">{%  if action.icon %}<i class="fa-solid fa-{{ action.icon }}"></i> {% endif %}{{ action.name|trans }}</div></span>
                                 {% endif %}{% endfor %}
                                  <span class="dropdown-item" data-grid-code="{{ manager.definition.code }}" data-grid-role="no-action">{{ 'spipu.ui.grid.item.at_least_one'|trans }}</span>
                             </div>
@@ -41,7 +41,7 @@
 {%   if column.sortable %}
 {%       if manager.request.sortColumn == column.code and manager.request.sortOrder == 'asc' %}{%  set sortOrder='desc' %}{% else %}{%  set sortOrder='asc' %}{% endif %}
                 <th scope="col" data-grid-code="{{ manager.definition.code }}" data-grid-role="header-column" data-grid-field-name="{{ column.code }}" class="sorting {% if manager.request.sortColumn == column.code %}sorting_{{ manager.request.sortOrder }}{% endif %}">
-                    <span class="fas fa-angle-up"></span><span class="fas fa-angle-down"></span>
+                    <span class="fa-solid fa-angle-up"></span><span class="fa-solid fa-angle-down"></span>
                     <a href="{{ manager.getSortUrl(column.code, sortOrder) }}">{{ column.name|trans }}</a>
                 </th>
 {%   else %}
