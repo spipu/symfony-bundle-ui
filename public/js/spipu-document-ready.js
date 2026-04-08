@@ -5,7 +5,7 @@ class SpipuDocumentReady {
         this.isReady = false;
         this.callback = [];
 
-        $(document).ready($.proxy(this.execute, this));
+        $(document).ready(this.execute.bind(this));
     }
 
     add(callback) {

@@ -1,4 +1,4 @@
 {% import '@SpipuUi/macro/size.html.twig' as convertSize %}
-<td data-grid-field-name="{{ column.code }}" class="{{ column.option('td-css-class', 'text-right') }}">
+<td data-grid-field-name="{{ column.code }}" class="{{ column.option('td-css-class', 'text-end') }}">
     {{ convertSize.bytesToSize(data) }}
 </td>

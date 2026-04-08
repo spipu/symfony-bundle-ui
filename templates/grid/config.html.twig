@@ -4,7 +4,7 @@
     <div class="row collapse" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-create-collapse">
         <div class="col-12 mb-2">
             <div class="card">
-                <div class="card-header font-weight-bold">
+                <div class="card-header fw-bold">
                     {{ 'spipu.ui.grid.config_create.title'|trans({'%name': currentConfig.name}) }}
                 </div>
                 <div class="card-body">
@@ -20,10 +20,10 @@
                         </div>
                         <div class="row">
                             <div class="col-12 col-sm-6">
-                                <button type="button" class="btn btn-outline-secondary btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-cancel"><i class="fas fa-times"></i> {{ 'spipu.ui.action.cancel'|trans }}</button>
+                                <button type="button" class="btn btn-outline-secondary w-100" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-cancel"><i class="fas fa-times"></i> {{ 'spipu.ui.action.cancel'|trans }}</button>
                             </div>
                             <div class="col-12 col-sm-6">
-                                <button type="submit" class="btn btn-success btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-create-submit"><i class="fas fa-edit"></i> {{ 'spipu.ui.action.create'|trans }}</button>
+                                <button type="submit" class="btn btn-success w-100" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-create-submit"><i class="fas fa-edit"></i> {{ 'spipu.ui.action.create'|trans }}</button>
                             </div>
                         </div>
                     </form>
@@ -34,7 +34,7 @@
     <div class="row collapse" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-columns-collapse">
         <div class="col-12 mb-2">
             <div class="card">
-                <div class="card-header font-weight-bold">
+                <div class="card-header fw-bold">
                     {{ 'spipu.ui.grid.config.title'|trans({'%name': currentConfig.name}) }}
                 </div>
                 <div class="card-body">
@@ -55,10 +55,10 @@
                                                     <li class="list-group-item d-flex align-items-center">
                                                         <input name="cf[columns][]" type="hidden" value="{{ columnKey }}" />
                                                         <span class="flex-grow-1">{{ configuration.columns[columnKey].name }}</span>
-                                                        <span class="float-right">
-                                                            <i class="list-action-sort ml-2 fa  fa-grip-lines"></i>
-                                                            <i class="list-action-hide ml-2 far fa-minus-square text-danger"  role="button"></i>
-                                                            <i class="list-action-show ml-2 far fa-plus-square  text-success" role="button"></i>
+                                                        <span class="float-end">
+                                                            <i class="list-action-sort ms-2 fa  fa-grip-lines"></i>
+                                                            <i class="list-action-hide ms-2 far fa-minus-square text-danger"  role="button"></i>
+                                                            <i class="list-action-show ms-2 far fa-plus-square  text-success" role="button"></i>
                                                         </span>
                                                     </li>
                                                 {% endfor %}
@@ -77,10 +77,10 @@
                                                     <li class="list-group-item d-flex align-items-center">
                                                         <input name="cf[columns][]" type="hidden" value="{{ columnKey }}" />
                                                         <span class="flex-grow-1">{{ configuration.columns[columnKey].name }}</span>
-                                                        <span class="float-right">
-                                                            <i class="list-action-sort ml-2 fa  fa-grip-lines"></i>
-                                                            <i class="list-action-hide ml-2 far fa-minus-square text-danger"  role="button"></i>
-                                                            <i class="list-action-show ml-2 far fa-plus-square  text-success" role="button"></i>
+                                                        <span class="float-end">
+                                                            <i class="list-action-sort ms-2 fa  fa-grip-lines"></i>
+                                                            <i class="list-action-hide ms-2 far fa-minus-square text-danger"  role="button"></i>
+                                                            <i class="list-action-show ms-2 far fa-plus-square  text-success" role="button"></i>
                                                         </span>
                                                     </li>
                                                 {% endif %}{% endfor %}
@@ -97,14 +97,14 @@
                                                 <div class="card-body">
                                                     <div class="row">
                                                         <div class="col-7">
-                                                            <select autocomplete="off" class="form-control" name="cf[sort][column]">
+                                                            <select autocomplete="off" class="form-select" name="cf[sort][column]">
                                                                 {% for column in sortableColumns %}
                                                                     <option value="{{ column.code }}" {% if currentConfig.configSortColumn == column.code %}selected="selected"{% endif %}>{{ column.name|trans }}</option>
                                                                 {% endfor %}
                                                             </select>
                                                         </div>
                                                         <div class="col-5">
-                                                            <select autocomplete="off" class="form-control" name="cf[sort][order]">
+                                                            <select autocomplete="off" class="form-select" name="cf[sort][order]">
                                                                 <option value="asc"  {% if currentConfig.configSortOrder == 'asc'  %}selected="selected"{% endif %}>{{ 'spipu.ui.grid.sort.asc'|trans }}</option>
                                                                 <option value="desc" {% if currentConfig.configSortOrder == 'desc' %}selected="selected"{% endif %}>{{ 'spipu.ui.grid.sort.desc'|trans }}</option>
                                                             </select>
@@ -128,7 +128,7 @@
                                                                     {{ column.name|trans }}
                                                                 </td>
                                                                 <td>
-                                                                    <select autocomplete="off" class="form-control form-control-sm" name="cf[filters][{{ column.code }}]">
+                                                                    <select autocomplete="off" class="form-select form-select-sm" name="cf[filters][{{ column.code }}]">
                                                                         <option value=""> - - - - - </option>
                                                                         {% for value, text in column.type.options.options %}
                                                                             {% if column.type.translate %}{% set text = text|trans %}{% endif %}
@@ -149,14 +149,14 @@
                                 <div class="row">
                                     <div class="col-12 col-sm-4">
                                         {% if not currentConfig.isDefault %}
-                                            <button type="submit" class="btn btn-outline-danger btn-block confirm-action" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-delete"><i class="fas fa-trash"></i> {{ 'spipu.ui.action.delete'|trans }}</button>
+                                            <button type="submit" class="btn btn-outline-danger w-100 confirm-action" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-delete"><i class="fas fa-trash"></i> {{ 'spipu.ui.action.delete'|trans }}</button>
                                         {% endif %}
                                     </div>
                                     <div class="col-12 col-sm-4">
-                                        <button type="button" class="btn btn-outline-secondary btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-cancel"><i class="fas fa-times"></i> {{ 'spipu.ui.action.cancel'|trans }}</button>
+                                        <button type="button" class="btn btn-outline-secondary w-100" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-cancel"><i class="fas fa-times"></i> {{ 'spipu.ui.action.cancel'|trans }}</button>
                                     </div>
                                     <div class="col-12 col-sm-4">
-                                        <button type="submit" class="btn btn-success btn-block" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-save"><i class="fas fa-save"></i> {{ 'spipu.ui.action.save'|trans }}</button>
+                                        <button type="submit" class="btn btn-success w-100" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-save"><i class="fas fa-save"></i> {{ 'spipu.ui.action.save'|trans }}</button>
                                     </div>
                                 </div>
                             </div>

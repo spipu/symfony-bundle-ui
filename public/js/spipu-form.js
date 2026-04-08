@@ -79,7 +79,7 @@ class SpipuUiForm {
         this.updateFieldConstraint(field, constraint);
         $(this.fields[askedFieldCode].node).on(
             'change',
-            $.proxy(function () { this.updateFieldConstraint(field, constraint); }, this)
+            function () { this.updateFieldConstraint(field, constraint); }.bind(this)
         )
     }
 

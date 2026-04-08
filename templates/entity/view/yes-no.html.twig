@@ -1,1 +1,1 @@
-<div class="badge badge-pill badge-{{ (data ? 'primary' : 'secondary') }} w-100 text-left"><i class="fas fa-{{ (data ? 'check' : 'times') }} mr-1"></i>{{ data|label_from_option(field.choices)|trans }}</div>
+<div class="badge rounded-pill text-bg-{{ (data ? 'primary' : 'secondary') }} w-100 text-start"><i class="fas fa-{{ (data ? 'check' : 'times') }} me-1"></i>{{ data|label_from_option(field.choices)|trans }}</div>

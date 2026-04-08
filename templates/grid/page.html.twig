@@ -7,11 +7,11 @@
                 <td colspan="{{ hasMassAction + hasRowAction + manager.definition.displayedColumns(manager.currentGridConfig)|length }}">
                     <span data-grid-code="{{ manager.definition.code }}" data-grid-role="total-rows">{{ ('spipu.ui.grid.item.found.' ~ (manager.nbTotalRows == 0 ? 'none' : (manager.nbTotalRows == 1 ? 'one' : 'more'))) | trans({'%count%': manager.nbTotalRows}) }}</span>
 {% if hasMassAction %}
-                    <span class="border-right ml-2 mr-2"></span>
+                    <span class="border-end ms-2 me-2"></span>
                     <span data-grid-code="{{ manager.definition.code }}" data-grid-role="count">0</span> {{ 'spipu.ui.grid.item.selected'|trans }}
-                    <ul class="nav pl-2" style="display: inline-block">
+                    <ul class="nav ps-2" style="display: inline-block">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle p-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{ 'spipu.ui.grid.action.label'|trans }}</a>
+                            <a class="nav-link dropdown-toggle p-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{ 'spipu.ui.grid.action.label'|trans }}</a>
                             <div class="dropdown-menu">
                                 {% for action in manager.definition.massActions %}{% if manager.isGrantedAction(action) %}
                                     <span class="dropdown-item" data-grid-code="{{ manager.definition.code }}" data-grid-role="action" data-grid-href="{{ manager.buildActionUrl(action, {}, null) }}"><div class="btn btn-sm btn-outline-{{ action.cssClass }} w-100">{%  if action.icon %}<i class="fas fa-{{ action.icon }}"></i> {% endif %}{{ action.name|trans }}</div></span>
@@ -22,7 +22,7 @@
                     </ul>
 {% endif %}
 {% if manager.definition.globalActions|length > 0 %}
-                    <span class="float-right" data-grid-code="{{ manager.definition.code }}" data-grid-role="global-action">
+                    <span class="float-end" data-grid-code="{{ manager.definition.code }}" data-grid-role="global-action">
                         {%  include manager.definition.templateActions with {
                             'manager': manager,
                             'actions': manager.definition.globalActions,

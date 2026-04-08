@@ -23,14 +23,14 @@ class SpipuConfirmPopup {
                     '<div class="modal-content">' +
                         '<div class="modal-header">' +
                             '<h5 class="modal-title" id="answerModalLabel">'+ this.message +'</h5>' +
-                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                            '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
                         '</div>' +
                         '<div class="modal-footer">' +
                             '<button type="button" id="modalWindow-confirm" class="btn btn-'+ this.buttonLevel +'">' +
-                                '<i class="fa fa-'+ this.buttonIcon +' mr-2"></i>'+ this.buttonLabel +
+                                '<i class="fa fa-'+ this.buttonIcon +' me-2"></i>'+ this.buttonLabel +
                             '</button>' +
-                            '<button type="button" id="modalWindow-cancel" class="btn btn-outline-secondary" data-dismiss="modal">' +
-                                '<i class="fa fa-undo-alt mr-2"></i>' + translator.trans('spipu.ui.label.cancel') +
+                            '<button type="button" id="modalWindow-cancel" class="btn btn-outline-secondary" data-bs-dismiss="modal">' +
+                                '<i class="fa fa-undo-alt me-2"></i>' + translator.trans('spipu.ui.label.cancel') +
                             '</button>' +
                         '</div>' +
                     '</div>' +
@@ -38,15 +38,16 @@ class SpipuConfirmPopup {
             '</div>';
         $("#confirmPopup").html(popup);
 
-        let modal = $("#modalWindow");
-        modal.modal();
-        modal.on('hide.bs.modal', $.proxy(this.executeCancel, this));
-        modal.find("#modalWindow-confirm").on('click', $.proxy(this.executeConfirm, this));
-        modal.find("#modalWindow-cancel").on('click', $.proxy(this.close, this));
+        let modalEl = document.getElementById('modalWindow');
+        let modal = new bootstrap.Modal(modalEl);
+        modal.show();
+        modalEl.addEventListener('hide.bs.modal', this.executeCancel.bind(this));
+        $("#modalWindow-confirm").on('click', this.executeConfirm.bind(this));
+        $("#modalWindow-cancel").on('click', this.close.bind(this));
     }
 
     close() {
-        $("#modalWindow").modal('hide');
+        bootstrap.Modal.getInstance(document.getElementById('modalWindow')).hide();
     }
 
     addCallbackCancel(callback) {

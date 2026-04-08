@@ -7,7 +7,7 @@
 
 {% endfor %}
 {% if manager.definition.rowActions|length > 0 %}
-    <td data-grid-code="{{ manager.definition.code }}" data-grid-role="row-actions" class="text-right">
+    <td data-grid-code="{{ manager.definition.code }}" data-grid-role="row-actions" class="text-end">
         {%  include manager.definition.templateActions with {
             'manager': manager,
             'actions': manager.definition.rowActions,

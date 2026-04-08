@@ -95,7 +95,3 @@ services:
     Spipu\UiBundle\Assets\Jquery:
         autowire: true
         tags: ['spipu.asset']
-
-    Spipu\UiBundle\Assets\Popper:
-        autowire: true
-        tags: ['spipu.asset']

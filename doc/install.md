@@ -30,7 +30,7 @@ return [
 
 ### 2. Install assets
 
-The bundle ships asset definitions for Bootstrap 4, jQuery, Popper, and FontAwesome via `spipu/core-bundle`'s asset system. Run:
+The bundle ships asset definitions for Bootstrap, jQuery, and FontAwesome via `spipu/core-bundle`'s asset system. Run:
 
 ```bash
 php bin/console spipu:assets:install

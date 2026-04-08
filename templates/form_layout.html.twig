@@ -1,4 +1,4 @@
-{% use "bootstrap_4_layout.html.twig" %}
+{% use "bootstrap_5_layout.html.twig" %}
 
 {% block file_widget -%}
     {%- set attr = attr|merge({
@@ -13,17 +13,13 @@
 {% block integerunit_widget -%}
     <div class="input-group">
         {{- block('integer_widget') -}}
-        <div class="input-group-append">
-            <span class="input-group-text">{{ unit }}</span>
-        </div>
+        <span class="input-group-text">{{ unit }}</span>
     </div>
 {%- endblock %}
 
 {% block numberunit_widget -%}
     <div class="input-group">
         {{- block('number_widget') -}}
-        <div class="input-group-append">
-            <span class="input-group-text">{{ unit }}</span>
-        </div>
+        <span class="input-group-text">{{ unit }}</span>
     </div>
 {%- endblock %}

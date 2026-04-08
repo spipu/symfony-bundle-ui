@@ -11,13 +11,10 @@ use Spipu\CoreBundle\Assets\AssetInterface;
 use Spipu\UiBundle\Assets\Bootstrap;
 use Spipu\UiBundle\Assets\FontAwesome;
 use Spipu\UiBundle\Assets\Jquery;
-use Spipu\UiBundle\Assets\Popper;
-
 #[AllowMockObjectsWithoutExpectations]
 #[CoversClass(Bootstrap::class)]
 #[CoversClass(FontAwesome::class)]
 #[CoversClass(Jquery::class)]
-#[CoversClass(Popper::class)]
 class AssetsTest extends TestCase
 {
     private array $availableTypes = [AssetInterface::TYPE_URL, AssetInterface::TYPE_VENDOR, AssetInterface::TYPE_URL_ZIP];
@@ -27,7 +24,6 @@ class AssetsTest extends TestCase
         $this->assetTest(new Bootstrap(), 'bootstrap');
         $this->assetTest(new FontAwesome(), 'fontawesome');
         $this->assetTest(new Jquery(), 'jquery');
-        $this->assetTest(new Popper(), 'popper');
     }
 
     private function assetTest(AssetInterface $asset, string $code): void

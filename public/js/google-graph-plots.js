@@ -24,13 +24,13 @@ class GoogleGraphPlots {
     init() {
         google.charts.load('current', {'packages':['corechart']});
         google.charts.setOnLoadCallback(
-            $.proxy(this.initDraw, this)
+            this.initDraw.bind(this)
         );
         return true;
     }
 
     initDraw() {
-        $(window).resize($.proxy(this.draw, this));
+        $(window).resize(this.draw.bind(this));
 
         this.draw();
     }

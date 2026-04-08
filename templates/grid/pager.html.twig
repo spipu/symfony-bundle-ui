@@ -1,7 +1,7 @@
 {% set infoPages = manager.infoPages %}
 {% if infoPages|length %}
 <div class="row">
-    <div class="col-xs-12 col-md-7" >
+    <div class="col-12 col-md-7" >
         <nav aria-label="Page Navigation">
             <ul class="pagination pagination-sm justify-content-center justify-content-md-start">
 {% for infoPage in infoPages %}
@@ -10,7 +10,7 @@
             </ul>
         </nav>
     </div>
-    <div class="col-xs-12 col-md-5">
+    <div class="col-12 col-md-5">
         <nav aria-label="page Length">
             <ul class="pagination pagination-sm justify-content-center justify-content-md-end">
 {% for value in manager.definition.pager.lengths %}

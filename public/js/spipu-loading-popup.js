@@ -20,11 +20,11 @@ class SpipuLoadingPopup {
             '</div>';
 
         $("#confirmPopup").html(popup);
-        $("#modalWindow").modal({keyboard: false, backdrop: 'static', show: true });
+        new bootstrap.Modal(document.getElementById('modalWindow'), {keyboard: false, backdrop: 'static'}).show();
     }
 
     close() {
-        $("#modalWindow").modal('hide');
+        bootstrap.Modal.getInstance(document.getElementById('modalWindow')).hide();
         $("#confirmPopup").html('');
     }
 }

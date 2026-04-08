@@ -37,8 +37,8 @@ class FieldSetTest extends TestCase
         $this->assertSame(false, $entity->isHiddenInView());
 
         $this->assertSame('col-12', $entity->getCssClass());
-        $entity->setCssClass('col-xs-12 col-md-6');
-        $this->assertSame('col-xs-12 col-md-6', $entity->getCssClass());
+        $entity->setCssClass('col-12 col-md-6');
+        $this->assertSame('col-12 col-md-6', $entity->getCssClass());
     }
     
     public function testEntityFields(): void

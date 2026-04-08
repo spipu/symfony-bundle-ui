@@ -42,8 +42,8 @@ class SpipuUiGrid {
     }
 
     filtersInit() {
-        this.getElement('filter-cancel').click($.proxy(this.filtersReset, this));
-        this.getElement('filter-open').click($.proxy(this.filtersOpen, this));
+        this.getElement('filter-cancel').click(this.filtersReset.bind(this));
+        this.getElement('filter-open').click(this.filtersOpen.bind(this));
     }
 
     filtersOpen() {
@@ -54,11 +54,11 @@ class SpipuUiGrid {
     }
 
     personalizeInit() {
-        this.getElement('config-select').on('change', $.proxy(this.personalizeSelect, this));
-        this.getElement('config-create').click($.proxy(this.personalizeCreate, this));
-        this.getElement('config-delete').click($.proxy(this.personalizeDelete, this));
-        this.getElement('config-configure').click($.proxy(this.personalizeConfigure, this));
-        this.getElement('config-cancel').click($.proxy(this.personalizeCancel, this));
+        this.getElement('config-select').on('change', this.personalizeSelect.bind(this));
+        this.getElement('config-create').click(this.personalizeCreate.bind(this));
+        this.getElement('config-delete').click(this.personalizeDelete.bind(this));
+        this.getElement('config-configure').click(this.personalizeConfigure.bind(this));
+        this.getElement('config-cancel').click(this.personalizeCancel.bind(this));
 
         this.personalizeSortColumnsInit();
     }
@@ -104,11 +104,11 @@ class SpipuUiGrid {
         items.find('.list-action-sort').show();
 
         items = items.slice(0, -1);
-        items.on('dragover', $.proxy(this.personalizeSortColumnsDragOver, this));
-        items.on('drop',     $.proxy(this.personalizeSortColumnsDrop, this));
+        items.on('dragover', this.personalizeSortColumnsDragOver.bind(this));
+        items.on('drop',     this.personalizeSortColumnsDrop.bind(this));
         items = items.slice(1);
-        items.on('drag',     $.proxy(this.personalizeSortColumnsDrag, this));
-        items.on('dragend',  $.proxy(this.personalizeSortColumnsDrop, this));
+        items.on('drag',     this.personalizeSortColumnsDrag.bind(this));
+        items.on('dragend',  this.personalizeSortColumnsDrop.bind(this));
         items.attr('draggable', true);
         items.css('cursor', 'move');
 
@@ -121,8 +121,8 @@ class SpipuUiGrid {
         items.css('cursor', '');
         items.off();
         items.find('.list-action-sort').off().hide();
-        items.find('.list-action-show').off().hide().on('click', $.proxy(this.personalizeSortColumnsShow, this));
-        items.find('.list-action-hide').off().hide().on('click', $.proxy(this.personalizeSortColumnsHide, this));
+        items.find('.list-action-show').off().hide().on('click', this.personalizeSortColumnsShow.bind(this));
+        items.find('.list-action-hide').off().hide().on('click', this.personalizeSortColumnsHide.bind(this));
     }
 
     personalizeSortColumnsShow(event) {
@@ -249,8 +249,7 @@ class SpipuUiGrid {
         let value = this.getValue(target);
         let checked = $(target).prop("checked");
 
-        this.ids = $.grep(
-            this.ids,
+        this.ids = this.ids.filter(
             function (id) {
                 return id !== value;
             }

@@ -26,8 +26,9 @@ The **UiBundle** provides a reusable admin UI framework built on Twig, Bootstrap
 - PHP >= 8.3
 - Symfony >= 7.4
 - `spipu/core-bundle`
-- Bootstrap 4 (provided via the `spipu.asset` system)
-- FontAwesome, jQuery, Popper (also provided via the `spipu.asset` system)
+- Bootstrap v5 (provided via the `spipu.asset` system)
+- FontAwesome v7 (provided via the `spipu.asset` system)
+- jQuery v4 (provided via the `spipu.asset` system)
 
 ## Quick Start
 
