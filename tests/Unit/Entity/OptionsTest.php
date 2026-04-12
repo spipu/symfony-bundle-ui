@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Spipu\UiBundle\Tests\Unit\Entity;
 
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\TestCase;
 use Spipu\UiBundle\Entity\OptionsTrait;
 
+#[CoversNothing]
 #[AllowMockObjectsWithoutExpectations]
 class OptionsTest extends TestCase
 {

@@ -6,10 +6,11 @@ namespace Spipu\UiBundle\Tests\Unit\Entity;
 
 use DateTimeInterface;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\TestCase;
 use Spipu\UiBundle\Entity\TimestampableTrait;
 
+#[CoversNothing]
 #[AllowMockObjectsWithoutExpectations]
 class TimestampableTest extends TestCase
 {
