@@ -8,29 +8,29 @@
     <button type="{{ buttonType }}" {% if action is not null %}onclick="{{ action }}"{% endif %} {% if id is not null %}id="{{ id }}"{% endif %} {% if role is not null %}data-action-role="{{ role }}"{% endif %} class="ms-2 spipu-ui-btn btn btn-outline-{{ class }}" >{% if icon is not null %}<i class="fa-solid fa-{{ icon }}"></i> {% endif %}{{ message|trans() }}</button>
 {% endmacro %}
 
-{% macro create(url, message, id) %}
+{% macro create(url, message, id, additionalClass) %}
     {% if message is empty %}{% set message = 'spipu.ui.action.create' %}{% endif %}
-    {{ _self.defaultLink(url, message, 'success', 'pen-to-square', id) }}
+    {{ _self.defaultLink(url, message, 'success' ~ (additionalClass is not null ? ' ' ~ additionalClass : ''), 'pen-to-square', id) }}
 {% endmacro %}
 
-{% macro show(url, message, id) %}
+{% macro show(url, message, id, additionalClass) %}
     {% if message is empty %}{% set message = 'spipu.ui.action.show' %}{% endif %}
-    {{ _self.defaultLink(url, message, 'primary', 'eye', id) }}
+    {{ _self.defaultLink(url, message, 'primary' ~ (additionalClass is not null ? ' ' ~ additionalClass : ''), 'eye', id) }}
 {% endmacro %}
 
-{% macro edit(url, message, id) %}
+{% macro edit(url, message, id, additionalClass) %}
     {% if message is empty %}{% set message = 'spipu.ui.action.edit' %}{% endif %}
-    {{ _self.defaultLink(url, message, 'success', 'pen-to-square', id) }}
+    {{ _self.defaultLink(url, message, 'success' ~ (additionalClass is not null ? ' ' ~ additionalClass : ''), 'pen-to-square', id) }}
 {% endmacro %}
 
-{% macro back(url, message, id) %}
+{% macro back(url, message, id, additionalClass) %}
     {% if message is empty %}{% set message = 'spipu.ui.action.back' %}{% endif %}
-    {{ _self.defaultLink(url, message, 'secondary', 'rotate-left', id) }}
+    {{ _self.defaultLink(url, message, 'secondary' ~ (additionalClass is not null ? ' ' ~ additionalClass : ''), 'rotate-left', id) }}
 {% endmacro %}
 
-{% macro delete(url, tokenId, message, id) %}
+{% macro delete(url, tokenId, message, id, additionalClass) %}
     {% if message is empty %}{% set message = 'spipu.ui.action.delete' %}{% endif %}
-    <form method="post" action="{{ url }}" style="display: inline"><input type="hidden" name="_method" value="DELETE"><input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ tokenId) }}">{{ _self.defaultButton(null, message, 'danger confirm-action', 'trash-can', id, 'delete') }}</form>
+    <form method="post" action="{{ url }}" style="display: inline"><input type="hidden" name="_method" value="DELETE"><input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ tokenId) }}">{{ _self.defaultButton(null, message, 'danger confirm-action' ~ (additionalClass is not null ? ' ' ~ additionalClass : ''), 'trash-can', id, 'delete') }}</form>
 {% endmacro %}
 
 {% macro submitManagerForm(manager) %}

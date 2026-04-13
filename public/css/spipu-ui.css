@@ -28,7 +28,7 @@ body > main.footerless {
 table.table thead th.sorting
 {
     position: relative;
-    padding-left: 0.75em;
+    padding-left:1em;
 }
 
 table.table thead th.sorting a
@@ -65,7 +65,7 @@ div.tab-sub-actions {
     position: absolute;
     top: 0;
     right: 0;
-    margin: 1.25rem;
+    margin: 1.0rem;
     padding: 0.3rem;
 }
 
