@@ -23,9 +23,9 @@ class SpipuUiCheckboxTree {
     toggleChildren(node) {
         let selector = this.getFlatChildrenSelector(node);
         let form = node.closest('form');
-        this.toogleUselessNode(form.find('input'), false);
-        this.toogleUselessNode(form.find(selector), true)
-        this.toogleUselessNode(form.find('input:checked:not(:indeterminate) ~ ul > li > input'), true);
+        this.toggleUselessNode(form.find('input'), false);
+        this.toggleUselessNode(form.find(selector), true)
+        this.toggleUselessNode(form.find('input:checked:not(:indeterminate) ~ ul > li > input'), true);
     }
 
     getFlatChildrenSelector(node) {
@@ -43,7 +43,7 @@ class SpipuUiCheckboxTree {
         return selectors.join(',');
     }
 
-    toogleUselessNode(node, checked) {
+    toggleUselessNode(node, checked) {
         node.prop('indeterminate', checked)
             .prop('disabled', checked)
             .each(function (index, checkbox) {
@@ -52,12 +52,16 @@ class SpipuUiCheckboxTree {
                     .prop('indeterminate', checked);
             })
     }
+
+    static init(container = document) {
+        $(container).find('ul.checkbox-tree').each(function () {
+            new SpipuUiCheckboxTree($(this));
+        });
+    }
 }
 
+window.SpipuUiCheckboxTree = SpipuUiCheckboxTree;
+
 window.documentReady.add(function () {
-    $("ul.checkbox-tree").each(
-        function () {
-            new SpipuUiCheckboxTree($(this));
-        }
-    )
+    SpipuUiCheckboxTree.init();
 });
