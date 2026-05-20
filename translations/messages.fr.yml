@@ -3,8 +3,8 @@ spipu:
         options:
             value_disabled: "Désactiver"
             value_enabled:  "Activer"
-            value_false: "Vrai"
-            value_true:  "Faux"
+            value_false: "Faux"
+            value_true:  "Vrai"
             value_yes: "Oui"
             value_no:  "Non"
 
