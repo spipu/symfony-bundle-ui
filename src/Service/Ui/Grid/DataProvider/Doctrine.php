@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Spipu\UiBundle\Service\Ui\Grid\DataProvider;
 
 use Doctrine\ORM\Query\Expr\Andx;
+use SortDirection;
 use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Entity\Grid\Column;
 use Spipu\UiBundle\Entity\Grid\ColumnType;
@@ -194,9 +195,13 @@ class Doctrine extends AbstractDataProvider
         }
 
         if ($this->request->getSortColumn()) {
+            $sortOrder = SortDirection::Ascending;
+            if ($this->request->getSortOrder() === 'desc') {
+                $sortOrder = SortDirection::Descending;
+            }
             $queryBuilder->orderBy(
                 $this->getFieldFromColumn($this->definition->getColumn($this->request->getSortColumn())),
-                $this->request->getSortOrder()
+                $sortOrder
             );
         }
 
