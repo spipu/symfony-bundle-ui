@@ -10,17 +10,17 @@
                     <input name="cf[action]" type="hidden" value="select" />
                     <div class="mb-3 mb-2 text-center text-xl-end">
                         <div class="input-group">
-                            <label for="grid_config_select" class="input-group-text border-dark">{{ 'spipu.ui.grid.config.display'|trans }}</label>
-                            <select autocomplete="off" class="form-select border-dark" name="cf[id]" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-select">
+                            <label for="grid_config_select" class="input-group-text border-secondary">{{ 'spipu.ui.grid.config.display'|trans }}</label>
+                            <select autocomplete="off" class="form-select border-secondary" name="cf[id]" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-select">
                                 {% for config in configuration.configs %}
                                     <option {% if currentConfig.id == config.id %}selected="selected"{% endif %} value="{{ config.id }}">{{ config.getCutName(30) }}</option>
                                 {% endfor %}
                             </select>
-                            <button type="button" class="btn btn-outline-secondary border-dark" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-configure">
+                            <button type="button" class="btn btn-outline-secondary border-secondary" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-configure">
                                 <i class="fa-solid fa-gear"></i> {{ 'spipu.ui.grid.config.configure'|trans }}
                             </button>
                         </div>
-                        <a class="form-text text-muted" role="button" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-create">
+                        <a class="form-text text-body-secondary" role="button" data-grid-code="{{ manager.definition.code }}" data-grid-role="config-create">
                            <small>{{ 'spipu.ui.grid.config_create.title'|trans }}</small>
                         </a>
                     </div>
@@ -35,18 +35,18 @@
                     <div class="mb-3 mb-2 text-center text-xl-end">
                         {% if infoQuickSearch|length %}
                             <div class="input-group">
-                                        <select class="form-select btn btn-outline-secondary border-dark" name="qs[field]">
+                                        <select class="form-select btn btn-outline-secondary border-secondary" name="qs[field]">
                                         {% for column in infoQuickSearch %}
                                             <option value="{{ column.code }}" {% if (manager.request.quickSearchField == column.code) %}selected{% endif %}>{{ column.name|trans() }}</option>
                                         {% endfor %}
                                     </select>
-                                <input type="text" class="form-control" aria-label="quick search" name="qs[value]" value="{{ manager.request.quickSearchValue }}">
+                                <input type="text" class="form-control border-secondary" aria-label="quick search" name="qs[value]" value="{{ manager.request.quickSearchValue }}">
                                     <button class="btn btn-outline-secondary" type="submit">
                                         <i class="fa-solid fa-magnifying-glass"></i> {{ 'spipu.ui.grid.quick_search.search'|trans }}
                                     </button>
                             </div>
                             {% if infoFilters|length %}
-                                <a class="form-text text-muted" role="button" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-open">
+                                <a class="form-text text-body-secondary" role="button" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-open">
                                     <small>{{ 'spipu.ui.grid.filter.title'|trans }}</small>
                                 </a>
                             {% endif %}

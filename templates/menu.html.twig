@@ -1,16 +1,16 @@
 {%  set mainItem = getMenu(currentItem) %}
-<nav class="navbar navbar-expand-md {% if mainItem.cssClass %}{{ mainItem.cssClass }}{% else %}bg-dark{% endif %} fixed-top" data-bs-theme="dark">
+<nav class="navbar navbar-expand-md fixed-top {% if mainItem.cssClass %}{{ mainItem.cssClass }}{% else %}bg-body-tertiary{% endif %}">
   <div class="container-fluid">
     <a class="navbar-brand" href="{% if mainItem.route %}{{ path(mainItem.route, mainItem.routeParams) }}{% else %}#{% endif %}">
         {% if mainItem.icon %}
-            <span class="badge text-bg-light text-{{ mainItem.iconThemeColor }}" {% if mainItem.iconTitle %}title="{{ mainItem.iconTitle }}"{% endif %}><i class="fa-solid fa-{{ mainItem.icon }}"></i> {{ mainItem.name }}</span>
+            <span class="badge text-bg-light border text-{{ mainItem.iconThemeColor }}" {% if mainItem.iconTitle %}title="{{ mainItem.iconTitle }}"{% endif %}><i class="fa-solid fa-{{ mainItem.icon }}"></i> {{ mainItem.name }}</span>
         {% else %}
             {{ mainItem.name }}
         {% endif %}
     </a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu-navbar" aria-controls="menu-navbar" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+        <i class="fa-solid fa-bars"></i>
     </button>
 
     <div class="collapse navbar-collapse" id="menu-navbar">

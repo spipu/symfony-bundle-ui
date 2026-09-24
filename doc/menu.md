@@ -70,7 +70,7 @@ new Item(string $name, ?string $code = null, ?string $route = null, array $route
 | `getParentItem(): ?Item` | Return the parent (for chaining back up) |
 | `setACL(bool $connected, ?string $role = null)` | Set access control: `false` = guests only, `true` = authenticated users, `$role` = specific role |
 | `setIcon(string $icon, string $iconThemeColor = 'secondary', ?string $iconTitle = null)` | Set FontAwesome icon name and Bootstrap theme color |
-| `setCssClass(?string $cssClass)` | Custom CSS class on the menu item |
+| `setCssClass(?string $cssClass)` | Custom CSS class on the menu item (on the main item, applied to the navbar itself, see [Styling and color mode](#styling-and-color-mode)) |
 
 ### Rendering the menu in Twig
 
@@ -82,6 +82,32 @@ The `getMenu` Twig function (from `UiExtension`) builds the menu and marks the a
 ```
 
 Pass the `code` of the currently active item to `getMenu()`. The `Manager` service traverses the tree, evaluates access rules, and marks items as `allowed` or `active`.
+
+### Styling and color mode
+
+The global color mode is set on the `<html>` tag of `@SpipuUi/base.html.twig` (`light` by default). Override the `html_theme` block to change it:
+
+```twig
+{% extends '@SpipuUi/base.html.twig' %}
+
+{% block html_theme %}dark{% endblock %}
+```
+
+By default, the navbar uses the theme-adaptive `bg-body-tertiary` background: it follows the global color mode, like its dropdowns.
+
+To use a custom background, set it with `setCssClass()` on the main item, together with a contrast class matching this background:
+
+| Class | Use with |
+|-------|----------|
+| `spipu-navbar-on-dark` | dark backgrounds (`bg-dark`, `bg-primary`, ...): light navbar content |
+| `spipu-navbar-on-light` | light backgrounds (`bg-light`, `bg-warning`, ...): dark navbar content |
+
+```php
+$root = new Item('My App', '', 'app_home');
+$root->setCssClass('bg-dark spipu-navbar-on-dark');
+```
+
+These classes only change the navbar content colors (links, brand, toggler): dropdown menus keep the global color mode.
 
 ### `Menu\Manager` access rules
 
