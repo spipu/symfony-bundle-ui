@@ -28,6 +28,10 @@
     {{ _self.defaultLink(url, message, 'secondary' ~ (additionalClass is not null ? ' ' ~ additionalClass : ''), 'rotate-left', id) }}
 {% endmacro %}
 
+{% macro postButton(url, tokenId, message, class, icon = null, id = null, role = null) %}
+    <form method="post" action="{{ url }}" style="display: inline"><input type="hidden" name="_token" value="{{ csrf_token(tokenId) }}">{{ _self.defaultButton(null, message, class, icon, id, role) }}</form>
+{% endmacro %}
+
 {% macro delete(url, tokenId, message = null, id = null, additionalClass = null) %}
     {% if message is empty %}{% set message = 'spipu.ui.action.delete' %}{% endif %}
     <form method="post" action="{{ url }}" style="display: inline"><input type="hidden" name="_method" value="DELETE"><input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ tokenId) }}">{{ _self.defaultButton(null, message, 'danger confirm-action' ~ (additionalClass is not null ? ' ' ~ additionalClass : ''), 'trash-can', id, 'delete') }}</form>
