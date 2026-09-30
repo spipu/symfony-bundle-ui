@@ -23,7 +23,7 @@ The **UiBundle** provides a reusable admin UI framework built on Twig, Bootstrap
 
 ## Requirements
 
-- PHP 8.1+
+- PHP 8.3+
 - Symfony 6.4+
 - `spipu/core-bundle`
 - Bootstrap 4 (provided via the `spipu.asset` system)

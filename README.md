@@ -14,7 +14,7 @@ This symfony bundle add the following features:
 
 This symfony bundle works with:
 
-* PHP >= 8.1
+* PHP >= 8.3
 * Composer
 * Symfony >= 6.4
 
