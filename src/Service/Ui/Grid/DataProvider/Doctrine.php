@@ -20,6 +20,7 @@ use Spipu\UiBundle\Entity\Grid\ColumnType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Spipu\UiBundle\Exception\GridException;
+use SortDirection;
 
 class Doctrine extends AbstractDataProvider
 {
@@ -196,7 +197,7 @@ class Doctrine extends AbstractDataProvider
         if ($this->request->getSortColumn()) {
             $queryBuilder->orderBy(
                 $this->getFieldFromColumn($this->definition->getColumn($this->request->getSortColumn())),
-                $this->request->getSortOrder()
+                $this->request->getSortOrder() === 'desc' ? SortDirection::Descending : SortDirection::Ascending
             );
         }
 
