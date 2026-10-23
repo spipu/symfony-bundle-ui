@@ -360,6 +360,8 @@ Values are read with the Symfony PropertyAccess component (`symfony/property-acc
 
 Only the Doctrine data provider applies the filter condition. A custom data provider must apply the rule itself, for example with `PersonalDataProtection::isProtectedField()` and `PersonalDataProtection::getHiddenAtField()`.
 
+A custom column template (`setTemplateField()`) or show template must display `data` or `personal_data(...)`: reading `row` or `manager.resource` directly bypasses the protection.
+
 ## Grid Personalization
 
 Enabling `setPersonalize(true)` on the `Grid` allows users to save custom column selections. These are stored in the `spipu_ui_grid_config` database table via the `GridConfig` entity.
