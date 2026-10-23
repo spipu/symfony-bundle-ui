@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Service\Ui\Grid\DataProvider;
 
+use DateTimeImmutable;
 use Doctrine\ORM\Query\Expr\Andx;
 use SortDirection;
 use Spipu\UiBundle\Entity\EntityInterface;
@@ -21,18 +22,23 @@ use Spipu\UiBundle\Entity\Grid\ColumnType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Spipu\UiBundle\Exception\GridException;
+use Spipu\UiBundle\Service\Ui\PersonalDataProtection;
+use Stringable;
 
 class Doctrine extends AbstractDataProvider
 {
     protected EntityManagerInterface $entityManager;
+    protected PersonalDataProtection $personalDataProtection;
     protected array $conditions = [];
     protected array $mappingValues = [];
     protected array $joins = [];
 
     public function __construct(
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        PersonalDataProtection $personalDataProtection
     ) {
         $this->entityManager = $entityManager;
+        $this->personalDataProtection = $personalDataProtection;
     }
 
     public function resetDataProvider(): void
@@ -118,9 +124,25 @@ class Doctrine extends AbstractDataProvider
         string $code,
         mixed $value
     ): array {
+        $column = $this->definition->getColumn($code);
+
+        $parameters = $this->prepareQueryBuilderFilterValue($queryBuilder, $where, $column, $code, $value);
+        if (count($parameters) > 0) {
+            $parameters += $this->preparePersonalDataCondition($queryBuilder, $where, $column);
+        }
+
+        return $parameters;
+    }
+
+    protected function prepareQueryBuilderFilterValue(
+        QueryBuilder $queryBuilder,
+        Andx $where,
+        Column $column,
+        string $code,
+        mixed $value
+    ): array {
         $parameters = [];
 
-        $column = $this->definition->getColumn($code);
         $entityField = $this->getFieldFromColumn($column);
 
         if ($column->getFilter()->isRange()) {
@@ -167,8 +189,53 @@ class Doctrine extends AbstractDataProvider
         $value = $this->applyValueTransformer($column, $value);
         $where->add($queryBuilder->expr()->like($entityField, ':' . $code));
         $parameters[':' . $code] = $value . '%';
+        $parameters += $this->preparePersonalDataCondition($queryBuilder, $where, $column);
 
         return $parameters;
+    }
+
+    protected function preparePersonalDataCondition(QueryBuilder $queryBuilder, Andx $where, Column $column): array
+    {
+        $entityName = $this->definition->getEntityName();
+        if (!$this->personalDataProtection->isProtectedField($entityName, $column->getEntityField())) {
+            return [];
+        }
+
+        $parameterName = $this->getPersonalDataParameterName();
+        $dateField = 'main.' . $this->personalDataProtection->getHiddenAtField($entityName);
+        $where->add(
+            $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->isNull($dateField),
+                $queryBuilder->expr()->gt($dateField, $parameterName)
+            )
+        );
+
+        return [$parameterName => new DateTimeImmutable()];
+    }
+
+    protected function getPersonalDataParameterName(): string
+    {
+        $reserved = [];
+        foreach ($this->definition->getColumns() as $column) {
+            $code = $column->getCode();
+            $reserved[] = ':' . $code;
+            $reserved[] = ':' . $code . '_from';
+            $reserved[] = ':' . $code . '_to';
+        }
+
+        foreach ($this->conditions as $condition) {
+            if (is_string($condition) || ($condition instanceof Stringable)) {
+                preg_match_all('/:[a-z_][a-z0-9_]*/i', (string) $condition, $matches);
+                $reserved = array_merge($reserved, $matches[0]);
+            }
+        }
+
+        $name = ':personal_data_now';
+        while (in_array($name, $reserved, true)) {
+            $name .= '_';
+        }
+
+        return $name;
     }
 
     public function getNbTotalRows(): int

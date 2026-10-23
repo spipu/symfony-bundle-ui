@@ -28,16 +28,19 @@ class ShowManager implements ShowManagerInterface
     private Twig $twig;
     private EntityDefinitionInterface $definition;
     private Form $formDefinition;
+    private PersonalDataProtection $personalDataProtection;
     private ?EntityInterface $resource = null;
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         Twig $twig,
-        EntityDefinitionInterface $definition
+        EntityDefinitionInterface $definition,
+        PersonalDataProtection $personalDataProtection
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->twig = $twig;
         $this->definition = $definition;
+        $this->personalDataProtection = $personalDataProtection;
     }
 
     public function setResource(EntityInterface $resource): ShowManagerInterface
@@ -66,6 +69,11 @@ class ShowManager implements ShowManagerInterface
     public function getResource(): EntityInterface
     {
         return $this->resource;
+    }
+
+    public function getValue(string $field): mixed
+    {
+        return $this->personalDataProtection->getValue($this->resource, $field);
     }
 
     public function display(): string

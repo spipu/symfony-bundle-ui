@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Twig;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -11,6 +12,8 @@ use Spipu\CoreBundle\Tests\SymfonyMock;
 use Spipu\UiBundle\Entity\Menu\Item;
 use Spipu\UiBundle\Service\Menu\Manager as MenuManager;
 use Spipu\UiBundle\Service\Ui\UiManagerInterface;
+use Spipu\UiBundle\Tests\SpipuUiMock;
+use Spipu\UiBundle\Tests\Unit\Service\Ui\PersonalDataProtectionTest;
 use Spipu\UiBundle\Twig\UiExtension;
 use Twig\Extension\ExtensionInterface;
 
@@ -33,7 +36,11 @@ class UiExtensionTest extends TestCase
             );
 
         /** @var MenuManager $menuManagerMock */
-        $extension = new UiExtension($menuManagerMock, SymfonyMock::getTranslator($this));
+        $extension = new UiExtension(
+            $menuManagerMock,
+            SymfonyMock::getTranslator($this),
+            PersonalDataProtectionTest::getService()
+        );
 
         return $extension;
     }
@@ -52,6 +59,7 @@ class UiExtensionTest extends TestCase
             'getTranslations',
             'isClosure',
             'executeClosure',
+            'personal_data',
         ];
 
         $extension = $this->getExtension();
@@ -79,6 +87,25 @@ class UiExtensionTest extends TestCase
         $this->assertSame(true, $item->isActive());
 
         Item::resetAll();
+    }
+
+    public function testPersonalData(): void
+    {
+        $extension = $this->getExtension();
+
+        $entity = SpipuUiMock::getPersonalDataResourceMock();
+        $entity
+            ->setFieldAA(9)
+            ->setFieldAB('secret');
+
+        $this->assertSame('secret', $extension->getPersonalData($entity, 'fieldAB'));
+
+        $entity->setPersonalDataHiddenAt(new DateTimeImmutable('-1 day'));
+        $this->assertNull($extension->getPersonalData($entity, 'fieldAB'));
+        $this->assertSame(9, $extension->getPersonalData($entity, 'fieldAA'));
+
+        $resource = SpipuUiMock::getResourceMock()->setFieldAB('public');
+        $this->assertSame('public', $extension->getPersonalData($resource, 'fieldAB'));
     }
 
     public function testRenderManager(): void

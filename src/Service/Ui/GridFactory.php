@@ -31,6 +31,7 @@ class GridFactory
     private EventDispatcherInterface $eventDispatcher;
     private Twig $twig;
     private GridConfig $gridConfig;
+    private PersonalDataProtection $personalDataProtection;
 
     public function __construct(
         ContainerInterface $container,
@@ -39,7 +40,8 @@ class GridFactory
         RouterInterface $router,
         EventDispatcherInterface $eventDispatcher,
         Twig $twig,
-        GridConfig $gridConfig
+        GridConfig $gridConfig,
+        PersonalDataProtection $personalDataProtection
     ) {
         $this->container = $container;
         $this->requestStack = $requestStack;
@@ -48,6 +50,7 @@ class GridFactory
         $this->eventDispatcher = $eventDispatcher;
         $this->twig = $twig;
         $this->gridConfig = $gridConfig;
+        $this->personalDataProtection = $personalDataProtection;
     }
 
     public function create(GridDefinitionInterface $gridDefinition): GridManagerInterface
@@ -60,7 +63,8 @@ class GridFactory
             $this->eventDispatcher,
             $this->twig,
             $this->gridConfig,
-            $gridDefinition
+            $gridDefinition,
+            $this->personalDataProtection
         );
     }
 }

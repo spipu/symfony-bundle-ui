@@ -5,7 +5,7 @@
 {% for field in fieldSet.fields|filter(field => not field.isHiddenInView) %}
             <tr><th>{{ field.label|trans }}</th></tr>
             <tr><td data-form-code="{{ manager.definition.code }}" data-form-role="field" data-field-name="{{ field.code }}">
-                {% set data = attribute(manager.resource, field.code) %}
+                {% set data = manager.value(field.code) %}
                 {% if field.isList %}
                     <ul class="mb-0">
                         {% for value in data %}

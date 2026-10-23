@@ -33,6 +33,9 @@ services:
     Spipu\UiBundle\Service\Ui\ShowFactory:
         autowire: true
 
+    Spipu\UiBundle\Service\Ui\PersonalDataProtection:
+        autowire: true
+
     # Grid services
     Spipu\UiBundle\Service\Ui\Grid\DataProvider\Doctrine:
         public: true
