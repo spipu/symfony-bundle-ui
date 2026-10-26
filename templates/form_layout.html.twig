@@ -1,14 +1,9 @@
 {% use "bootstrap_5_layout.html.twig" %}
 
 {% block file_widget -%}
-    {%- set attr = attr|merge({
-            placeholder: 'spipu.ui.field.file.placeholder'|trans,
-            onchange: "this.parentElement.getElementsByTagName('label')[0].innerText = this.value.replace(/\\\\/g, '/').split('/').pop();"
-        })
-    -%}
-    {{ parent() }}
-    <style type="text/css">.custom-file-label::after { content: "{{ 'spipu.ui.field.file.action'|trans }}"; }</style>
-{% endblock %}
+    {%- set attr = attr|merge({placeholder: 'spipu.ui.field.file.placeholder'|trans}) -%}
+    {{- block('form_widget') -}}
+{%- endblock %}
 
 {% block integerunit_widget -%}
     <div class="input-group">
