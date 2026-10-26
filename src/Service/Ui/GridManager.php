@@ -48,6 +48,7 @@ class GridManager implements GridManagerInterface
     private EventDispatcherInterface $eventDispatcher;
     private Twig $twig;
     private GridConfig $gridConfig;
+    private PersonalDataProtection $personalDataProtection;
     private GridDefinition $definition;
     private DataProviderInterface $dataProvider;
     private ?GridConfigEntity $currentGridConfig;
@@ -67,17 +68,21 @@ class GridManager implements GridManagerInterface
         EventDispatcherInterface $eventDispatcher,
         Twig $twig,
         GridConfig $gridConfig,
-        GridDefinitionInterface $gridDefinition
+        GridDefinitionInterface $gridDefinition,
+        PersonalDataProtection $personalDataProtection
     ) {
         $this->container = $container;
         $this->authorizationChecker = $authorizationChecker;
         $this->eventDispatcher = $eventDispatcher;
         $this->router = $router;
         $this->twig = $twig;
+        $this->personalDataProtection = $personalDataProtection;
         $this->definition = $gridDefinition->getDefinition();
 
         $event = new GridDefinitionEvent($this->definition);
         $this->eventDispatcher->dispatch($event, $event->getEventCode());
+
+        $this->personalDataProtection->disableSort($this->definition);
 
         $this->request = $this->initGridRequest($symfonyRequest, $router);
         $this->dataProvider = $this->initDataProvider();
@@ -337,41 +342,7 @@ class GridManager implements GridManagerInterface
 
     public function getValue(EntityInterface $object, string $field): mixed
     {
-        $finalObject = $object;
-        $finalField = $field;
-
-        if (str_contains($field, '.')) {
-            [$subMethod, $finalField] = explode('.', $field, 2);
-            $subMethod = 'get' . ucfirst($subMethod);
-
-            if (!method_exists($object, $subMethod)) {
-                throw new GridException(
-                    'Unable to find field ' . $field . ' on object ' . get_class($object)
-                );
-            }
-
-            $finalObject = $object->{$subMethod}();
-
-            if ($finalObject === null) {
-                return null;
-            }
-        }
-
-        $methods = [
-            'get' . ucfirst($finalField),
-            'is' . ucfirst($finalField),
-            $finalField,
-        ];
-
-        foreach ($methods as $method) {
-            if (method_exists($finalObject, $method)) {
-                return $finalObject->{$method}();
-            }
-        }
-
-        throw new GridException(
-            'Unable to find field ' . $field . ' on object ' . get_class($object)
-        );
+        return $this->personalDataProtection->getValue($object, $field);
     }
 
     /**

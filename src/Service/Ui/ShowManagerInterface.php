@@ -18,4 +18,6 @@ use Spipu\UiBundle\Entity\EntityInterface;
 interface ShowManagerInterface extends UiManagerInterface
 {
     public function setResource(EntityInterface $resource): ShowManagerInterface;
+
+    public function getValue(string $field): mixed;
 }

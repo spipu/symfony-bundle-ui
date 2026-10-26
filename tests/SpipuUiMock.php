@@ -13,11 +13,13 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Spipu\CoreBundle\Tests\SymfonyMock;
 use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Entity\Grid;
 use Spipu\UiBundle\Entity\Form;
+use Spipu\UiBundle\Entity\PersonalDataProtectedInterface;
 use Spipu\UiBundle\Exception\FormException;
 use Spipu\UiBundle\Form\Options\AbstractOptions;
 use Spipu\UiBundle\Service\Ui\Grid\GridRequest;
@@ -51,9 +53,22 @@ class SpipuUiMock extends TestCase
         return new ResourceMock();
     }
 
-    public static function getGridDefinitionMock(): GridDefinitionMock
+    public static function getPersonalDataResourceMock(): PersonalDataResourceMock
     {
-        return new GridDefinitionMock();
+        return new PersonalDataResourceMock();
+    }
+
+    public static function getGridDefinitionMock(?string $entityName = null): GridDefinitionMock
+    {
+        return new GridDefinitionMock($entityName);
+    }
+
+    public static function getPersonalDataGridDefinitionMock(): GridDefinitionMock
+    {
+        $definition = new GridDefinitionMock(PersonalDataResourceMock::class);
+        $definition->getDefinition()->getColumn('field_a_b')->getFilter()->useQuickSearch(true);
+
+        return $definition;
     }
 
     public static function getEntityDefinitionMock(): EntityDefinitionMock
@@ -138,9 +153,63 @@ class ResourceMock implements EntityInterface
     }
 }
 
+class PersonalDataResourceMock extends ResourceMock implements PersonalDataProtectedInterface
+{
+    private ?ResourceMock $sub = null;
+    private ?DateTimeImmutable $personalDataHiddenAt = null;
+
+    public static function getPersonalDataFields(): array
+    {
+        return ['fieldAB', 'sub.fieldBA'];
+    }
+
+    public static function getPersonalDataHiddenAtField(): string
+    {
+        return 'personalDataHiddenAt';
+    }
+
+    public function isPersonalDataHidden(): bool
+    {
+        return (
+            ($this->personalDataHiddenAt !== null)
+            && ($this->personalDataHiddenAt <= new DateTimeImmutable())
+        );
+    }
+
+    public function getSub(): ?ResourceMock
+    {
+        return $this->sub;
+    }
+
+    public function setSub(?ResourceMock $sub): self
+    {
+        $this->sub = $sub;
+
+        return $this;
+    }
+
+    public function getPersonalDataHiddenAt(): ?DateTimeImmutable
+    {
+        return $this->personalDataHiddenAt;
+    }
+
+    public function setPersonalDataHiddenAt(?DateTimeImmutable $personalDataHiddenAt): self
+    {
+        $this->personalDataHiddenAt = $personalDataHiddenAt;
+
+        return $this;
+    }
+}
+
 class GridDefinitionMock implements GridDefinitionInterface
 {
+    private ?string $entityName;
     private ?Grid\Grid $definition = null;
+
+    public function __construct(?string $entityName = null)
+    {
+        $this->entityName = $entityName;
+    }
 
     public function getDefinition(): Grid\Grid
     {
@@ -148,7 +217,7 @@ class GridDefinitionMock implements GridDefinitionInterface
             return $this->definition;
         }
 
-        $this->definition = new Grid\Grid('test');
+        $this->definition = new Grid\Grid('test', $this->entityName);
         $this->definition
             ->setDataProviderServiceName('data_provider')
             ->addColumn(

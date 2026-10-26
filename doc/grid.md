@@ -314,6 +314,54 @@ Call these after `$gridFactory->create()` but before `$manager->validate()`.
 
 `forceFilters(array $filters)` can also be used to bypass the request-driven filter mechanism entirely.
 
+## Personal data protection
+
+An entity can hide some of its fields once its personal data must no longer be displayed. It implements `Spipu\UiBundle\Entity\PersonalDataProtectedInterface` alongside `EntityInterface`:
+
+```php
+use DateTimeImmutable;
+use Spipu\UiBundle\Entity\EntityInterface;
+use Spipu\UiBundle\Entity\PersonalDataProtectedInterface;
+
+class Customer implements EntityInterface, PersonalDataProtectedInterface
+{
+    public static function getPersonalDataFields(): array
+    {
+        return ['email', 'lastName', 'address.street'];
+    }
+
+    public static function getPersonalDataHiddenAtField(): string
+    {
+        return 'personalDataHiddenAt';
+    }
+
+    public function isPersonalDataHidden(): bool
+    {
+        return ($this->personalDataHiddenAt !== null) && ($this->personalDataHiddenAt <= new DateTimeImmutable());
+    }
+}
+```
+
+| Method | Description |
+|--------|-------------|
+| `getPersonalDataFields()` (static) | Protected field paths, compared by exact match with the column entity field, the show field code, or the Twig function field. Dotted paths (`address.street`) are allowed |
+| `getPersonalDataHiddenAtField()` (static) | Name of the persisted nullable date-time property of the main entity, used by the Doctrine data provider |
+| `isPersonalDataHidden()` | Whether the personal data of this row is hidden |
+
+The rule is applied by the `Spipu\UiBundle\Service\Ui\PersonalDataProtection` service:
+
+- **Grid cell and action conditions**: `GridManager::getValue()` returns `null` for a protected field of a hidden row. Action conditions on that field receive `null`; `callback` conditions still receive the entity.
+- **Sort**: a column whose entity field is protected is never sortable. A sort requested on it (request, session, saved config or default sort) is ignored.
+- **Doctrine filters and quick search**: a filter or quick search on a protected column adds `(main.<hiddenAtField> IS NULL OR main.<hiddenAtField> > <now>)`, where `<now>` is a dedicated date parameter (`:personal_data_now`, suffixed with `_` until it differs from every column parameter and from every parameter named in `addCondition()` strings), so a hidden row is never found through its personal data. Range filters add the condition only when a bound is given. The date condition is always on the main entity, even for a dotted protected field.
+- **Show page**: `ShowManager::getValue()` returns `null` for a protected field of a hidden resource; the default `viewFieldset` template uses it.
+- **Twig**: `personal_data(entity, 'field')` returns the same value (see [Form / View / Menu System](./form.md)).
+
+Values are read with the Symfony PropertyAccess component (`symfony/property-access`): getters, `is`/`has`/`can` methods and public properties are supported. A field path is read segment by segment: a `null` intermediate value gives `null`; a segment that cannot be read, or an intermediate value that is not an object, throws a `GridException`. This relies on the default `framework.property_access.throw_exception_on_invalid_property_path: true`; with `false`, an unreadable field returns `null`.
+
+Only the Doctrine data provider applies the filter condition. A custom data provider must apply the rule itself, for example with `PersonalDataProtection::isProtectedField()` and `PersonalDataProtection::getHiddenAtField()`.
+
+A custom column template (`setTemplateField()`) or show template must display `data` or `personal_data(...)`: reading `row` or `manager.resource` directly bypasses the protection.
+
 ## Grid Personalization
 
 Enabling `setPersonalize(true)` on the `Grid` allows users to save custom column selections. These are stored in the `spipu_ui_grid_config` database table via the `GridConfig` entity.

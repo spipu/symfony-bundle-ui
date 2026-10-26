@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Service\Ui;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Spipu\UiBundle\Entity\EntityInterface;
@@ -42,7 +43,8 @@ class GridManagerTest extends AbstractTestCase
             $container->get('router'),
             $container->get('event_dispatcher'),
             $container->get('twig'),
-            $gridConfig
+            $gridConfig,
+            PersonalDataProtectionTest::getService()
         );
     }
 
@@ -501,6 +503,63 @@ class GridManagerTest extends AbstractTestCase
         $manager->getValue($row, 'wrongField');
     }
 
+    public function testManagerPersonalDataValues(): void
+    {
+        $manager = $this->prepareManagerReset(SpipuUiMock::getPersonalDataGridDefinitionMock(), []);
+
+        $row = SpipuUiMock::getPersonalDataResourceMock();
+        $row->setPersonalDataHiddenAt(new DateTimeImmutable('-1 day'));
+        $row
+            ->setFieldAA(3)
+            ->setFieldAB('secret');
+
+        $this->assertNull($manager->getValue($row, 'fieldAB'));
+        $this->assertSame(3, $manager->getValue($row, 'fieldAA'));
+
+        $row->setPersonalDataHiddenAt(null);
+        $this->assertSame('secret', $manager->getValue($row, 'fieldAB'));
+    }
+
+    public function testManagerPersonalDataSort(): void
+    {
+        $definition = SpipuUiMock::getPersonalDataGridDefinitionMock();
+
+        $manager = $this->prepareManagerReset($definition, []);
+        $this->assertFalse($manager->getDefinition()->getColumn('field_a_b')->isSortable());
+        $this->assertTrue($manager->getDefinition()->getColumn('field_a_a')->isSortable());
+        $this->assertArrayNotHasKey('field_a_b', $manager->getDefinition()->getSortableColumns());
+
+        $manager = $this->prepareManagerReset(
+            $definition,
+            [GridRequest::KEY_SORT_COLUMN => 'field_a_b', GridRequest::KEY_SORT_ORDER => 'desc']
+        );
+        $this->assertNull($manager->getRequest()->getSortColumn());
+        $this->assertNull($manager->getRequest()->getSortOrder());
+
+        $manager = $this->prepareManagerReset(
+            $definition,
+            [GridRequest::KEY_SORT_COLUMN => 'field_a_a', GridRequest::KEY_SORT_ORDER => 'desc']
+        );
+        $this->assertSame('field_a_a', $manager->getRequest()->getSortColumn());
+        $this->assertSame('desc', $manager->getRequest()->getSortOrder());
+    }
+
+    public function testManagerPersonalDataGranted(): void
+    {
+        $manager = $this->prepareManagerReset(SpipuUiMock::getPersonalDataGridDefinitionMock(), []);
+
+        $row = SpipuUiMock::getPersonalDataResourceMock();
+        $row->setFieldAB('secret');
+
+        $action = new Grid\Action('enable', 'Enable', 30, 'enable');
+        $action->setConditions(['fieldAB' => ['eq' => null]]);
+
+        $this->assertFalse($manager->isGrantedAction($action, $row));
+
+        $row->setPersonalDataHiddenAt(new DateTimeImmutable('-1 day'));
+        $this->assertTrue($manager->isGrantedAction($action, $row));
+    }
+
     public function testManagerGranted(): void
     {
         // Prepare the grid definition
@@ -629,7 +688,10 @@ class GridManagerTest extends AbstractTestCase
 
         $container = $this->getContainerMock();
 
-        $dataProvider = new Doctrine($container->get('doctrine.orm.default_entity_manager'));
+        $dataProvider = new Doctrine(
+            $container->get('doctrine.orm.default_entity_manager'),
+            PersonalDataProtectionTest::getService()
+        );
         $dataProvider->setGridRequest($manager->getRequest());
         $dataProvider->setGridDefinition($manager->getDefinition());
         $dataProvider->addCondition(['id' => 1]);

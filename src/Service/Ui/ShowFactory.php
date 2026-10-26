@@ -21,13 +21,16 @@ class ShowFactory
 {
     private EventDispatcherInterface $eventDispatcher;
     private Twig $twig;
+    private PersonalDataProtection $personalDataProtection;
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
-        Twig $twig
+        Twig $twig,
+        PersonalDataProtection $personalDataProtection
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->twig = $twig;
+        $this->personalDataProtection = $personalDataProtection;
     }
 
     public function create(EntityDefinitionInterface $formDefinition): ShowManagerInterface
@@ -35,7 +38,8 @@ class ShowFactory
         return new ShowManager(
             $this->eventDispatcher,
             $this->twig,
-            $formDefinition
+            $formDefinition,
+            $this->personalDataProtection
         );
     }
 }
