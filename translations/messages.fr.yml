@@ -87,4 +87,3 @@ spipu:
         field:
             file:
                 placeholder: "Veuillez sélectionner un fichier ..."
-                action:      "Parcourir"
