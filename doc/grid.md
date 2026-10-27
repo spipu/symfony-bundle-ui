@@ -321,7 +321,7 @@ Goal: limit the exposure of personal data, for example if the credentials of a b
 Once a record no longer needs to be fully visible (a closed case, an order shipped months ago), its personal data are hidden in the UI.
 
 - The data stay in the database: this is not an anonymization.
-- The protection only applies to the UI components listed below (grids, show pages, Twig functions).
+- The protection only applies to the UI components listed below (grids, show pages, Twig functions and macro).
 - An API, an export or a custom template reading the entity directly is not protected.
 - The controllers of the project are not protected: a mass action controller, or an edition not using `FormManager`, must check `PersonalDataProtection::isEntityHidden()` itself (a forged request can send the id of a hidden entity).
 
@@ -371,8 +371,8 @@ services:
 
 | Method | Description |
 |--------|-------------|
-| `isActive()` | Whether the rule applies in the current context. An inactive rule is ignored: nothing hidden, no search condition, edition allowed. Example: `false` for an admin who keeps the full view |
 | `getEntityClass()` | Entity class of the rule. Only one rule per class (a duplicate throws a `UiException`). Child classes use the rule of their parent |
+| `isActive()` | Whether the rule applies in the current context. An inactive rule is ignored: nothing hidden, no search condition, edition allowed. Example: `false` for an admin who keeps the full view |
 | `getFields()` | Protected fields: own fields of the entity only, no dotted path |
 | `isVisible(EntityInterface $entity)` | Whether the personal data of this entity are visible |
 | `getVisibleDqlCondition(string $alias)` | DQL condition matching the visible rows on the given alias, and its parameters. The parameter names are free: the data provider renames them to avoid collisions |

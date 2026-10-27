@@ -4,7 +4,7 @@
 
 This symfony bundle add the following features:
 
-* Bootstrap 4 theming
+* Bootstrap 5 theming
 * Menu Definition and management
 * Grid Definition and management
 * Entity Form Definition and management

@@ -298,6 +298,8 @@ class UserController extends AbstractController
 
 `ShowManager` uses the same `EntityDefinitionInterface` definition as `FormManager`. It renders `$form->getTemplateView()` (default: `@SpipuUi/entity/view.html.twig`) and respects `useHiddenInView()` on fieldsets and fields.
 
+`ShowManager::isHiddenValue(string $field)` returns `true` if the field is protected and the resource is hidden: the default view template displays a "Hidden" badge instead of the value (see [Personal data protection](./grid.md#personal-data-protection)).
+
 ## Listening to Form Events
 
 ### `FormDefinitionEvent`
@@ -419,6 +421,12 @@ Two Twig filters are available (provided by `OptionsExtension`):
 | `executeClosure` | `executeClosure(callable $closure, array $variables = []): mixed` | Calls a closure with the given arguments |
 | `is_personal_data_hidden_entity` | `is_personal_data_hidden_entity(EntityInterface $entity): bool` | Returns `true` if the personal data of the entity are hidden (see [Personal data protection](./grid.md#personal-data-protection)) |
 | `is_personal_data_hidden_field` | `is_personal_data_hidden_field(EntityInterface $entity, string $field): bool` | Returns `true` if the field is protected and its owning entity is hidden. Dotted paths are allowed (see [Personal data protection](./grid.md#personal-data-protection)) |
+
+### Macros
+
+| Macro | Usage | Description |
+|-------|-------|-------------|
+| `display` | `{% import '@SpipuUi/macro/personal_data.html.twig' as personal_data %}` then `personal_data.display(entity, 'field', value)` | Displays the "Hidden" badge if the field is hidden, else the given value, already formatted (see [Personal data protection](./grid.md#personal-data-protection)) |
 
 ### Filters (provided by `OptionsExtension`)
 
