@@ -19,6 +19,7 @@ use Spipu\UiBundle\Tests\ResourceMock;
 use Spipu\UiBundle\Tests\SpipuUiMock;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[AllowMockObjectsWithoutExpectations]
 #[CoversClass(FormManager::class)]
@@ -36,7 +37,8 @@ class FormManagerTest extends AbstractTestCase
             $container->get('doctrine.orm.default_entity_manager'),
             $container->get('form.factory'),
             $container->get('translator'),
-            $container->get('twig')
+            $container->get('twig'),
+            SpipuUiMock::getPersonalDataProtection($this)
         );
     }
 
@@ -138,6 +140,25 @@ class FormManagerTest extends AbstractTestCase
         $this->assertSame($values['generic']['field_a_a'], $manager->getForm()->getData()['field_a_a']);
         $this->assertSame($values['generic']['field_b_a'], $manager->getForm()->getData()['field_b_a']);
         $this->assertSame($values['generic']['field_b_b'], $manager->getForm()->getData()['field_b_b']);
+    }
+
+    public function testManagerWithHiddenResource(): void
+    {
+        $container = $this->getContainerMock(['form.factory' => SymfonyMock::getFormFactory($this)]);
+        $manager = $this->getFormFactory($container)->create(SpipuUiMock::getEntityDefinitionMock());
+
+        $resource = SpipuUiMock::getPersonalDataResourceMock();
+        $this->assertSame($manager, $manager->setResource($resource));
+
+        $resource = SpipuUiMock::getPersonalDataResourceMock();
+        $resource->setId(null);
+        $resource->setHidden(true);
+        $this->assertSame($manager, $manager->setResource($resource));
+
+        $resource = SpipuUiMock::getPersonalDataResourceMock();
+        $resource->setHidden(true);
+        $this->expectException(AccessDeniedException::class);
+        $manager->setResource($resource);
     }
 
     public function testManagerWithResource(): void

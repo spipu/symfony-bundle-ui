@@ -23,11 +23,13 @@ use Spipu\UiBundle\Event\FormSaveEvent;
 use Spipu\UiBundle\Exception\FormException;
 use Spipu\UiBundle\Form\GenericType;
 use Spipu\UiBundle\Service\Ui\Definition\EntityDefinitionInterface;
+use Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataProtection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment as Twig;
 
@@ -43,6 +45,7 @@ class FormManager implements FormManagerInterface
     private TranslatorInterface $translator;
     private Twig $twig;
     private EntityDefinitionInterface $definition;
+    private PersonalDataProtection $personalDataProtection;
     private ?Form $formDefinition = null;
     private ?EntityInterface $resource = null;
     private ?FormInterface $form = null;
@@ -56,7 +59,8 @@ class FormManager implements FormManagerInterface
         FormFactoryInterface $formFactory,
         TranslatorInterface $translator,
         Twig $twig,
-        EntityDefinitionInterface $definition
+        EntityDefinitionInterface $definition,
+        PersonalDataProtection $personalDataProtection
     ) {
         $this->symfonyRequest = $symfonyRequest;
         $this->eventDispatcher = $eventDispatcher;
@@ -65,6 +69,7 @@ class FormManager implements FormManagerInterface
         $this->translator = $translator;
         $this->twig = $twig;
         $this->definition = $definition;
+        $this->personalDataProtection = $personalDataProtection;
     }
 
     /**
@@ -73,6 +78,10 @@ class FormManager implements FormManagerInterface
      */
     public function setResource(EntityInterface $resource): FormManagerInterface
     {
+        if ($this->personalDataProtection->isEntityHidden($resource)) {
+            throw new AccessDeniedException('The personal data of this resource are hidden: it can not be edited');
+        }
+
         $this->resource = $resource;
 
         return $this;

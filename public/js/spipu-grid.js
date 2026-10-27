@@ -268,11 +268,11 @@ class SpipuUiGrid {
         let checked = $(target).prop("checked");
         let that = this;
 
-        that.getElement('checkbox').prop("checked", checked);
+        that.getElement('checkbox').not(':disabled').prop("checked", checked);
 
         that.ids = [];
         if (checked) {
-            that.getElement('checkbox').each(
+            that.getElement('checkbox').not(':disabled').each(
                 function () {
                     that.ids.push(that.getValue(this));
                 }

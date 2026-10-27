@@ -1,0 +1,7 @@
+{% macro display(entity, field, value) %}
+    {%- if is_personal_data_hidden_field(entity, field) -%}
+        {% include '@SpipuUi/entity/view/personal-data-hidden.html.twig' %}
+    {%- else -%}
+        {{ value }}
+    {%- endif -%}
+{% endmacro %}

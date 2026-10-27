@@ -20,6 +20,10 @@ spipu:
             home:  "Accueil"
             admin: "Admin"
 
+        personal_data:
+            hidden:         "Masqué"
+            not_selectable: "Données personnelles masquées : cette ligne ne peut pas être sélectionnée"
+
         grid:
             item:
                 found:

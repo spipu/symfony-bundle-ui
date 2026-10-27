@@ -13,19 +13,23 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests;
 
-use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use PHPUnit\Framework\TestCase;
 use Spipu\CoreBundle\Tests\SymfonyMock;
 use Spipu\UiBundle\Entity\EntityInterface;
 use Spipu\UiBundle\Entity\Grid;
 use Spipu\UiBundle\Entity\Form;
-use Spipu\UiBundle\Entity\PersonalDataProtectedInterface;
 use Spipu\UiBundle\Exception\FormException;
 use Spipu\UiBundle\Form\Options\AbstractOptions;
 use Spipu\UiBundle\Service\Ui\Grid\GridRequest;
 use Spipu\UiBundle\Service\Ui\Grid\DataProvider\AbstractDataProvider;
 use Spipu\UiBundle\Service\Ui\Definition\GridDefinitionInterface;
 use Spipu\UiBundle\Service\Ui\Definition\EntityDefinitionInterface;
+use Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataProtection;
+use Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataRuleInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type;
 
@@ -67,8 +71,67 @@ class SpipuUiMock extends TestCase
     {
         $definition = new GridDefinitionMock(PersonalDataResourceMock::class);
         $definition->getDefinition()->getColumn('field_a_b')->getFilter()->useQuickSearch(true);
+        $definition->getDefinition()->addColumn(
+            (new Grid\Column('sub_field_b_a', 'Sub Field B.A', 'sub.fieldBA', 50))
+                ->setType((new Grid\ColumnType(Grid\ColumnType::TYPE_TEXT)))
+                ->setFilter((new Grid\ColumnFilter(true, true)))
+                ->useSortable()
+        );
 
         return $definition;
+    }
+
+    /**
+     * Rules: PersonalDataResourceMock protects fieldAB, PersonalDataSubResourceMock protects fieldBA.
+     * Doctrine metadata: PersonalDataResourceMock::$sub targets PersonalDataSubResourceMock.
+     * @param PersonalDataRuleInterface[]|null $rules
+     */
+    public static function getPersonalDataProtection(
+        TestCase $testCase,
+        ?array $rules = null
+    ): PersonalDataProtection {
+        if ($rules === null) {
+            $rules = [
+                new PersonalDataRuleMock(PersonalDataResourceMock::class, ['fieldAB']),
+                new PersonalDataRuleMock(PersonalDataSubResourceMock::class, ['fieldBA']),
+            ];
+        }
+
+        $metadataFactory = $testCase->createMock(ClassMetadataFactory::class);
+        $metadataFactory
+            ->method('isTransient')
+            ->willReturnCallback(
+                fn (string $className): bool => !is_a($className, EntityInterface::class, true)
+            );
+
+        $entityManager = $testCase->createMock(EntityManagerInterface::class);
+        $entityManager->method('getMetadataFactory')->willReturn($metadataFactory);
+        $entityManager
+            ->method('getClassMetadata')
+            ->willReturnCallback(
+                function (string $className) use ($testCase): ClassMetadata {
+                    $associations = [];
+                    if ($className === PersonalDataResourceMock::class) {
+                        $associations['sub'] = PersonalDataSubResourceMock::class;
+                    }
+
+                    $metadata = $testCase->createMock(ClassMetadata::class);
+                    $metadata
+                        ->method('hasAssociation')
+                        ->willReturnCallback(
+                            fn (string $name): bool => array_key_exists($name, $associations)
+                        );
+                    $metadata
+                        ->method('getAssociationTargetClass')
+                        ->willReturnCallback(
+                            fn (string $name): string => $associations[$name]
+                        );
+
+                    return $metadata;
+                }
+            );
+
+        return new PersonalDataProtection(PropertyAccess::createPropertyAccessor(), $entityManager, $rules);
     }
 
     public static function getEntityDefinitionMock(): EntityDefinitionMock
@@ -153,51 +216,137 @@ class ResourceMock implements EntityInterface
     }
 }
 
-class PersonalDataResourceMock extends ResourceMock implements PersonalDataProtectedInterface
+class PersonalDataResourceMock extends ResourceMock
 {
-    private ?ResourceMock $sub = null;
-    private ?DateTimeImmutable $personalDataHiddenAt = null;
+    private static int $nextId = 1;
+    private ?int $id;
+    private ?PersonalDataSubResourceMock $sub = null;
+    private bool $hidden = false;
 
-    public static function getPersonalDataFields(): array
+    public function __construct()
     {
-        return ['fieldAB', 'sub.fieldBA'];
+        $this->id = self::$nextId++;
     }
 
-    public static function getPersonalDataHiddenAtField(): string
+    public function __clone()
     {
-        return 'personalDataHiddenAt';
+        $this->id = self::$nextId++;
     }
 
-    public function isPersonalDataHidden(): bool
+    public function getId(): ?int
     {
-        return (
-            ($this->personalDataHiddenAt !== null)
-            && ($this->personalDataHiddenAt <= new DateTimeImmutable())
-        );
+        return $this->id;
     }
 
-    public function getSub(): ?ResourceMock
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function getSub(): ?PersonalDataSubResourceMock
     {
         return $this->sub;
     }
 
-    public function setSub(?ResourceMock $sub): self
+    public function setSub(?PersonalDataSubResourceMock $sub): self
     {
         $this->sub = $sub;
 
         return $this;
     }
 
-    public function getPersonalDataHiddenAt(): ?DateTimeImmutable
+    public function isHidden(): bool
     {
-        return $this->personalDataHiddenAt;
+        return $this->hidden;
     }
 
-    public function setPersonalDataHiddenAt(?DateTimeImmutable $personalDataHiddenAt): self
+    public function setHidden(bool $hidden): self
     {
-        $this->personalDataHiddenAt = $personalDataHiddenAt;
+        $this->hidden = $hidden;
 
         return $this;
+    }
+}
+
+class PersonalDataSubResourceMock extends ResourceMock
+{
+    private static int $nextId = 1;
+    private int $id;
+    private bool $hidden = false;
+
+    public function __construct()
+    {
+        $this->id = self::$nextId++;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function isHidden(): bool
+    {
+        return $this->hidden;
+    }
+
+    public function setHidden(bool $hidden): self
+    {
+        $this->hidden = $hidden;
+
+        return $this;
+    }
+}
+
+class PersonalDataRuleMock implements PersonalDataRuleInterface
+{
+    private string $entityClass;
+    private array $fields;
+    private bool $active = true;
+
+    public function __construct(string $entityClass, array $fields)
+    {
+        $this->entityClass = $entityClass;
+        $this->fields = $fields;
+    }
+
+    public function getEntityClass(): string
+    {
+        return $this->entityClass;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    public function getFields(): array
+    {
+        return $this->fields;
+    }
+
+    public function isVisible(EntityInterface $entity): bool
+    {
+        return !(
+            ($entity instanceof PersonalDataResourceMock || $entity instanceof PersonalDataSubResourceMock)
+            && $entity->isHidden()
+        );
+    }
+
+    public function getVisibleDqlCondition(string $alias): array
+    {
+        return [
+            $alias . '.hidden = :hidden OR ' . $alias . '.fieldAA > :hidden_limit',
+            ['hidden' => false, ':hidden_limit' => 10],
+        ];
     }
 }
 

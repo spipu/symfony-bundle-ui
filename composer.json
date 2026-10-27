@@ -17,6 +17,7 @@
         "symfony/twig-bundle": "^7.4",
         "symfony/http-kernel": "^7.4",
         "symfony/property-access": "^7.4",
+        "symfony/security-core": "^7.4",
         "spipu/core-bundle":   "^5.0",
         "twbs/bootstrap":      "^5.0"
     },

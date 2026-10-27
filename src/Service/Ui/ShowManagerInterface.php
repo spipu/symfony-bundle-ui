@@ -19,5 +19,5 @@ interface ShowManagerInterface extends UiManagerInterface
 {
     public function setResource(EntityInterface $resource): ShowManagerInterface;
 
-    public function getValue(string $field): mixed;
+    public function isHiddenValue(string $field): bool;
 }

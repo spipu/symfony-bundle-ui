@@ -19,6 +19,7 @@ use Spipu\UiBundle\Entity\Form\Form;
 use Spipu\UiBundle\Event\FormDefinitionEvent;
 use Spipu\UiBundle\Exception\FormException;
 use Spipu\UiBundle\Service\Ui\Definition\EntityDefinitionInterface;
+use Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataProtection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Twig\Environment as Twig;
 
@@ -71,9 +72,9 @@ class ShowManager implements ShowManagerInterface
         return $this->resource;
     }
 
-    public function getValue(string $field): mixed
+    public function isHiddenValue(string $field): bool
     {
-        return $this->personalDataProtection->getValue($this->resource, $field);
+        return $this->personalDataProtection->isHidden($this->resource, $field);
     }
 
     public function display(): string

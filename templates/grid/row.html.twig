@@ -1,9 +1,14 @@
 <tr data-grid-code="{{ manager.definition.code }}" data-grid-role="row" data-grid-row-id="{{ attribute(row, manager.definition.dataProviderPrimaryKey) }}" class="{{ manager.definition.option('tr-css-class', '') }}">
 {% if manager.definition.massActions|length > 0 %}
-    <td data-grid-role="checkbox"><input type="checkbox" value="{{ attribute(row, manager.definition.dataProviderPrimaryKey) }}" data-grid-code="{{ manager.definition.code }}" data-grid-role="checkbox" /></td>
+    {% set rowHidden = is_personal_data_hidden_entity(row) %}
+    <td data-grid-role="checkbox"><input type="checkbox" value="{{ attribute(row, manager.definition.dataProviderPrimaryKey) }}" data-grid-code="{{ manager.definition.code }}" data-grid-role="checkbox"{% if rowHidden %} disabled title="{{ 'spipu.ui.personal_data.not_selectable'|trans }}"{% endif %} /></td>
 {% endif %}
 {% for column in manager.definition.displayedColumns(manager.currentGridConfig) %}
+{% if manager.hiddenValue(row, column.entityField) %}
+    {% include '@SpipuUi/grid/field/personal-data-hidden.html.twig' with {'manager': manager, 'row': row, 'column': column} %}
+{% else %}
     {% include column.type.templateField with {'manager': manager, 'row': row, 'column': column, 'data': manager.value(row, column.entityField)} %}
+{% endif %}
 
 {% endfor %}
 {% if manager.definition.rowActions|length > 0 %}

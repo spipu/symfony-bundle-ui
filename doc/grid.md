@@ -241,6 +241,7 @@ new Action(string $code, string $name, int $position, string $routeName, array $
 | `setIcon(?string $icon)` | FontAwesome icon name (without `fa-` prefix) |
 | `setNeededRole(?string $role)` | Symfony role required to see this action |
 | `setConditions(array $conditions)` | Conditions on entity field values to show the action |
+| `setDeniedIfPersonalDataHidden(bool $denied)` | Hide the action on rows whose personal data are hidden (see [Personal data protection](#personal-data-protection)) |
 | `setBuildCallback(?callable $callback)` | Custom callable `(RouterInterface, Action, array $params, ?EntityInterface $row): string` to build the URL |
 
 ### Action conditions
@@ -316,51 +317,108 @@ Call these after `$gridFactory->create()` but before `$manager->validate()`.
 
 ## Personal data protection
 
-An entity can hide some of its fields once its personal data must no longer be displayed. It implements `Spipu\UiBundle\Entity\PersonalDataProtectedInterface` alongside `EntityInterface`:
+Goal: limit the exposure of personal data, for example if the credentials of a back-office user are stolen.
+Once a record no longer needs to be fully visible (a closed case, an order shipped months ago), its personal data are hidden in the UI.
+
+- The data stay in the database: this is not an anonymization.
+- The protection only applies to the UI components listed below (grids, show pages, Twig functions).
+- An API, an export or a custom template reading the entity directly is not protected.
+- The controllers of the project are not protected: a mass action controller, or an edition not using `FormManager`, must check `PersonalDataProtection::isEntityHidden()` itself (a forged request can send the id of a hidden entity).
+
+### Defining a rule
+
+Each entity is responsible for its own fields only. A rule is a service implementing `Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataRuleInterface`, tagged `spipu.ui.personal-data.rule`:
 
 ```php
-use DateTimeImmutable;
 use Spipu\UiBundle\Entity\EntityInterface;
-use Spipu\UiBundle\Entity\PersonalDataProtectedInterface;
+use Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataRuleInterface;
 
-class Customer implements EntityInterface, PersonalDataProtectedInterface
+class CustomerRule implements PersonalDataRuleInterface
 {
-    public static function getPersonalDataFields(): array
+    public function getEntityClass(): string
     {
-        return ['email', 'lastName', 'address.street'];
+        return Customer::class;
     }
 
-    public static function getPersonalDataHiddenAtField(): string
+    public function isActive(): bool
     {
-        return 'personalDataHiddenAt';
+        return !$this->security->isGranted('ROLE_ADMIN_FULL_VIEW');
     }
 
-    public function isPersonalDataHidden(): bool
+    public function getFields(): array
     {
-        return ($this->personalDataHiddenAt !== null) && ($this->personalDataHiddenAt <= new DateTimeImmutable());
+        return ['email', 'lastName'];
+    }
+
+    public function isVisible(EntityInterface $entity): bool
+    {
+        return ($entity->getLastActivityAt() !== null) && ($entity->getLastActivityAt() >= $this->getLimitDate());
+    }
+
+    public function getVisibleDqlCondition(string $alias): array
+    {
+        return [$alias . '.lastActivityAt >= :limit', ['limit' => $this->getLimitDate()]];
     }
 }
 ```
 
+```yaml
+services:
+    App\Service\PersonalData\CustomerRule:
+        autowire: true
+        tags: ['spipu.ui.personal-data.rule']
+```
+
 | Method | Description |
 |--------|-------------|
-| `getPersonalDataFields()` (static) | Protected field paths, compared by exact match with the column entity field, the show field code, or the Twig function field. Dotted paths (`address.street`) are allowed |
-| `getPersonalDataHiddenAtField()` (static) | Name of the persisted nullable date-time property of the main entity, used by the Doctrine data provider |
-| `isPersonalDataHidden()` | Whether the personal data of this row is hidden |
+| `isActive()` | Whether the rule applies in the current context. An inactive rule is ignored: nothing hidden, no search condition, edition allowed. Example: `false` for an admin who keeps the full view |
+| `getEntityClass()` | Entity class of the rule. Only one rule per class (a duplicate throws a `UiException`). Child classes use the rule of their parent |
+| `getFields()` | Protected fields: own fields of the entity only, no dotted path |
+| `isVisible(EntityInterface $entity)` | Whether the personal data of this entity are visible |
+| `getVisibleDqlCondition(string $alias)` | DQL condition matching the visible rows on the given alias, and its parameters. The parameter names are free: the data provider renames them to avoid collisions |
 
-The rule is applied by the `Spipu\UiBundle\Service\Ui\PersonalDataProtection` service:
+The rule is a service: it can read a threshold from the configuration, the current date, the current user or firewall, etc. A threshold specific to each interface is read by the rule from the current context.
 
-- **Grid cell and action conditions**: `GridManager::getValue()` returns `null` for a protected field of a hidden row. Action conditions on that field receive `null`; `callback` conditions still receive the entity.
-- **Sort**: a column whose entity field is protected is never sortable. A sort requested on it (request, session, saved config or default sort) is ignored.
-- **Doctrine filters and quick search**: a filter or quick search on a protected column adds `(main.<hiddenAtField> IS NULL OR main.<hiddenAtField> > <now>)`, where `<now>` is a dedicated date parameter (`:personal_data_now`, suffixed with `_` until it differs from every column parameter and from every parameter named in `addCondition()` strings), so a hidden row is never found through its personal data. Range filters add the condition only when a bound is given. The date condition is always on the main entity, even for a dotted protected field.
-- **Show page**: `ShowManager::getValue()` returns `null` for a protected field of a hidden resource; the default `viewFieldset` template uses it.
-- **Twig**: `personal_data(entity, 'field')` returns the same value (see [Form / View / Menu System](./form.md)).
+An entity without id (not saved yet) is never hidden, and its rule is not called. The active rule of each entity class is cached until the end of the request (`kernel.reset`): `isActive()` is called once per class and request. `isVisible()` is called once per entity and request: it must stay cheap.
 
-Values are read with the Symfony PropertyAccess component (`symfony/property-access`): getters, `is`/`has`/`can` methods and public properties are supported. A field path is read segment by segment: a `null` intermediate value gives `null`; a segment that cannot be read, or an intermediate value that is not an object, throws a `GridException`. This relies on the default `framework.property_access.throw_exception_on_invalid_property_path: true`; with `false`, an unreadable field returns `null`.
+`isVisible()` and `getVisibleDqlCondition()` express the same predicate, in PHP and in DQL: they must match exactly the same entities, `NULL` values included. In SQL, a comparison with `NULL` is never true: `a.x >= :limit` excludes the rows where `x` is `NULL`, so `isVisible()` must return `false` when `x` is `null`. Otherwise, the entity is fully displayed but never found by a search on a protected field. Cover both methods with the same test cases in the project.
 
-Only the Doctrine data provider applies the filter condition. A custom data provider must apply the rule itself, for example with `PersonalDataProtection::isProtectedField()` and `PersonalDataProtection::getHiddenAtField()`.
+Performance: a condition on an expression (`COALESCE(...)`, a function...) cannot use an index. Prefer an indexable form, for example `(a.x >= :limit OR (a.x IS NULL AND a.y >= :limit))` instead of `COALESCE(a.x, a.y) >= :limit`.
 
-A custom column template (`setTemplateField()`) or show template must display `data` or `personal_data(...)`: reading `row` or `manager.resource` directly bypasses the protection.
+### Where the rule is applied
+
+The rules are applied by the `Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataProtection` service.
+
+**Display: in the templates only.**
+
+- `GridManager::getValue()` always returns the real value. The show page reads the value with `attribute(manager.resource, field.code)`.
+- **Grid cells**: `grid/row.html.twig` checks `GridManager::isHiddenValue()` and displays the info badge "Hidden" (`@SpipuUi/grid/field/personal-data-hidden.html.twig`) instead of the column template.
+- **Show pages**: `entity/viewFieldset.html.twig` checks `ShowManager::isHiddenValue()` and displays the same badge (`@SpipuUi/entity/view/personal-data-hidden.html.twig`) instead of the field view template.
+- **Custom templates**: use the Twig functions `is_personal_data_hidden_entity(entity)` and `is_personal_data_hidden_field(entity, 'field')` (see [Form / View / Menu System](./form.md)). A custom template reading the entity without this check bypasses the protection.
+- **Custom templates — display a value**: the macro `display` of `@SpipuUi/macro/personal_data.html.twig` displays the "Hidden" badge if the field is hidden, else the given value, already formatted:
+
+```twig
+{% import '@SpipuUi/macro/personal_data.html.twig' as personal_data %}
+{{ personal_data.display(order, 'customerEmail', order.customerEmail) }}
+{{ personal_data.display(order.customer, 'birthday', order.customer.birthday ? order.customer.birthday|date('Y-m-d') : '-') }}
+```
+- **Dotted paths** (`customer.email`): each segment is checked against the rule of the object owning it. The value of `customer.email` is hidden when the customer is hidden, whatever the state of the main entity.
+
+**Search: in PHP.**
+
+- **Doctrine filters and quick search**: a filter or a quick search on a protected field adds the visible condition of the rule, on the alias owning the field (`main` for a direct field, the join alias for a dotted field). For a dotted path, each protected segment adds the condition of its own rule (for example a protected `customer` association on the order, and a protected `email` on the customer). It is added once per alias. Range filters add it only when a bound is given.
+- The class owning a dotted field is resolved with the Doctrine metadata (association target class). The join alias is the segment before the field, as with `addJoin()`.
+- Only the Doctrine data provider applies the filter condition. A custom data provider must apply the rule itself, with `PersonalDataProtection::getVisibleDqlConditions()`: it returns the DQL condition and its parameters for each alias owning a protected segment of a path.
+- **Sort**: the columns on a protected field stay sortable. The order of the rows may reveal a little information about the hidden values.
+
+**Actions and edition: in PHP.**
+
+- **Denied actions**: an action with `setDeniedIfPersonalDataHidden(true)` is not displayed on a hidden row (for example an edit action).
+- **Mass actions**: the selection checkbox of a hidden row is disabled, with a tooltip, and "select all" ignores it: a hidden row can not be selected for a mass action. This is a UI protection only: the controller of a mass action receives ids, possibly forged, so it must check `PersonalDataProtection::isEntityHidden()` on the loaded entities if the action must not apply to hidden rows.
+- **Action conditions** receive the real value.
+- **Edition**: `FormManager::setResource()` throws an `AccessDeniedException` (HTTP 403) on a hidden entity: a hidden entity can not be edited through `FormManager`. Any other edition (Symfony form built directly, AJAX action, etc.) must check `PersonalDataProtection::isEntityHidden()` itself.
+
+To check a dotted path, the intermediate objects are read with the Symfony PropertyAccess component (`symfony/property-access`). A `null` intermediate object means not hidden. An intermediate segment that cannot be read, or that is not an object, throws a `GridException`.
 
 ## Grid Personalization
 

@@ -20,6 +20,10 @@ spipu:
             home:  "Home"
             admin: "Admin"
 
+        personal_data:
+            hidden:         "Hidden"
+            not_selectable: "Personal data hidden: this row can not be selected"
+
         grid:
             item:
                 found:

@@ -5,8 +5,10 @@
 {% for field in fieldSet.fields|filter(field => not field.isHiddenInView) %}
             <tr><th>{{ field.label|trans }}</th></tr>
             <tr><td data-form-code="{{ manager.definition.code }}" data-form-role="field" data-field-name="{{ field.code }}">
-                {% set data = manager.value(field.code) %}
-                {% if field.isList %}
+                {% if manager.hiddenValue(field.code) %}
+                    {% include '@SpipuUi/entity/view/personal-data-hidden.html.twig' with {'manager': manager, 'field': field} %}
+                {% elseif field.isList %}
+                    {% set data = attribute(manager.resource, field.code) %}
                     <ul class="mb-0">
                         {% for value in data %}
                             <li>{% include field.templateView with {'manager': manager, 'field': field, 'data': value} %}</li>
@@ -15,6 +17,7 @@
                         {% endfor %}
                     </ul>
                 {%  else %}
+                    {% set data = attribute(manager.resource, field.code) %}
                     {% if (data is same as(null)) or (data is same as('')) %}-{% else %}
                         {% include field.templateView with {'manager': manager, 'field': field, 'data': data} %}
                     {% endif %}

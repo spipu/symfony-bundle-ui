@@ -33,8 +33,13 @@ services:
     Spipu\UiBundle\Service\Ui\ShowFactory:
         autowire: true
 
-    Spipu\UiBundle\Service\Ui\PersonalDataProtection:
+    # Personal data protection
+    # You can add rules. They must implement PersonalDataRuleInterface and have the spipu.ui.personal-data.rule tag
+    Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataProtection:
         autowire: true
+        tags: [{ name: 'kernel.reset', method: 'reset' }]
+        arguments:
+            $rules: !tagged_iterator 'spipu.ui.personal-data.rule'
 
     # Grid services
     Spipu\UiBundle\Service\Ui\Grid\DataProvider\Doctrine:

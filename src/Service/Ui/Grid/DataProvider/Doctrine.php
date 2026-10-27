@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Service\Ui\Grid\DataProvider;
 
-use DateTimeImmutable;
 use Doctrine\ORM\Query\Expr\Andx;
 use SortDirection;
 use Spipu\UiBundle\Entity\EntityInterface;
@@ -22,7 +21,7 @@ use Spipu\UiBundle\Entity\Grid\ColumnType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Spipu\UiBundle\Exception\GridException;
-use Spipu\UiBundle\Service\Ui\PersonalDataProtection;
+use Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataProtection;
 use Stringable;
 
 class Doctrine extends AbstractDataProvider
@@ -32,6 +31,8 @@ class Doctrine extends AbstractDataProvider
     protected array $conditions = [];
     protected array $mappingValues = [];
     protected array $joins = [];
+    protected array $personalDataAliases = [];
+    protected int $personalDataParameterCount = 0;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -78,6 +79,8 @@ class Doctrine extends AbstractDataProvider
     public function prepareQueryBuilder(): QueryBuilder
     {
         $this->validate();
+        $this->personalDataAliases = [];
+        $this->personalDataParameterCount = 0;
 
         $queryBuilder = $this->entityManager->createQueryBuilder();
 
@@ -128,7 +131,7 @@ class Doctrine extends AbstractDataProvider
 
         $parameters = $this->prepareQueryBuilderFilterValue($queryBuilder, $where, $column, $code, $value);
         if (count($parameters) > 0) {
-            $parameters += $this->preparePersonalDataCondition($queryBuilder, $where, $column);
+            $parameters += $this->preparePersonalDataCondition($where, $column);
         }
 
         return $parameters;
@@ -189,28 +192,28 @@ class Doctrine extends AbstractDataProvider
         $value = $this->applyValueTransformer($column, $value);
         $where->add($queryBuilder->expr()->like($entityField, ':' . $code));
         $parameters[':' . $code] = $value . '%';
-        $parameters += $this->preparePersonalDataCondition($queryBuilder, $where, $column);
+        $parameters += $this->preparePersonalDataCondition($where, $column);
 
         return $parameters;
     }
 
-    protected function preparePersonalDataCondition(QueryBuilder $queryBuilder, Andx $where, Column $column): array
+    protected function preparePersonalDataCondition(Andx $where, Column $column): array
     {
-        $entityName = $this->definition->getEntityName();
-        if (!$this->personalDataProtection->isProtectedField($entityName, $column->getEntityField())) {
-            return [];
-        }
-
-        $parameterName = $this->getPersonalDataParameterName();
-        $dateField = 'main.' . $this->personalDataProtection->getHiddenAtField($entityName);
-        $where->add(
-            $queryBuilder->expr()->orX(
-                $queryBuilder->expr()->isNull($dateField),
-                $queryBuilder->expr()->gt($dateField, $parameterName)
-            )
+        $conditions = $this->personalDataProtection->getVisibleDqlConditions(
+            $this->definition->getEntityName(),
+            $column->getEntityField(),
+            $this->personalDataAliases,
+            $this->getPersonalDataParameterName(...)
         );
 
-        return [$parameterName => new DateTimeImmutable()];
+        $parameters = [];
+        foreach ($conditions as $alias => [$condition, $conditionParameters]) {
+            $this->personalDataAliases[] = $alias;
+            $where->add($condition);
+            $parameters += $conditionParameters;
+        }
+
+        return $parameters;
     }
 
     protected function getPersonalDataParameterName(): string
@@ -230,7 +233,7 @@ class Doctrine extends AbstractDataProvider
             }
         }
 
-        $name = ':personal_data_now';
+        $name = ':personal_data_' . $this->personalDataParameterCount++;
         while (in_array($name, $reserved, true)) {
             $name .= '_';
         }

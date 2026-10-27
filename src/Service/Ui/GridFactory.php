@@ -15,6 +15,7 @@ namespace Spipu\UiBundle\Service\Ui;
 
 use Spipu\UiBundle\Service\Ui\Definition\GridDefinitionInterface;
 use Spipu\UiBundle\Service\Ui\Grid\GridConfig;
+use Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataProtection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Service\Ui\Grid\DataProvider;
 
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
@@ -18,10 +17,12 @@ use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Service\Ui\Definition\GridDefinitionInterface;
 use Spipu\UiBundle\Service\Ui\Grid\DataProvider\Doctrine;
 use Spipu\UiBundle\Service\Ui\Grid\GridRequest;
+use Spipu\UiBundle\Tests\PersonalDataResourceMock;
+use Spipu\UiBundle\Tests\PersonalDataRuleMock;
+use Spipu\UiBundle\Tests\PersonalDataSubResourceMock;
 use Spipu\UiBundle\Tests\ResourceMock;
 use Spipu\UiBundle\Tests\SpipuUiMock;
 use Spipu\UiBundle\Tests\Unit\Service\Ui\AbstractTestCase;
-use Spipu\UiBundle\Tests\Unit\Service\Ui\PersonalDataProtectionTest;
 
 #[AllowMockObjectsWithoutExpectations]
 #[CoversClass(Doctrine::class)]
@@ -33,7 +34,7 @@ class DoctrineTest extends AbstractTestCase
 
         $service = new Doctrine(
             $containerMock->get('doctrine.orm.default_entity_manager'),
-            PersonalDataProtectionTest::getService()
+            SpipuUiMock::getPersonalDataProtection($this)
         );
 
         $this->expectException(GridException::class);
@@ -47,7 +48,7 @@ class DoctrineTest extends AbstractTestCase
 
         $service = new Doctrine(
             $containerMock->get('doctrine.orm.default_entity_manager'),
-            PersonalDataProtectionTest::getService()
+            SpipuUiMock::getPersonalDataProtection($this)
         );
         $service->setGridDefinition($definition->getDefinition());
 
@@ -62,7 +63,7 @@ class DoctrineTest extends AbstractTestCase
 
         $service = new Doctrine(
             $containerMock->get('doctrine.orm.default_entity_manager'),
-            PersonalDataProtectionTest::getService()
+            SpipuUiMock::getPersonalDataProtection($this)
         );
         $service->setGridRequest($requestMock);
 
@@ -78,7 +79,7 @@ class DoctrineTest extends AbstractTestCase
 
         $service = new Doctrine(
             $containerMock->get('doctrine.orm.default_entity_manager'),
-            PersonalDataProtectionTest::getService()
+            SpipuUiMock::getPersonalDataProtection($this)
         );
         $service->setGridDefinition($definition->getDefinition());
         $service->setGridRequest($requestMock);
@@ -96,7 +97,7 @@ class DoctrineTest extends AbstractTestCase
         $requestMock = $this->createMock(GridRequest::class);
 
         $entityManager = SymfonyMock::getEntityManager($this);
-        $service = new Doctrine($entityManager, PersonalDataProtectionTest::getService());
+        $service = new Doctrine($entityManager, SpipuUiMock::getPersonalDataProtection($this));
         $service->setGridDefinition($grid);
         $service->setGridRequest($requestMock);
 
@@ -127,7 +128,7 @@ class DoctrineTest extends AbstractTestCase
             ->willreturn($filters);
 
         $entityManager = SymfonyMock::getEntityManager($this);
-        $service =  new Doctrine($entityManager, PersonalDataProtectionTest::getService());
+        $service =  new Doctrine($entityManager, SpipuUiMock::getPersonalDataProtection($this));
         $service->setGridDefinition($definition->getDefinition());
         $service->setGridRequest($requestMock);
         $this->assertTrue($service->validate());
@@ -155,7 +156,7 @@ class DoctrineTest extends AbstractTestCase
             ['field_a_b' => 'foo']
         );
 
-        $this->assertPersonalDataCondition($result);
+        $this->assertPersonalDataCondition($result, 'main');
         $this->assertSame('%foo%', $result['parameters'][':field_a_b']);
     }
 
@@ -166,7 +167,7 @@ class DoctrineTest extends AbstractTestCase
 
         $result = $this->preparePersonalDataQuery($definition, ['field_a_b' => 'foo']);
 
-        $this->assertPersonalDataCondition($result);
+        $this->assertPersonalDataCondition($result, 'main');
         $this->assertSame('foo', $result['parameters'][':field_a_b']);
     }
 
@@ -177,7 +178,7 @@ class DoctrineTest extends AbstractTestCase
 
         $result = $this->preparePersonalDataQuery($definition, ['field_a_b' => 'foo']);
 
-        $this->assertPersonalDataCondition($result);
+        $this->assertPersonalDataCondition($result, 'main');
         $this->assertSame('foo', $result['parameters'][':field_a_b']);
     }
 
@@ -188,12 +189,12 @@ class DoctrineTest extends AbstractTestCase
 
         $result = $this->preparePersonalDataQuery($definition, ['field_a_b' => ['from' => '1']]);
 
-        $this->assertPersonalDataCondition($result);
+        $this->assertPersonalDataCondition($result, 'main');
         $this->assertSame('1', $result['parameters'][':field_a_b_from']);
 
         $result = $this->preparePersonalDataQuery($definition, ['field_a_b' => []]);
 
-        $this->assertArrayNotHasKey(':personal_data_now', $result['parameters']);
+        $this->assertSame([], $result['parameters']);
         $this->assertNull($result['where']);
     }
 
@@ -206,8 +207,77 @@ class DoctrineTest extends AbstractTestCase
             'foo'
         );
 
-        $this->assertPersonalDataCondition($result);
+        $this->assertPersonalDataCondition($result, 'main');
         $this->assertSame('foo%', $result['parameters'][':field_a_b']);
+    }
+
+    public function testPersonalDataJoinedField(): void
+    {
+        $result = $this->preparePersonalDataQuery(
+            SpipuUiMock::getPersonalDataGridDefinitionMock(),
+            ['sub_field_b_a' => 'foo']
+        );
+
+        $this->assertPersonalDataCondition($result, 'sub');
+        $this->assertStringNotContainsString('main.hidden', $result['where']);
+        $this->assertSame('%foo%', $result['parameters'][':sub_field_b_a']);
+    }
+
+    public function testPersonalDataProtectedAssociation(): void
+    {
+        $result = $this->preparePersonalDataQuery(
+            SpipuUiMock::getPersonalDataGridDefinitionMock(),
+            ['sub_field_b_a' => 'foo'],
+            null,
+            null,
+            [],
+            [
+                new PersonalDataRuleMock(PersonalDataResourceMock::class, ['sub']),
+                new PersonalDataRuleMock(PersonalDataSubResourceMock::class, ['fieldBA']),
+            ]
+        );
+
+        $this->assertStringContainsString(
+            '(main.hidden = :personal_data_0 OR main.fieldAA > :personal_data_1)',
+            $result['where']
+        );
+        $this->assertStringContainsString(
+            '(sub.hidden = :personal_data_2 OR sub.fieldAA > :personal_data_3)',
+            $result['where']
+        );
+    }
+
+    public function testPersonalDataSeveralAliases(): void
+    {
+        $result = $this->preparePersonalDataQuery(
+            SpipuUiMock::getPersonalDataGridDefinitionMock(),
+            ['field_a_b' => 'foo', 'sub_field_b_a' => 'bar']
+        );
+
+        $this->assertStringContainsString(
+            '(main.hidden = :personal_data_0 OR main.fieldAA > :personal_data_1)',
+            $result['where']
+        );
+        $this->assertStringContainsString(
+            '(sub.hidden = :personal_data_2 OR sub.fieldAA > :personal_data_3)',
+            $result['where']
+        );
+        $this->assertFalse($result['parameters'][':personal_data_2']);
+        $this->assertSame(10, $result['parameters'][':personal_data_3']);
+    }
+
+    public function testPersonalDataSameAliasOnce(): void
+    {
+        $result = $this->preparePersonalDataQuery(
+            SpipuUiMock::getPersonalDataGridDefinitionMock(),
+            ['field_a_b' => 'foo'],
+            'field_a_b',
+            'bar'
+        );
+
+        $this->assertPersonalDataCondition($result, 'main');
+        $this->assertSame(1, substr_count($result['where'], 'main.hidden'));
+        $this->assertArrayNotHasKey(':personal_data_2', $result['parameters']);
     }
 
     public function testPersonalDataNotProtectedField(): void
@@ -218,7 +288,7 @@ class DoctrineTest extends AbstractTestCase
         );
 
         $this->assertSame([':field_b_a' => '%foo%'], $result['parameters']);
-        $this->assertStringNotContainsString('personalDataHiddenAt', $result['where']);
+        $this->assertStringNotContainsString('hidden', $result['where']);
     }
 
     public function testPersonalDataNotProtectedEntity(): void
@@ -230,15 +300,15 @@ class DoctrineTest extends AbstractTestCase
             'bar'
         );
 
-        $this->assertArrayNotHasKey(':personal_data_now', $result['parameters']);
-        $this->assertStringNotContainsString('personalDataHiddenAt', $result['where']);
+        $this->assertArrayNotHasKey(':personal_data_0', $result['parameters']);
+        $this->assertStringNotContainsString('hidden', $result['where']);
     }
 
     public function testPersonalDataParameterNameFilterCollision(): void
     {
         $result = $this->preparePersonalDataQuery(
             $this->getPersonalDataCollisionDefinition(),
-            ['personal_data_now' => 'foo', 'field_a_b' => 'bar']
+            ['personal_data_0' => 'foo', 'field_a_b' => 'bar']
         );
 
         $this->assertPersonalDataParameterNameCollision($result);
@@ -248,7 +318,7 @@ class DoctrineTest extends AbstractTestCase
     {
         $result = $this->preparePersonalDataQuery(
             $this->getPersonalDataCollisionDefinition(),
-            ['personal_data_now' => 'foo'],
+            ['personal_data_0' => 'foo'],
             'field_a_b',
             'bar'
         );
@@ -263,18 +333,19 @@ class DoctrineTest extends AbstractTestCase
             ['field_a_b' => 'foo'],
             null,
             null,
-            ['main.fieldAA = :personal_data_now']
+            ['main.fieldAA = :personal_data_0']
         );
 
-        $this->assertInstanceOf(DateTimeImmutable::class, $result['parameters'][':personal_data_now_']);
-        $this->assertArrayNotHasKey(':personal_data_now', $result['parameters']);
+        $this->assertFalse($result['parameters'][':personal_data_0_']);
+        $this->assertSame(10, $result['parameters'][':personal_data_1']);
+        $this->assertArrayNotHasKey(':personal_data_0', $result['parameters']);
     }
 
     private function getPersonalDataCollisionDefinition(): GridDefinitionInterface
     {
         $definition = SpipuUiMock::getPersonalDataGridDefinitionMock();
         $definition->getDefinition()->addColumn(
-            (new Column('personal_data_now', 'Now', 'fieldBA', 40))->setFilter(new ColumnFilter(true))
+            (new Column('personal_data_0', 'Collision', 'fieldBA', 40))->setFilter(new ColumnFilter(true))
         );
 
         return $definition;
@@ -282,18 +353,23 @@ class DoctrineTest extends AbstractTestCase
 
     private function assertPersonalDataParameterNameCollision(array $result): void
     {
-        $this->assertSame('%foo%', $result['parameters'][':personal_data_now']);
-        $this->assertInstanceOf(DateTimeImmutable::class, $result['parameters'][':personal_data_now_']);
-        $this->assertStringContainsString('main.personalDataHiddenAt > :personal_data_now_)', $result['where']);
-    }
-
-    private function assertPersonalDataCondition(array $result): void
-    {
+        $this->assertSame('%foo%', $result['parameters'][':personal_data_0']);
+        $this->assertFalse($result['parameters'][':personal_data_0_']);
+        $this->assertSame(10, $result['parameters'][':personal_data_1']);
         $this->assertStringContainsString(
-            'main.personalDataHiddenAt IS NULL OR main.personalDataHiddenAt > :personal_data_now',
+            '(main.hidden = :personal_data_0_ OR main.fieldAA > :personal_data_1)',
             $result['where']
         );
-        $this->assertInstanceOf(DateTimeImmutable::class, $result['parameters'][':personal_data_now']);
+    }
+
+    private function assertPersonalDataCondition(array $result, string $alias): void
+    {
+        $this->assertStringContainsString(
+            '(' . $alias . '.hidden = :personal_data_0 OR ' . $alias . '.fieldAA > :personal_data_1)',
+            $result['where']
+        );
+        $this->assertFalse($result['parameters'][':personal_data_0']);
+        $this->assertSame(10, $result['parameters'][':personal_data_1']);
     }
 
     private function preparePersonalDataQuery(
@@ -301,7 +377,8 @@ class DoctrineTest extends AbstractTestCase
         array $filters,
         ?string $quickSearchField = null,
         ?string $quickSearchValue = null,
-        array $conditions = []
+        array $conditions = [],
+        ?array $rules = null
     ): array {
         $result = ['where' => null, 'parameters' => []];
 
@@ -334,7 +411,7 @@ class DoctrineTest extends AbstractTestCase
         $requestMock->method('getQuickSearchField')->willReturn($quickSearchField);
         $requestMock->method('getQuickSearchValue')->willReturn($quickSearchValue);
 
-        $service = new Doctrine($entityManager, PersonalDataProtectionTest::getService());
+        $service = new Doctrine($entityManager, SpipuUiMock::getPersonalDataProtection($this, $rules));
         $service->setGridDefinition($definition->getDefinition());
         $service->setGridRequest($requestMock);
         foreach ($conditions as $condition) {

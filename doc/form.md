@@ -417,7 +417,8 @@ Two Twig filters are available (provided by `OptionsExtension`):
 | `getTranslations` | `getTranslations(array $codes): array` | Translates an array of translation key codes, returning a `key => translated` map |
 | `isClosure` | `isClosure(mixed $var): bool` | Returns `true` if the variable is a `\Closure` |
 | `executeClosure` | `executeClosure(callable $closure, array $variables = []): mixed` | Calls a closure with the given arguments |
-| `personal_data` | `personal_data(EntityInterface $entity, string $field): mixed` | Returns the field value, or `null` when the field is protected and the entity personal data is hidden (see [Personal data protection](./grid.md#personal-data-protection)) |
+| `is_personal_data_hidden_entity` | `is_personal_data_hidden_entity(EntityInterface $entity): bool` | Returns `true` if the personal data of the entity are hidden (see [Personal data protection](./grid.md#personal-data-protection)) |
+| `is_personal_data_hidden_field` | `is_personal_data_hidden_field(EntityInterface $entity, string $field): bool` | Returns `true` if the field is protected and its owning entity is hidden. Dotted paths are allowed (see [Personal data protection](./grid.md#personal-data-protection)) |
 
 ### Filters (provided by `OptionsExtension`)
 
@@ -439,7 +440,7 @@ interface EntityInterface
 
 Implement this on any Doctrine entity used with `FormManager` or `ShowManager`.
 
-To hide personal data on show pages, also implement `PersonalDataProtectedInterface`: `ShowManager::getValue()` returns `null` for a protected field of a hidden entity. See [Personal data protection](./grid.md#personal-data-protection).
+To hide personal data on show pages, define a personal data rule for the entity: the show template displays a "Hidden" badge for a protected field of a hidden entity, and `FormManager` refuses to edit a hidden entity. See [Personal data protection](./grid.md#personal-data-protection).
 
 ### `TimestampableInterface` and `TimestampableTrait`
 

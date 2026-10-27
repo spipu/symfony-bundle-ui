@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Spipu\UiBundle\Service\Ui;
 
 use Spipu\UiBundle\Service\Ui\Definition\EntityDefinitionInterface;
+use Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataProtection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Twig\Environment as Twig;
 

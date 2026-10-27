@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Service\Ui;
 
-use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use Spipu\UiBundle\Event\FormDefinitionEvent;
@@ -28,7 +27,7 @@ class ShowManagerTest extends AbstractTestCase
         return new ShowFactory(
             $container->get('event_dispatcher'),
             $container->get('twig'),
-            PersonalDataProtectionTest::getService()
+            SpipuUiMock::getPersonalDataProtection($this)
         );
     }
 
@@ -81,15 +80,16 @@ class ShowManagerTest extends AbstractTestCase
             ->setFieldAB('secret');
         $manager->setResource($resource);
 
-        $this->assertSame('secret', $manager->getValue('fieldAB'));
-        $this->assertSame(5, $manager->getValue('fieldAA'));
+        $this->assertFalse($manager->isHiddenValue('fieldAB'));
 
-        $resource->setPersonalDataHiddenAt(new DateTimeImmutable('-1 day'));
-        $this->assertNull($manager->getValue('fieldAB'));
-        $this->assertSame(5, $manager->getValue('fieldAA'));
+        $resource = clone $resource;
+        $resource->setHidden(true);
+        $manager->setResource($resource);
+        $this->assertTrue($manager->isHiddenValue('fieldAB'));
+        $this->assertFalse($manager->isHiddenValue('fieldAA'));
 
         $manager->setResource(SpipuUiMock::getResourceMock()->setFieldAB('public'));
-        $this->assertSame('public', $manager->getValue('fieldAB'));
+        $this->assertFalse($manager->isHiddenValue('fieldAB'));
     }
 
     public function testMissingResource(): void

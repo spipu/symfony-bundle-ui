@@ -15,6 +15,7 @@ namespace Spipu\UiBundle\Service\Ui;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Spipu\UiBundle\Service\Ui\Definition\EntityDefinitionInterface;
+use Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataProtection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -28,6 +29,7 @@ class FormFactory
     private EntityManagerInterface $entityManager;
     private FormFactoryInterface $formFactory;
     private TranslatorInterface $translator;
+    private PersonalDataProtection $personalDataProtection;
     private Twig $twig;
 
     public function __construct(
@@ -36,7 +38,8 @@ class FormFactory
         EntityManagerInterface $entityManager,
         FormFactoryInterface $formFactory,
         TranslatorInterface $translator,
-        Twig $twig
+        Twig $twig,
+        PersonalDataProtection $personalDataProtection
     ) {
         $this->container = $container;
         $this->eventDispatcher = $eventDispatcher;
@@ -44,6 +47,7 @@ class FormFactory
         $this->formFactory = $formFactory;
         $this->translator = $translator;
         $this->twig = $twig;
+        $this->personalDataProtection = $personalDataProtection;
     }
 
     public function create(EntityDefinitionInterface $formDefinition): FormManagerInterface
@@ -55,7 +59,8 @@ class FormFactory
             $this->formFactory,
             $this->translator,
             $this->twig,
-            $formDefinition
+            $formDefinition,
+            $this->personalDataProtection
         );
     }
 }

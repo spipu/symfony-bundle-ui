@@ -28,6 +28,7 @@ class Action implements PositionInterface
     private ?string $icon = null;
     private array $conditions = [];
     private ?string $neededRole = null;
+    private bool $deniedIfPersonalDataHidden = false;
 
     /**
      * @var callable|null
@@ -101,6 +102,18 @@ class Action implements PositionInterface
     public function setNeededRole(?string $neededRole): self
     {
         $this->neededRole = $neededRole;
+
+        return $this;
+    }
+
+    public function isDeniedIfPersonalDataHidden(): bool
+    {
+        return $this->deniedIfPersonalDataHidden;
+    }
+
+    public function setDeniedIfPersonalDataHidden(bool $deniedIfPersonalDataHidden): self
+    {
+        $this->deniedIfPersonalDataHidden = $deniedIfPersonalDataHidden;
 
         return $this;
     }

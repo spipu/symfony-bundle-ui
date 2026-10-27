@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Tests\Unit\Twig;
 
-use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -13,7 +12,6 @@ use Spipu\UiBundle\Entity\Menu\Item;
 use Spipu\UiBundle\Service\Menu\Manager as MenuManager;
 use Spipu\UiBundle\Service\Ui\UiManagerInterface;
 use Spipu\UiBundle\Tests\SpipuUiMock;
-use Spipu\UiBundle\Tests\Unit\Service\Ui\PersonalDataProtectionTest;
 use Spipu\UiBundle\Twig\UiExtension;
 use Twig\Extension\ExtensionInterface;
 
@@ -39,7 +37,7 @@ class UiExtensionTest extends TestCase
         $extension = new UiExtension(
             $menuManagerMock,
             SymfonyMock::getTranslator($this),
-            PersonalDataProtectionTest::getService()
+            SpipuUiMock::getPersonalDataProtection($this)
         );
 
         return $extension;
@@ -59,7 +57,8 @@ class UiExtensionTest extends TestCase
             'getTranslations',
             'isClosure',
             'executeClosure',
-            'personal_data',
+            'is_personal_data_hidden_entity',
+            'is_personal_data_hidden_field',
         ];
 
         $extension = $this->getExtension();
@@ -89,23 +88,35 @@ class UiExtensionTest extends TestCase
         Item::resetAll();
     }
 
-    public function testPersonalData(): void
+    public function testIsPersonalDataHiddenEntity(): void
     {
         $extension = $this->getExtension();
 
         $entity = SpipuUiMock::getPersonalDataResourceMock();
-        $entity
-            ->setFieldAA(9)
-            ->setFieldAB('secret');
+        $this->assertFalse($extension->isPersonalDataHiddenEntity($entity));
 
-        $this->assertSame('secret', $extension->getPersonalData($entity, 'fieldAB'));
+        $entity = clone $entity;
+        $entity->setHidden(true);
+        $this->assertTrue($extension->isPersonalDataHiddenEntity($entity));
 
-        $entity->setPersonalDataHiddenAt(new DateTimeImmutable('-1 day'));
-        $this->assertNull($extension->getPersonalData($entity, 'fieldAB'));
-        $this->assertSame(9, $extension->getPersonalData($entity, 'fieldAA'));
+        $this->assertFalse($extension->isPersonalDataHiddenEntity(SpipuUiMock::getResourceMock()));
+    }
+
+    public function testIsPersonalDataHiddenField(): void
+    {
+        $extension = $this->getExtension();
+
+        $entity = SpipuUiMock::getPersonalDataResourceMock();
+        $entity->setFieldAB('secret');
+        $this->assertFalse($extension->isPersonalDataHiddenField($entity, 'fieldAB'));
+
+        $entity = clone $entity;
+        $entity->setHidden(true);
+        $this->assertTrue($extension->isPersonalDataHiddenField($entity, 'fieldAB'));
+        $this->assertFalse($extension->isPersonalDataHiddenField($entity, 'fieldAA'));
 
         $resource = SpipuUiMock::getResourceMock()->setFieldAB('public');
-        $this->assertSame('public', $extension->getPersonalData($resource, 'fieldAB'));
+        $this->assertFalse($extension->isPersonalDataHiddenField($resource, 'fieldAB'));
     }
 
     public function testRenderManager(): void
