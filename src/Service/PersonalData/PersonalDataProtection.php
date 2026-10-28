@@ -85,16 +85,12 @@ class PersonalDataProtection implements ResetInterface
     public function isHidden(EntityInterface $entity, string $path): bool
     {
         $segments = explode('.', $path);
-        $lastIndex = count($segments) - 1;
+        $field = array_pop($segments);
         $current = $entity;
 
-        foreach ($segments as $index => $segment) {
-            if ($current instanceof EntityInterface && $this->isHiddenOwnField($current, $segment)) {
+        foreach ($segments as $segment) {
+            if ($this->isHiddenSegment($current, $segment)) {
                 return true;
-            }
-
-            if ($index === $lastIndex) {
-                return false;
             }
 
             try {
@@ -112,7 +108,7 @@ class PersonalDataProtection implements ResetInterface
             }
         }
 
-        return false;
+        return $this->isHiddenSegment($current, $field);
     }
 
     /**
@@ -194,11 +190,15 @@ class PersonalDataProtection implements ResetInterface
         return $this->rules;
     }
 
-    private function isHiddenOwnField(EntityInterface $entity, string $field): bool
+    private function isHiddenSegment(object $current, string $segment): bool
     {
-        $rule = $this->getRuleForClass($entity::class);
+        if (!($current instanceof EntityInterface)) {
+            return false;
+        }
 
-        return ($this->isProtectedOwnField($rule, $field) && $this->isEntityHidden($entity));
+        $rule = $this->getRuleForClass($current::class);
+
+        return ($this->isProtectedOwnField($rule, $segment) && $this->isEntityHidden($current));
     }
 
     private function isProtectedOwnField(?PersonalDataRuleInterface $rule, string $field): bool
