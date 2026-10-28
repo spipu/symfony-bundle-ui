@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Spipu\UiBundle\Service\Ui\Grid\DataProvider;
 
+use DateTimeImmutable;
 use Doctrine\ORM\Query\Expr\Andx;
 use SortDirection;
 use Spipu\UiBundle\Entity\EntityInterface;
@@ -163,31 +164,50 @@ class Doctrine extends AbstractDataProvider
         $entityField = $this->getFieldFromColumn($column);
 
         if ($column->getFilter()->isRange()) {
-            if (is_array($value) && array_key_exists('from', $value)) {
-                $where->add($queryBuilder->expr()->gte($entityField, ':' . $code . '_from'));
-                $parameters[':' . $code . '_from'] = $this->applyMappingValue($code, $value['from']);
-            }
-            if (is_array($value) && array_key_exists('to', $value)) {
-                $where->add($queryBuilder->expr()->lte($entityField, ':' . $code . '_to'));
-                $parameters[':' . $code . '_to'] = $this->applyMappingValue($code, $value['to']);
-            }
-            return $parameters;
+            return $this->prepareQueryBuilderRangeFilterValue(
+                $queryBuilder,
+                $where,
+                $column,
+                $code,
+                $value
+            );
         }
 
         if ($column->getFilter()->isExactValue() || $column->getType()->getType() == ColumnType::TYPE_SELECT) {
-            $value = $this->applyMappingValue($code, $value);
-            $expression = $queryBuilder->expr()->eq($entityField, ':' . $code);
-            if (is_array($value)) {
-                $expression = $queryBuilder->expr()->in($entityField, ':' . $code);
-            }
-            $where->add($expression);
-            $parameters[':' . $code] = $value;
-            return $parameters;
+            return $this->prepareQueryBuilderExactFilterValue(
+                $queryBuilder,
+                $where,
+                $column,
+                $code,
+                $value
+            );
         }
 
         $value = $this->applyValueTransformer($column, (string) $value);
         $where->add($queryBuilder->expr()->like($entityField, ':' . $code));
         $parameters[':' . $code] = '%' . $value . '%';
+
+        return $parameters;
+    }
+
+    protected function prepareQueryBuilderExactFilterValue(
+        QueryBuilder $queryBuilder,
+        Andx $where,
+        Column $column,
+        string $code,
+        mixed $value
+    ): array {
+        $parameters = [];
+
+        $entityField = $this->getFieldFromColumn($column);
+
+        $value = $this->applyMappingValue($code, $value);
+        $expression = $queryBuilder->expr()->eq($entityField, ':' . $code);
+        if (is_array($value)) {
+            $expression = $queryBuilder->expr()->in($entityField, ':' . $code);
+        }
+        $where->add($expression);
+        $parameters[':' . $code] = $value;
 
         return $parameters;
     }
@@ -290,6 +310,56 @@ class Doctrine extends AbstractDataProvider
         }
 
         return $queryBuilder->getQuery()->execute();
+    }
+
+    protected function prepareQueryBuilderRangeFilterValue(
+        QueryBuilder $queryBuilder,
+        Andx $where,
+        Column $column,
+        string $code,
+        mixed $value
+    ): array {
+        $parameters = [];
+
+        $entityField = $this->getFieldFromColumn($column);
+
+        if (is_array($value) && array_key_exists('from', $value)) {
+            $where->add($queryBuilder->expr()->gte($entityField, ':' . $code . '_from'));
+            $parameters[':' . $code . '_from'] = $this->applyMappingValue($code, $value['from']);
+        }
+
+        if (is_array($value) && array_key_exists('to', $value)) {
+            $valueTo = $this->applyMappingValue($code, $value['to']);
+            $expression = $queryBuilder->expr()->lte($entityField, ':' . $code . '_to');
+
+            $nextDay = $this->getNextDayOfDateOnlyValue($column, $valueTo);
+            if ($nextDay !== null) {
+                $valueTo = $nextDay;
+                $expression = $queryBuilder->expr()->lt($entityField, ':' . $code . '_to');
+            }
+
+            $where->add($expression);
+            $parameters[':' . $code . '_to'] = $valueTo;
+        }
+
+        return $parameters;
+    }
+
+    /**
+     * A datetime column filtered "to" a date only must include the whole day: "< next day 00:00:00"
+     */
+    private function getNextDayOfDateOnlyValue(Column $column, mixed $value): ?string
+    {
+        if (
+            $column->getType()->getType() !== ColumnType::TYPE_DATETIME
+            || !is_string($value)
+            || !preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value, $match)
+            || !checkdate((int) $match[2], (int) $match[3], (int) $match[1])
+        ) {
+            return null;
+        }
+
+        return (new DateTimeImmutable($value))->modify('+1 day')->format('Y-m-d H:i:s');
     }
 
     public function applyMappingValue(string $fieldCode, mixed $originalValue): mixed

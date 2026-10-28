@@ -41,6 +41,7 @@ spipu:
                 to:             "A"
                 no_result:      "Aucun item trouvé"
                 filters:        "Filtres"
+                modify:         "Modifier les Filtres"
 
             sort:
                 title: "Tri par défaut"

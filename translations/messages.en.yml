@@ -41,6 +41,7 @@ spipu:
                 to:             "To"
                 no_result:      "No item found"
                 filters:        "Filters"
+                modify:         "Modify Filters"
 
             sort:
                 title: "Default sort"

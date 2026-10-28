@@ -216,6 +216,36 @@ class DoctrineTest extends AbstractTestCase
         $this->assertNull($result['where']);
     }
 
+    public function testDateTimeRangeFilterToIncludesWholeDay(): void
+    {
+        $definition = SpipuUiMock::getPersonalDataGridDefinitionMock();
+        $column = $definition->getDefinition()->getColumn('field_a_b');
+        $column->setType(new ColumnType(ColumnType::TYPE_DATETIME));
+        $column->getFilter()->useRange();
+
+        $result = $this->preparePersonalDataQuery(
+            $definition,
+            ['field_a_b' => ['from' => '2026-10-27', 'to' => '2026-10-27']]
+        );
+        $this->assertStringContainsString('main.fieldAB >= :field_a_b_from', $result['where']);
+        $this->assertStringContainsString('main.fieldAB < :field_a_b_to', $result['where']);
+        $this->assertSame('2026-10-27', $result['parameters'][':field_a_b_from']);
+        $this->assertSame('2026-10-28 00:00:00', $result['parameters'][':field_a_b_to']);
+
+        $result = $this->preparePersonalDataQuery($definition, ['field_a_b' => ['to' => '2026-10-27 12:00:00']]);
+        $this->assertStringContainsString('main.fieldAB <= :field_a_b_to', $result['where']);
+        $this->assertSame('2026-10-27 12:00:00', $result['parameters'][':field_a_b_to']);
+
+        $result = $this->preparePersonalDataQuery($definition, ['field_a_b' => ['to' => '2026-02-31']]);
+        $this->assertStringContainsString('main.fieldAB <= :field_a_b_to', $result['where']);
+        $this->assertSame('2026-02-31', $result['parameters'][':field_a_b_to']);
+
+        $column->setType(new ColumnType(ColumnType::TYPE_DATE));
+        $result = $this->preparePersonalDataQuery($definition, ['field_a_b' => ['to' => '2026-10-27']]);
+        $this->assertStringContainsString('main.fieldAB <= :field_a_b_to', $result['where']);
+        $this->assertSame('2026-10-27', $result['parameters'][':field_a_b_to']);
+    }
+
     public function testPersonalDataQuickSearch(): void
     {
         $result = $this->preparePersonalDataQuery(

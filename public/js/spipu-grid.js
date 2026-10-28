@@ -43,11 +43,13 @@ class SpipuUiGrid {
 
     filtersInit() {
         this.getElement('filter-cancel').click(this.filtersReset.bind(this));
+        this.getElement('filter-clean').click(this.filtersReset.bind(this));
         this.getElement('filter-open').click(this.filtersOpen.bind(this));
     }
 
     filtersOpen() {
         this.getElement('search-header-collapse').collapse('hide');
+        this.getElement('filter-summary').collapse('hide');
         this.getElement('config-columns-collapse').collapse('hide');
         this.getElement('config-create-collapse').collapse('hide');
         this.getElement('filter-collapse').collapse('show');
@@ -73,6 +75,7 @@ class SpipuUiGrid {
 
     personalizeCreate() {
         this.getElement('filter-collapse').collapse('hide');
+        this.getElement('filter-summary').collapse('hide');
         this.getElement('search-header-collapse').collapse('hide');
         this.getElement('config-select-collapse').collapse('hide');
         this.getElement('config-columns-collapse').collapse('hide');
@@ -81,6 +84,7 @@ class SpipuUiGrid {
 
     personalizeConfigure() {
         this.getElement('filter-collapse').collapse('hide');
+        this.getElement('filter-summary').collapse('hide');
         this.getElement('search-header-collapse').collapse('hide');
         this.getElement('config-select-collapse').collapse('hide');
         this.getElement('config-create-collapse').collapse('hide');

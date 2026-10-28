@@ -1,6 +1,39 @@
 {% set infoFilters = manager.infoFilters %}
 {% if infoFilters|length %}
-<div class="row collapse {% if manager.request.filters|length > 0 %}show{% endif %}" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-collapse">
+{% set activeFilters = manager.request.filters %}
+{% if activeFilters|length > 0 %}
+<div class="row collapse show" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-summary">
+    <div class="col-12 mb-2">
+        <b class="me-2">{{ 'spipu.ui.grid.filter.filters'|trans }}</b>
+        <a class="me-2 text-primary" role="button" title="{{ 'spipu.ui.grid.filter.modify'|trans }}" aria-label="{{ 'spipu.ui.grid.filter.modify'|trans }}" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-open"><i class="fa-solid fa-filter"></i></a>
+        <a class="me-2 text-danger" role="button" title="{{ 'spipu.ui.grid.filter.clean'|trans }}" aria-label="{{ 'spipu.ui.grid.filter.clean'|trans }}" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-clean"><i class="fa-solid fa-trash-can"></i></a>
+{% for column in infoFilters %}
+{%     if activeFilters[column.code] is defined %}
+{%         if column.filter.isRange %}
+{%             for rangeKey, rangeSymbol in {'from': '≥', 'to': '≤'} %}
+{%                 set rangeValue = manager.request.filter(column.code, rangeKey) %}
+{%                 if rangeValue != '' %}
+        <span class="badge text-bg-info fw-normal me-1">{{ column.name|trans }} <b>{{ rangeSymbol }} {{ rangeValue }}</b></span>
+{%                 endif %}
+{%             endfor %}
+{%         else %}
+{%             set values = column.filter.isMultipleValues ? manager.request.multipleValuesFilter(column.code) : [manager.request.filter(column.code)] %}
+{%             set options = column.type.options ? column.type.options.options : [] %}
+{%             set labels = [] %}
+{%             for value in values %}
+{%                 set label = options[value] ?? value %}
+{%                 if options[value] is defined and column.type.translate %}{% set label = label|trans %}{% endif %}
+{%                 set labels = labels|merge([label]) %}
+{%             endfor %}
+{%             set valueSymbol = (column.filter.exactValue or column.type.type == 'select') ? '=' : '∋' %}
+        <span class="badge text-bg-info fw-normal me-1">{{ column.name|trans }} <b>{{ valueSymbol }} {{ labels|join(', ') }}</b></span>
+{%         endif %}
+{%     endif %}
+{% endfor %}
+    </div>
+</div>
+{% endif %}
+<div class="row collapse" data-grid-code="{{ manager.definition.code }}" data-grid-role="filter-collapse">
     <div class="col-12 mb-2">
         <div class="card">
             <div class="card-header">
