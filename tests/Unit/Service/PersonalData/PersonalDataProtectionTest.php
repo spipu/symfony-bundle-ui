@@ -39,7 +39,7 @@ class PersonalDataProtectionTest extends TestCase
 
     private function getConditions(
         PersonalDataProtection $service,
-        ?string $entityClass,
+        string $entityClass,
         string $path,
         array $excludedAliases = []
     ): array {
@@ -88,7 +88,6 @@ class PersonalDataProtectionTest extends TestCase
         $this->assertSame([], $this->getConditions($service, PersonalDataResourceMock::class, 'fieldAB', ['main']));
         $this->assertSame([], $this->getConditions($service, PersonalDataResourceMock::class, 'sub.fieldAB'));
         $this->assertSame([], $this->getConditions($service, PersonalDataResourceMock::class, 'wrong.fieldBA'));
-        $this->assertSame([], $this->getConditions($service, null, 'sub.fieldBA'));
         $this->assertSame([], $this->getConditions($service, 'stdClass', 'sub.fieldBA'));
     }
 

@@ -24,6 +24,9 @@ use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Service\PersonalData\PersonalDataProtection;
 use Stringable;
 
+/**
+ * @SuppressWarnings(PMD.ExcessiveClassComplexity)
+ */
 class Doctrine extends AbstractDataProvider
 {
     protected EntityManagerInterface $entityManager;
@@ -40,6 +43,17 @@ class Doctrine extends AbstractDataProvider
     ) {
         $this->entityManager = $entityManager;
         $this->personalDataProtection = $personalDataProtection;
+    }
+
+    public function validate(): bool
+    {
+        parent::validate();
+
+        if ($this->definition->getEntityName() === null) {
+            throw new GridException('The grid definition has no entity name');
+        }
+
+        return true;
     }
 
     public function resetDataProvider(): void

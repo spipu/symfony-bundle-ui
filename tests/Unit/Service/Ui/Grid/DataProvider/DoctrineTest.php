@@ -71,11 +71,29 @@ class DoctrineTest extends AbstractTestCase
         $service->validate();
     }
 
-    public function testClone(): void
+    public function testValidateWrongMissingEntityName(): void
     {
         $containerMock = $this->getContainerMock();
         $requestMock   = $this->createMock(GridRequest::class);
         $definition    = SpipuUiMock::getGridDefinitionMock();
+
+        $service = new Doctrine(
+            $containerMock->get('doctrine.orm.default_entity_manager'),
+            SpipuUiMock::getPersonalDataProtection($this)
+        );
+        $service->setGridDefinition($definition->getDefinition());
+        $service->setGridRequest($requestMock);
+
+        $this->expectException(GridException::class);
+        $this->expectExceptionMessage('The grid definition has no entity name');
+        $service->validate();
+    }
+
+    public function testClone(): void
+    {
+        $containerMock = $this->getContainerMock();
+        $requestMock   = $this->createMock(GridRequest::class);
+        $definition    = SpipuUiMock::getGridDefinitionMock(ResourceMock::class);
 
         $service = new Doctrine(
             $containerMock->get('doctrine.orm.default_entity_manager'),
@@ -119,7 +137,7 @@ class DoctrineTest extends AbstractTestCase
     public function testValidateOk(): void
     {
         $requestMock   = $this->createMock(GridRequest::class);
-        $definition    = SpipuUiMock::getGridDefinitionMock();
+        $definition    = SpipuUiMock::getGridDefinitionMock(ResourceMock::class);
 
         $filters = ['foo' => 'bar'];
         $requestMock

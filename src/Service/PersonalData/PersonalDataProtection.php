@@ -120,14 +120,14 @@ class PersonalDataProtection implements ResetInterface
      * One condition per alias owning a protected segment of the path ("main" for the main entity, else the join alias).
      * The aliases already handled by the query are excluded.
      * Format of the generator: function(): string (a new unique parameter name, with the ":" prefix)
-     * @param string|null $entityClass
+     * @param string $entityClass
      * @param string $path
      * @param string[] $excludedAliases
      * @param callable $parameterNameGenerator
      * @return array<string, array{0: string, 1: array<string, mixed>}> alias => [DQL condition, parameters]
      */
     public function getVisibleDqlConditions(
-        ?string $entityClass,
+        string $entityClass,
         string $path,
         array $excludedAliases,
         callable $parameterNameGenerator
@@ -220,25 +220,26 @@ class PersonalDataProtection implements ResetInterface
      * The alias is "main" for the main entity, else the join alias (the segment before).
      * @return array<array{0: PersonalDataRuleInterface, 1: string}>
      */
-    private function getFieldRules(?string $entityClass, string $path): array
+    private function getFieldRules(string $entityClass, string $path): array
     {
         $fieldRules = [];
         $segments = explode('.', $path);
         $lastIndex = count($segments) - 1;
         $alias = 'main';
+        $currentClass = $entityClass;
 
         foreach ($segments as $index => $segment) {
-            if ($entityClass === null) {
+            if ($currentClass === null) {
                 break;
             }
 
-            $rule = $this->getRuleForClass($entityClass);
+            $rule = $this->getRuleForClass($currentClass);
             if ($this->isProtectedOwnField($rule, $segment)) {
                 $fieldRules[] = [$rule, $alias];
             }
 
             if ($index < $lastIndex) {
-                $entityClass = $this->getAssociationTargetClass($entityClass, $segment);
+                $currentClass = $this->getAssociationTargetClass($currentClass, $segment);
                 $alias = $segment;
             }
         }
