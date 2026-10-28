@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Spipu\UiBundle\Service\Ui\PersonalData;
+namespace Spipu\UiBundle\Service\PersonalData;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Spipu\UiBundle\Entity\EntityInterface;

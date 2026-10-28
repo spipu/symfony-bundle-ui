@@ -35,7 +35,7 @@ services:
 
     # Personal data protection
     # You can add rules. They must implement PersonalDataRuleInterface and have the spipu.ui.personal-data.rule tag
-    Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataProtection:
+    Spipu\UiBundle\Service\PersonalData\PersonalDataProtection:
         autowire: true
         tags: [{ name: 'kernel.reset', method: 'reset' }]
         arguments:

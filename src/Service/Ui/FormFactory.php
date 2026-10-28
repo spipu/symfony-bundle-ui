@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Spipu\UiBundle\Service\Ui;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Spipu\UiBundle\Service\PersonalData\PersonalDataProtection;
 use Spipu\UiBundle\Service\Ui\Definition\EntityDefinitionInterface;
-use Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataProtection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;

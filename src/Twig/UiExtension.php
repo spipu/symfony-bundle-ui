@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Spipu\UiBundle\Twig;
 
 use Spipu\UiBundle\Entity\EntityInterface;
-use Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataProtection;
+use Spipu\UiBundle\Service\PersonalData\PersonalDataProtection;
 use Spipu\UiBundle\Service\Ui\UiManagerInterface;
 use Spipu\UiBundle\Service\Menu\Manager as MenuManager;
 use Spipu\UiBundle\Entity\Menu\Item as MenuItem;

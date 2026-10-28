@@ -21,7 +21,7 @@ use Spipu\UiBundle\Entity\Grid\ColumnType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Spipu\UiBundle\Exception\GridException;
-use Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataProtection;
+use Spipu\UiBundle\Service\PersonalData\PersonalDataProtection;
 use Stringable;
 
 class Doctrine extends AbstractDataProvider

@@ -327,11 +327,11 @@ Once a record no longer needs to be fully visible (a closed case, an order shipp
 
 ### Defining a rule
 
-Each entity is responsible for its own fields only. A rule is a service implementing `Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataRuleInterface`, tagged `spipu.ui.personal-data.rule`:
+Each entity is responsible for its own fields only. A rule is a service implementing `Spipu\UiBundle\Service\PersonalData\PersonalDataRuleInterface`, tagged `spipu.ui.personal-data.rule`:
 
 ```php
 use Spipu\UiBundle\Entity\EntityInterface;
-use Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataRuleInterface;
+use Spipu\UiBundle\Service\PersonalData\PersonalDataRuleInterface;
 
 class CustomerRule implements PersonalDataRuleInterface
 {
@@ -387,7 +387,7 @@ Performance: a condition on an expression (`COALESCE(...)`, a function...) canno
 
 ### Where the rule is applied
 
-The rules are applied by the `Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataProtection` service.
+The rules are applied by the `Spipu\UiBundle\Service\PersonalData\PersonalDataProtection` service.
 
 **Display: in the templates only.**
 

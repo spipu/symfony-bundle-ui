@@ -18,8 +18,8 @@ use Spipu\UiBundle\Entity\Form\FieldSet;
 use Spipu\UiBundle\Entity\Form\Form;
 use Spipu\UiBundle\Event\FormDefinitionEvent;
 use Spipu\UiBundle\Exception\FormException;
+use Spipu\UiBundle\Service\PersonalData\PersonalDataProtection;
 use Spipu\UiBundle\Service\Ui\Definition\EntityDefinitionInterface;
-use Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataProtection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Twig\Environment as Twig;
 

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Spipu\UiBundle\Tests\Unit\Service\Ui\PersonalData;
+namespace Spipu\UiBundle\Tests\Unit\Service\PersonalData;
 
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Spipu\UiBundle\Exception\GridException;
 use Spipu\UiBundle\Exception\UiException;
-use Spipu\UiBundle\Service\Ui\PersonalData\PersonalDataProtection;
+use Spipu\UiBundle\Service\PersonalData\PersonalDataProtection;
 use Spipu\UiBundle\Tests\PersonalDataResourceMock;
 use Spipu\UiBundle\Tests\PersonalDataRuleMock;
 use Spipu\UiBundle\Tests\PersonalDataSubResourceMock;
