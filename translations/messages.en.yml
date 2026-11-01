@@ -16,6 +16,9 @@ spipu:
             default_confirm_message: "Do you really want to %1 this item ?"
             default_confirm_action: "make this action on"
 
+        confirm:
+            delete: "Do you really want to delete this item?"
+
         page:
             home:  "Home"
             admin: "Admin"

@@ -1,11 +1,11 @@
-{% macro defaultLink(url, message, class, icon = null, id = null, role = null) %}
-    <a href="{{ url }}" {% if id is not null %}id="{{ id }}"{% endif %} {% if role is not null %}data-action-role="{{ role }}"{% endif %} class="ms-2 spipu-ui-btn btn btn-outline-{{ class }}">{% if icon is not null %}<i class="fa-solid fa-{{ icon }}"></i> {% endif %}{{ message|trans }}</a>
+{% macro defaultLink(url, message, class, icon = null, id = null, role = null, confirmMessage = null) %}
+    <a href="{{ url }}" {% if id is not null %}id="{{ id }}"{% endif %} {% if role is not null %}data-action-role="{{ role }}"{% endif %} {% if confirmMessage is not null %}data-action-message="{{ confirmMessage|trans|e('html_attr') }}"{% endif %} class="ms-2 spipu-ui-btn btn btn-outline-{{ class }}">{% if icon is not null %}<i class="fa-solid fa-{{ icon }}"></i> {% endif %}{{ message|trans }}</a>
 {% endmacro %}
 
-{% macro defaultButton(action, message, class, icon = null, id = null, role = null) %}
+{% macro defaultButton(action, message, class, icon = null, id = null, role = null, confirmMessage = null) %}
     {% set buttonType = 'button' %}
     {% if action is empty %}{% set buttonType = 'submit' %}{% endif %}
-    <button type="{{ buttonType }}" {% if action is not null %}onclick="{{ action }}"{% endif %} {% if id is not null %}id="{{ id }}"{% endif %} {% if role is not null %}data-action-role="{{ role }}"{% endif %} class="ms-2 spipu-ui-btn btn btn-outline-{{ class }}" >{% if icon is not null %}<i class="fa-solid fa-{{ icon }}"></i> {% endif %}{{ message|trans() }}</button>
+    <button type="{{ buttonType }}" {% if action is not null %}onclick="{{ action }}"{% endif %} {% if id is not null %}id="{{ id }}"{% endif %} {% if role is not null %}data-action-role="{{ role }}"{% endif %} {% if confirmMessage is not null %}data-action-message="{{ confirmMessage|trans|e('html_attr') }}"{% endif %} class="ms-2 spipu-ui-btn btn btn-outline-{{ class }}" >{% if icon is not null %}<i class="fa-solid fa-{{ icon }}"></i> {% endif %}{{ message|trans() }}</button>
 {% endmacro %}
 
 {% macro create(url, message = null, id = null, additionalClass = null) %}
@@ -28,13 +28,14 @@
     {{ _self.defaultLink(url, message, 'secondary' ~ (additionalClass is not null ? ' ' ~ additionalClass : ''), 'rotate-left', id) }}
 {% endmacro %}
 
-{% macro postButton(url, tokenId, message, class, icon = null, id = null, role = null) %}
-    <form method="post" action="{{ url }}" style="display: inline"><input type="hidden" name="_token" value="{{ csrf_token(tokenId) }}">{{ _self.defaultButton(null, message, class, icon, id, role) }}</form>
+{% macro postButton(url, tokenId, message, class, icon = null, id = null, role = null, confirmMessage = null) %}
+    <form method="post" action="{{ url }}" style="display: inline"><input type="hidden" name="_token" value="{{ csrf_token(tokenId) }}">{{ _self.defaultButton(null, message, class, icon, id, role, confirmMessage) }}</form>
 {% endmacro %}
 
-{% macro delete(url, tokenId, message = null, id = null, additionalClass = null) %}
+{% macro delete(url, tokenId, message = null, id = null, additionalClass = null, confirmMessage = null) %}
     {% if message is empty %}{% set message = 'spipu.ui.action.delete' %}{% endif %}
-    <form method="post" action="{{ url }}" style="display: inline"><input type="hidden" name="_method" value="DELETE"><input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ tokenId) }}">{{ _self.defaultButton(null, message, 'danger confirm-action' ~ (additionalClass is not null ? ' ' ~ additionalClass : ''), 'trash-can', id, 'delete') }}</form>
+    {% if confirmMessage is empty %}{% set confirmMessage = 'spipu.ui.confirm.delete' %}{% endif %}
+    <form method="post" action="{{ url }}" style="display: inline"><input type="hidden" name="_method" value="DELETE"><input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ tokenId) }}">{{ _self.defaultButton(null, message, 'danger confirm-action' ~ (additionalClass is not null ? ' ' ~ additionalClass : ''), 'trash-can', id, 'delete', confirmMessage) }}</form>
 {% endmacro %}
 
 {% macro submitManagerForm(manager) %}
