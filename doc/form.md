@@ -298,7 +298,7 @@ class UserController extends AbstractController
 
 `ShowManager` uses the same `EntityDefinitionInterface` definition as `FormManager`. It renders `$form->getTemplateView()` (default: `@SpipuUi/entity/view.html.twig`) and respects `useHiddenInView()` on fieldsets and fields.
 
-`ShowManager::isHiddenValue(string $field)` returns `true` if the field is protected and the resource is hidden: the default view template displays a "Hidden" badge instead of the value (see [Personal data protection](./grid.md#personal-data-protection)).
+`ShowManager::isHiddenValue(string $field)` returns `true` if the field is protected and the resource is hidden: the default view template displays a "Hidden" marker instead of the value (see [Personal data protection](./grid.md#personal-data-protection)).
 
 ## Listening to Form Events
 
@@ -426,7 +426,7 @@ Two Twig filters are available (provided by `OptionsExtension`):
 
 | Macro | Usage | Description |
 |-------|-------|-------------|
-| `display` | `{% import '@SpipuUi/macro/personal_data.html.twig' as personal_data %}` then `personal_data.display(entity, 'field', value)` | Displays the "Hidden" badge if the field is hidden, else the given value, already formatted (see [Personal data protection](./grid.md#personal-data-protection)) |
+| `display` | `{% import '@SpipuUi/macro/personal_data.html.twig' as personal_data %}` then `personal_data.display(entity, 'field', value)` | Displays the "Hidden" marker if the field is hidden, else the given value, already formatted (see [Personal data protection](./grid.md#personal-data-protection)) |
 
 ### Filters (provided by `OptionsExtension`)
 
@@ -448,7 +448,7 @@ interface EntityInterface
 
 Implement this on any Doctrine entity used with `FormManager` or `ShowManager`.
 
-To hide personal data on show pages, define a personal data rule for the entity: the show template displays a "Hidden" badge for a protected field of a hidden entity, and `FormManager` refuses to edit a hidden entity. See [Personal data protection](./grid.md#personal-data-protection).
+To hide personal data on show pages, define a personal data rule for the entity: the show template displays a "Hidden" marker for a protected field of a hidden entity, and `FormManager` refuses to edit a hidden entity. See [Personal data protection](./grid.md#personal-data-protection).
 
 ### `TimestampableInterface` and `TimestampableTrait`
 
