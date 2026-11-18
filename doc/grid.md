@@ -392,10 +392,10 @@ The rules are applied by the `Spipu\UiBundle\Service\PersonalData\PersonalDataPr
 **Display: in the templates only.**
 
 - `GridManager::getValue()` always returns the real value. The show page reads the value with `attribute(manager.resource, field.code)`.
-- **Grid cells**: `grid/row.html.twig` checks `GridManager::isHiddenValue()` and displays the info badge "Hidden" (`@SpipuUi/grid/field/personal-data-hidden.html.twig`) instead of the column template.
-- **Show pages**: `entity/viewFieldset.html.twig` checks `ShowManager::isHiddenValue()` and displays the same badge (`@SpipuUi/entity/view/personal-data-hidden.html.twig`) instead of the field view template.
+- **Grid cells**: `grid/row.html.twig` checks `GridManager::isHiddenValue()` and displays the "Hidden" marker (`@SpipuUi/grid/field/personal-data-hidden.html.twig`, small light grey text without background) instead of the column template.
+- **Show pages**: `entity/viewFieldset.html.twig` checks `ShowManager::isHiddenValue()` and displays the same marker (`@SpipuUi/entity/view/personal-data-hidden.html.twig`) instead of the field view template.
 - **Custom templates**: use the Twig functions `is_personal_data_hidden_entity(entity)` and `is_personal_data_hidden_field(entity, 'field')` (see [Form / View / Menu System](./form.md)). A custom template reading the entity without this check bypasses the protection.
-- **Custom templates — display a value**: the macro `display` of `@SpipuUi/macro/personal_data.html.twig` displays the "Hidden" badge if the field is hidden, else the given value, already formatted:
+- **Custom templates — display a value**: the macro `display` of `@SpipuUi/macro/personal_data.html.twig` displays the "Hidden" marker if the field is hidden, else the given value, already formatted:
 
 ```twig
 {% import '@SpipuUi/macro/personal_data.html.twig' as personal_data %}
